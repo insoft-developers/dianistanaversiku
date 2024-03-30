@@ -95,6 +95,12 @@ class AuthUsersController extends Controller
     //     return Resp::json();
     // }
 
+    public function dashboard() {
+        $view = 'frontend-dashboard';
+        return view('frontend.dashboard', compact('view'));
+    }
+
+
     public function login(){
         $view = 'login';
         return view('frontend.login', compact('view'));
@@ -272,10 +278,18 @@ class AuthUsersController extends Controller
     }
 
 
-    public function logout() 
-    {
-        Auth::guard("web")->logout();
-        return redirect(route('login_admin'));
+    public function logout(Request $request) {
+        $request->session()->regenerate();
+        $request->session()->invalidate();
+        $request->session()->flush();
+        return redirect('/login');
+    }
+
+
+    public function booking() {
+        $view = "booking";
+        $unit = \App\Models\UnitBisnis::where('status_booking', 'Aktif')->get();
+        return view('frontend.booking', compact('view','unit'));
     }
 }
 

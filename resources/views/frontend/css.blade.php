@@ -62,4 +62,43 @@
     /* left: 0%; */
     margin: auto;
 }
+.profile-image{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 0;
+    top: 12px;
+    background: white;
+    border-radius: 15px;
+    padding: 2px;
+}
+.dashboard-foto{
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: auto;
+    border-radius: 50px;
+    border: 4px solid white;
+}
+.menu-image{
+    height: 204px;
+    object-fit: cover;
+    width: 100%;
+    border: 2px solid whitesmoke;
+    padding: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.daftar-harga{
+    background: #d7f3d7;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 10px;
+    opacity: 0.9;
+}
+.bg-red {
+    color: red !important;
+}
 </style>

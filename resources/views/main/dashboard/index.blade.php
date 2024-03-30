@@ -61,6 +61,41 @@ body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: 
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><script type="text/javascript" src="https://dibeli.online/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
 <script type="text/javascript" src="https://dibeli.online/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
 <style type="text/css">
+.sub-login {
+	position: absolute;
+    top: 44px !important;
+    background: white;
+    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 15px;
+    width: 155px;
+
+}
+.sub-login-menu:hover{
+	background: #0b2c3d;
+	color: white;
+	width: 130px;
+	padding-left: 10px;
+	border-radius: 2px;
+
+}
+
+.sub-login-menu {
+	color: black;
+    line-height: 3;
+
+}
+.profile-image{
+	position: absolute;
+    width: 30px;
+    height: 30px !important;
+    left: 19px;
+    top: 15px;
+    background: white;
+    border-radius: 15px !important;
+    padding: 2px;
+}
 svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertical-align: middle; margin-top: -2px; } 
 </style>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" /></head>
@@ -77,7 +112,20 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
 					</div>
 					<ul class="lp-navmenu-items">
-						<li><a href="#" >LOGIN OR REGISTER</a></li><li><a href="#download" >DOWNLOAD APPS</a></li><li><a href="{{ url('term') }}" >TERMS & CONDITIONS</a></li><li><a href="{{ url('privacy') }}" >PRIVACY POLICY</a></li><li><a href="{{ url('contact') }}" >contact us</a></li>					</ul>
+						@if( request()->session()->missing('session_id'))
+						<li><a href="#" >LOGIN OR REGISTER</a>
+							<ul class="sub-login">
+								<a href="{{ url('login') }}"><div class="sub-login-menu">Login</div></a>
+								<a href="{{ url('frontend_register') }}"><div class="sub-login-menu">Register</div></a>
+							</ul>
+						</li>
+						@endif
+
+						<li><a href="#download" >DOWNLOAD APPS</a></li><li><a href="{{ url('term') }}" >TERMS & CONDITIONS</a></li><li><a href="{{ url('privacy') }}" >PRIVACY POLICY</a></li><li><a href="{{ url('contact') }}" >contact us</a></li>
+						@if( request()->session()->has('session_id'))
+						<li><a href="{{ url('contact') }}" ><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a></li>
+						@endif					
+					</ul>
 										<div style="clear:both;"></div>
 		</div>
 				</div>
@@ -489,6 +537,7 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 							<i aria-hidden="true" class="fas fa-angle-right"></i>						</span>
 										<span class="elementor-icon-list-text">Login or Register</span>
 									</li>
+									
 								<li class="elementor-icon-list-item">
 											<span class="elementor-icon-list-icon">
 							<i aria-hidden="true" class="fas fa-angle-right"></i>						</span>

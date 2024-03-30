@@ -38,9 +38,16 @@ Route::get('/otp', [AuthUsersController::class, 'otp']);
 Route::post('/send_otp', [AuthUsersController::class, 'send_otp'])->name('send.otp');
 Route::get('/login', [AuthUsersController::class, 'login']);
 Route::post('/frontend_login', [AuthUsersController::class, 'frontend_login'])->name('frontend.login');
+Route::get('/frontend_logout', [AuthUsersController::class, 'logout']);
+Route::get('/frontend_dashboard', [AuthUsersController::class, 'dashboard']);
+Route::get('/frontend_booking', [AuthUsersController::class, 'booking']);
+
+
 
 // for admins
-Route::get('/login-admins',[AuthController::class, 'index'])->name("login_admin");
+
+Route::get('/login-admins', [AuthController::class, 'index'])->name("login_admin");
+
 Route::middleware(['throttle:webAuthAdmin'])->group(function(){
    Route::post('/process-auth-admin',[AuthController::class, 'prosesAuth']);
 });

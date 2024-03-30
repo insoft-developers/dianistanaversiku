@@ -73,6 +73,7 @@
                             </a>
                             <nav class="flex flex-wrap items-center">
                                 <ul class="hidden lg:flex flex-wrap items-center font-lora text-[16px] xl:text-[18px] leading-none text-black">
+                                    @if( request()->session()->missing('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
                                         <a href="#" class="transition-all hover:text-secondary">Login Or Register</a>
@@ -91,6 +92,7 @@
                                         </ul>
                                        
                                     </li>
+                                    @endif
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
                                         <a href="about.html" class="transition-all hover:text-secondary">Download Apps</a>
@@ -115,6 +117,27 @@
                                         <a href="{{ url('contact') }}" class="transition-all hover:text-secondary">Contact US</a>
 
                                     </li>
+                                    @if( request()->session()->has('session_id'))    
+                                    <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
+
+                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a>
+                                        <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
+                group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
+                
+                ">
+                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
+                                                <a href="{{ url('frontend_dashboard') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-t-[12px]">Dashboard</a>
+                                            </li>
+                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
+                                                <a href="index-4.html" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Notifications</a>
+                                            </li>
+                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
+                                                <a href="{{ url('frontend_logout') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-b-[12px]">Log Out</a>
+                                            </li>
+                                            
+                                        </ul>    
+                                    </li>
+                                    @endif
                                 </ul>
 
                                 <ul class="flex flex-wrap items-center">
@@ -339,7 +362,7 @@
 
 
         <!-- Footer Start -->
-        <footer class="footer bg-[#EEEEEE] pt-[80px] lg:pt-[120px] pb-30 md:pb-[80px] lg:pb-[110px] font-normal bg-no-repeat" style="background-image: url('{{ asset('template/frontend') }}/assets/images/footer/pattern.png');">
+        <footer class="footer bg-[#EEEEEE] pt-[30px] lg:pt-[120px] pb-30 md:pb-[80px] lg:pb-[110px] font-normal bg-no-repeat" style="background-image: url('{{ asset('template/frontend') }}/assets/images/footer/pattern.png');">
             <div class="container">
                 <div class="grid grid-cols-12 gap-x-[30px] mb-[-30px]">
                     <div class="col-span-12 sm:col-span-6 lg:col-span-4 mb-[30px]">

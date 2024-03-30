@@ -42,7 +42,7 @@ class UnitBisnisController extends Controller
             $item->image_src = assetImg_thumbnail();
             if ($item->image != "") {
                 if (Storage::disk("local")->exists("public/unit-bisnis/".$item->image)) {
-                    $item->image_src = Storage::url("public/unit-bisnis/".$item->image);
+                    $item->image_src = asset('storage/unit-bisnis/'.$item->image);
                 }
             }
             $item->image_src = '<div class="avatar avatar-lg"><img alt="'.$item->title.'" src="'.$item->image_src.'" class="rounded" /></div>';

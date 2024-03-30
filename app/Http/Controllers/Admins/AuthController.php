@@ -14,33 +14,33 @@ use Validator;
 
 class AuthController extends Controller
 {
-    // public function index(): View 
-    // {
-    //     return view("admins.auth.index");
-    // }
+    public function index(): View 
+    {
+        return view("admins.auth.index");
+    }
 
-    // public function prosesAuth(Request $request): JsonResponse
-    // {
-    //     $rules = [
-    //         'username'  =>  'required',
-    //         'password'  =>  'required',
-    //     ];
+    public function prosesAuth(Request $request): JsonResponse
+    {
+        $rules = [
+            'username'  =>  'required',
+            'password'  =>  'required',
+        ];
 
-    //     $validator = $this->validateRed($request, $rules);
-    //     if ($validator !== null) {
-    //         Resp::error($validator);
-    //     } else {
-    //         $credential = $request->only('username','password');
-    //         $remember_me = $request->remember_me == null ? false : true;
-    //         if (Auth::guard('webadmin')->attempt($credential, $remember_me)) {
-    //             Resp::success(alertSuccess("Berhasil Login"),["redirect" => route("home_admin")]);
-    //         } else {
-    //             Resp::error(spanRed("Username atau Password yang anda masukkan salah.!"));
-    //         }
-    //     }
+        $validator = $this->validateRed($request, $rules);
+        if ($validator !== null) {
+            Resp::error($validator);
+        } else {
+            $credential = $request->only('username','password');
+            $remember_me = $request->remember_me == null ? false : true;
+            if (Auth::guard('webadmin')->attempt($credential, $remember_me)) {
+                Resp::success(alertSuccess("Berhasil Login"),["redirect" => route("home_admin")]);
+            } else {
+                Resp::error(spanRed("Username atau Password yang anda masukkan salah.!"));
+            }
+        }
         
-    //     return Resp::json();
-    // }
+        return Resp::json();
+    }
 
     
 
