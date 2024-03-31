@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('payment_link');
             $table->string('payment_method');
             $table->string('payment_channel');
-            $table->date('paid-at');
+            $table->date('paid_at');
             $table->timestamps();
         });
     }

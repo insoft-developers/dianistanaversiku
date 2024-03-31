@@ -605,5 +605,52 @@ class AuthUsersController extends Controller
 
         return $HTML;
     }
+
+    public function transaction(Request $request) {
+        $input = $request->all();
+        $rules = array(
+            "business_unit_id" => "required",
+            "invoice" => "required",
+            "start_time" => "required",
+            "finish_time" => "required",
+            "quantity" => "required",
+            "total_price" => "required",
+            "booking_date" => "required",
+        );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $pesan = $validator->errors();
+            $pesanarr = explode(",", $pesan);
+            $find = array("[","]","{","}");
+            $html = '';
+            foreach($pesanarr as $p ) {
+                $html .= str_replace($find,"",$p).'<br>';
+            }
+            return response()->json([
+                "success" => false,
+                "message" => $html
+            ]);
+
+        }
+
+        try{    
+            $input['user_id'] = Auth::user()->id;
+            $input['description'] = "order";
+            $input['payment_status'] = "UNPAID";
+            \App\Models\Transaction::create($input);
+            return response()->json([
+                "success" => true,
+                "message" => "success"
+            ]);
+
+        }catch(\Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
+        
+    }
 }
 

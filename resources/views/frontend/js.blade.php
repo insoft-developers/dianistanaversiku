@@ -25,7 +25,7 @@ function tutup_alert() {
 function show_error(title, message) {
     $("#warning-box").slideDown();
     $(".alert-title").text(title);
-    $(".alert-content").text(message);
+    $(".alert-content").html(message);
     $("body").addClass("modal-open");
 }
 
@@ -214,7 +214,49 @@ function close_warning_box() {
     }
 
     function send_order() {
-        show_error("Error", "no Transaction Yet");
+        show_success("Warning", "Do you want to process this transaction...?");
+    }
+
+    function close_success_box() {
+        $("#success-box").slideUp();
+        $("body").removeClass("modal-open");
+    }
+
+    function show_success(title, message) {
+        $("#success-box").slideDown();
+        $(".alert-title").text(title);
+        $(".alert-content").text(message);
+        $("body").addClass("modal-open");
+    }
+
+    function confirm_success_box() {
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        close_success_box();
+        $("#btn_send_transaction").text("Processing....");
+        var productId = $("#product_id").val();
+        var invoice = $("#invoice").val();
+        var startTime = $("#start-time-input").val();
+        var finishTime = $("#finish-time-input").val();
+        var quantity = $("#quantity-input").val();
+        var totalPrice = $("#price-input").val();
+        var bookingDate = $("#booking-date-input").val();
+        $.ajax({
+            url: "{{ url('transaction') }}",
+            type: "POST",
+            dataType: "JSON",
+            data: {"business_unit_id":productId, "invoice":invoice, "start_time":startTime, "finish_time":finishTime, "quantity":quantity, "total_price":totalPrice, "booking_date":bookingDate, "_token":csrf_token},
+            success: function(data) {
+                console.log(data);
+                $("#btn_send_transaction").text("Submit");
+                if(data.success) {
+                    alert(data.message);
+                } else {
+                    show_error("Error", data.message);
+                }
+
+            }
+
+        });
     }
 
 

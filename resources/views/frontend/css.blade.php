@@ -253,6 +253,7 @@
     left: 0;
     right: 0;
 }
+
 .alert-title{
     text-align: center;
     font-size: 24px;
@@ -262,6 +263,7 @@
     text-align: center;
     font-size: 15px;
     font-weight: 300;
+    margin-bottom: 21px;
 }
 .button-oke{
     float: right;
@@ -273,6 +275,10 @@
     padding-top: 1px;
     padding-bottom: 1px;
     cursor: pointer;
+}
+.button-oke:hover {
+    background: orange;
+    color: white;
 }
 body.modal-open {
     overflow: hidden;
@@ -295,5 +301,24 @@ body.modal-open {
     padding: 15px 20px 15px 20px;
     border: 1px dotted #e9fff4;
 }
+
+.alert-green {
+    background: #2e8833;
+    color: white;
+    position: fixed;
+    top: 180px;
+    width: 500px;
+    margin: auto;
+    z-index: 999999;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 10px;
+    left: 0;
+    right: 0;
+}
+
+
 
 </style>

@@ -104,7 +104,7 @@
                 <tr>
                     <td><strong>Invoice</strong></td>
                     <td>:</td>
-                    <td>{{ $invoice }}</td>
+                    <td>{{ $invoice }}<input type="hidden" id="invoice" value="{{ $invoice }}"></td>
                 </tr>
                 <tr>
                     <td><strong>Booking Date</strong></td>
@@ -134,11 +134,19 @@
             </table>
 
             <div class="jarak20"></div>	
-                <button onclick="send_order()" type="button" class="block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[30px] py-[12px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:z-[-2] after:bg-primary after:rounded-md after:transition-all">Submit</button>
+                <button id="btn_send_transaction" onclick="send_order()" type="button" class="block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[30px] py-[12px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:z-[-2] after:bg-primary after:rounded-md after:transition-all">Submit</button>
 		</div>
 		
 	</div>
 </div>
 </section>
 <!-- Popular Properties end -->
+
+<div id="success-box" class="alert-green" style="display:none;">
+    <div class="alert-title">Peringatan</div>
+    <div class="alert-content">Maaf Data yang anda masukkan salah</div>
+    <div style="margin-left:5px;" onclick="confirm_success_box()" class="button-oke">Confirm</div>
+    <div onclick="close_success_box()" class="button-oke">Cancel</div>
+</div>
+
 @endsection

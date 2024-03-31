@@ -44,6 +44,7 @@ Route::get('/frontend_booking', [AuthUsersController::class, 'booking']);
 Route::get('/booking_detail/{slug}', [AuthUsersController::class, 'booking_detail']);
 Route::get('/display_calendar/{bulan}/{tahun}', [AuthUsersController::class, 'display_calendar']);
 Route::post('/booking_time', [AuthUsersController::class, 'booking_time']);
+Route::post('/transaction', [AuthUsersController::class, 'transaction']);
 
 
 // for admins
