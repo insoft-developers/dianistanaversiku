@@ -9,7 +9,7 @@
     <meta name="AdsBot-Google" content="noindex follow" />
     <meta name="description" content="Bery-Real Estate Listing Template">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
 
@@ -34,8 +34,15 @@
     <link rel="stylesheet" href="{{ asset('template/frontend') }}/assets/css/plugins/magnific-popup.css" />
 
 
+
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('template/frontend') }}/assets/css/style.css" />
+    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+   
+
+
+
+
 
     @include('frontend.css')
     
@@ -360,6 +367,12 @@
        
         @yield('content')
 
+        <!-- Danger Alert Modal -->
+        <div id="warning-box" class="alert-red" style="display:none;">
+            <div class="alert-title">Peringatan</div>
+            <div class="alert-content">Maaf Data yang anda masukkan salah</div>
+            <div onclick="close_warning_box()" class="button-oke">Oke</div>
+        </div>
 
         <!-- Footer Start -->
         <footer class="footer bg-[#EEEEEE] pt-[30px] lg:pt-[120px] pb-30 md:pb-[80px] lg:pb-[110px] font-normal bg-no-repeat" style="background-image: url('{{ asset('template/frontend') }}/assets/images/footer/pattern.png');">

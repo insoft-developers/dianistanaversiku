@@ -291,5 +291,319 @@ class AuthUsersController extends Controller
         $unit = \App\Models\UnitBisnis::where('status_booking', 'Aktif')->get();
         return view('frontend.booking', compact('view','unit'));
     }
+
+
+    public function booking_detail($slug) {
+        $view = "booking-detail";
+        $data = \App\Models\UnitBisnis::where('slug', $slug)->first();
+        return view('frontend.booking_detail', compact('view', 'data'));
+    }
+
+    public function display_calendar($bulan, $tahun) {
+        if($bulan == '01') {
+            $month = "January";
+        }
+        else if($bulan == '02') {
+            $month = "February";
+        }
+        else if($bulan == '03') {
+            $month = "March";
+        }
+        else if($bulan == '04') {
+            $month = "April";
+        }
+        else if($bulan == '05') {
+            $month = "Mei";
+        }
+        else if($bulan == '06') {
+            $month = "June";
+        }
+        else if($bulan == '07') {
+            $month = "July";
+        }
+        else if($bulan == '08') {
+            $month = "August";
+        }
+        else if($bulan == '09') {
+            $month = "September";
+        }
+        else if($bulan == '10') {
+            $month = "October";
+        }
+        else if($bulan == '11') {
+            $month = "November";
+        }
+        else if($bulan == '12') {
+            $month = "December";
+        }
+        
+        $d=cal_days_in_month(CAL_GREGORIAN,$bulan,$tahun);
+
+        $tanggal = $tahun.'-'.$bulan.'-01';
+        $timestamp = strtotime($tanggal);
+
+        $day = date('D', $timestamp);
+       
+        
+        $HTML = "";
+        $HTML .= '<div class="month">';
+        $HTML .= '<ul>';
+        $HTML .= '<li class="prev">&#10094;</li>';
+        $HTML .= '<li class="next">&#10095;</li>';
+        $HTML .= '<li>'.$month.'<br><span style="font-size:18px">'.$tahun.'</span></li>';
+        $HTML .= '</ul>';
+        $HTML .= '</div>';
+        $HTML .= '<ul class="weekdays">';
+        $HTML .= '<li>Mo</li><li>Tu</li><li>We</li><li>Th</li><li>Fr</li><li>Sa</li><li>Su</li></ul>';
+        $HTML .= '<ul class="days">';
+        if($day =="Mon") {
+
+        }
+        else if($day =="Tue") {
+            $HTML .= '<li></li>';
+        }
+        else if($day =="Wed") {
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+        }
+        else if($day =="Thu") {
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+        }
+        else if($day =="Fri") {
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+        }
+        else if($day =="Sat") {
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+        }
+        else if($day =="Sun") {
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+            $HTML .= '<li></li>';
+        }
+        for($n=1; $n<= $d; $n++) {
+            
+            $HTML .= '<li onclick="select_date('.$n.')" id="list_'.$n.'">'.$n.'</li>';
+        }
+                      
+        $HTML .= '</ul>';
+
+        return $HTML;
+    }
+
+    public function booking_time(Request $request) {
+        $input = $request->all();
+        $str_date = (string)$input['n'];
+        $panjang = strlen($str_date);
+        if($panjang == 1) {
+            $du = "0".$str_date;
+        } else {
+            $du = $str_date;
+        }
+        
+        $tanggal = $input['tahun'].'-'.$input['bulan'].'-'.$du;  
+        $timestamp = strtotime($tanggal);
+        
+        $day = date('D', $timestamp);
+        
+        $level = Auth::user()->level;
+        
+
+        $data = \App\Models\UnitBisnis::findorFail($input['product_id']);
+        if($level == "guest") {
+            if($day == "Sat" || $day=="Sun") {
+                $price1 = $data->harga_umum_0617_weekend;
+                $price2 = $data->harga_umum_1721_weekend; 
+            } else {
+                $price1 = $data->harga_umum_0617_weekday;
+                $price2 = $data->harga_umum_1721_weekday; 
+            }
+        } else {
+            if($day == "Sat" || $day=="Sun") {
+                $price1 = $data->harga_warga_0617_weekend;
+                $price2 = $data->harga_warga_1721_weekend; 
+            } else {
+                $price1 = $data->harga_warga_0617_weekday;
+                $price2 = $data->harga_warga_1721_weekday; 
+            }
+        }
+
+        $HTML = "";
+
+        $HTML .= '<div class="jarak20"></div>';
+        $HTML .= '<p>Select Booking Start Time:</p>';
+        $HTML .= '<div class="jarak10 grid grid-cols-12 items-center">';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_1" onclick="select_hour(1)" ><i class="fa fa-clock"></i> 06:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_1" value="06">';
+        $HTML .= '<input type="hidden" id="price_start_1" value="'.$price1.'">';
+       
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_2" onclick="select_hour(2)"><i class="fa fa-clock"></i> 07:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_2" value="07">';
+        $HTML .= '<input type="hidden" id="price_start_2" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_3" onclick="select_hour(3)"><i class="fa fa-clock"></i> 08:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_3" value="08">';
+        $HTML .= '<input type="hidden" id="price_start_3" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_4" onclick="select_hour(4)"><i class="fa fa-clock"></i> 09:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_4" value="09">';
+        $HTML .= '<input type="hidden" id="price_start_4" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_5" onclick="select_hour(5)"><i class="fa fa-clock"></i> 10:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_5" value="10">';
+        $HTML .= '<input type="hidden" id="price_start_5" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_6" onclick="select_hour(6)"><i class="fa fa-clock"></i> 11:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_6" value="11">';
+        $HTML .= '<input type="hidden" id="price_start_6" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_7" onclick="select_hour(7)"><i class="fa fa-clock"></i> 12:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_7" value="12">';
+        $HTML .= '<input type="hidden" id="price_start_7" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_8" onclick="select_hour(8)"><i class="fa fa-clock"></i> 13:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_8" value="13">';
+        $HTML .= '<input type="hidden" id="price_start_8" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_9" onclick="select_hour(9)"><i class="fa fa-clock"></i> 14:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_9" value="14">';
+        $HTML .= '<input type="hidden" id="price_start_9" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_10" onclick="select_hour(10)"><i class="fa fa-clock"></i> 15:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_10" value="15">';
+        $HTML .= '<input type="hidden" id="price_start_10" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_11" onclick="select_hour(11)"><i class="fa fa-clock"></i> 16:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_11" value="16">';
+        $HTML .= '<input type="hidden" id="price_start_11" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_12" onclick="select_hour(12)"><i class="fa fa-clock"></i> 17:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_12" value="17">';
+        $HTML .= '<input type="hidden" id="price_start_12" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_13" onclick="select_hour(13)"><i class="fa fa-clock"></i> 18:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_13" value="18">';
+        $HTML .= '<input type="hidden" id="price_start_13" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_14" onclick="select_hour(14)"><i class="fa fa-clock"></i> 19:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_14" value="19">';
+        $HTML .= '<input type="hidden" id="price_start_14" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="hour_15" onclick="select_hour(15)"><i class="fa fa-clock"></i> 20:00</div>';
+        $HTML .= '<input type="hidden" id="hour_start_15" value="20">';
+        $HTML .= '<input type="hidden" id="price_start_15" value="'.$price2.'">';
+        $HTML .= '</div>';
+
+        $HTML .= '</div>';
+        $HTML .= '<div class="jarak20"></div>';
+        $HTML .= '<p>Select Booking Finish Time:</p>';
+        $HTML .= '<div class="jarak10 grid grid-cols-12 items-center">';
+
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_2" onclick="select_finish_hour(2)"><i class="fa fa-clock"></i> 07:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_2" value="07">';
+        $HTML .= '<input type="hidden" id="price_finish_2" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_3" onclick="select_finish_hour(3)"><i class="fa fa-clock"></i> 08:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_3" value="08">';
+        $HTML .= '<input type="hidden" id="price_finish_3" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_4" onclick="select_finish_hour(4)"><i class="fa fa-clock"></i> 09:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_4" value="09">';
+        $HTML .= '<input type="hidden" id="price_finish_4" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_5" onclick="select_finish_hour(5)"><i class="fa fa-clock"></i> 10:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_5" value="10">';
+        $HTML .= '<input type="hidden" id="price_finish_5" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_6" onclick="select_finish_hour(6)"><i class="fa fa-clock"></i> 11:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_6" value="11">';
+        $HTML .= '<input type="hidden" id="price_finish_6" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_7" onclick="select_finish_hour(7)"><i class="fa fa-clock"></i> 12:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_7" value="12">';
+        $HTML .= '<input type="hidden" id="price_finish_7" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_8" onclick="select_finish_hour(8)"><i class="fa fa-clock"></i> 13:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_8" value="13">';
+        $HTML .= '<input type="hidden" id="price_finish_8" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_9" onclick="select_finish_hour(9)"><i class="fa fa-clock"></i> 14:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_9" value="14">';
+        $HTML .= '<input type="hidden" id="price_finish_9" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_10" onclick="select_finish_hour(10)"><i class="fa fa-clock"></i> 15:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_10" value="15">';
+        $HTML .= '<input type="hidden" id="price_finish_10" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_11" onclick="select_finish_hour(11)"><i class="fa fa-clock"></i> 16:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_11" value="16">';
+        $HTML .= '<input type="hidden" id="price_finish_11" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_12" onclick="select_finish_hour(12)"><i class="fa fa-clock"></i> 17:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_12" value="17">';
+        $HTML .= '<input type="hidden" id="price_finish_12" value="'.$price1.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_13" onclick="select_finish_hour(13)"><i class="fa fa-clock"></i> 18:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_13" value="18">';
+        $HTML .= '<input type="hidden" id="price_finish_13" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_14" onclick="select_finish_hour(14)"><i class="fa fa-clock"></i> 19:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_14" value="19">';
+        $HTML .= '<input type="hidden" id="price_finish_14" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_15" onclick="select_finish_hour(15)"><i class="fa fa-clock"></i> 20:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_15" value="20">';
+        $HTML .= '<input type="hidden" id="price_finish_15" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+        $HTML .= '<div class="hour-work" id="finish_16" onclick="select_finish_hour(16)"><i class="fa fa-clock"></i> 21:00</div>';
+        $HTML .= '<input type="hidden" id="hour_finish_16" value="21">';
+        $HTML .= '<input type="hidden" id="price_finish_16" value="'.$price2.'">';
+        $HTML .= '</div>';
+        $HTML .= '</div>';
+
+        return $HTML;
+    }
 }
 

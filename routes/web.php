@@ -41,7 +41,9 @@ Route::post('/frontend_login', [AuthUsersController::class, 'frontend_login'])->
 Route::get('/frontend_logout', [AuthUsersController::class, 'logout']);
 Route::get('/frontend_dashboard', [AuthUsersController::class, 'dashboard']);
 Route::get('/frontend_booking', [AuthUsersController::class, 'booking']);
-
+Route::get('/booking_detail/{slug}', [AuthUsersController::class, 'booking_detail']);
+Route::get('/display_calendar/{bulan}/{tahun}', [AuthUsersController::class, 'display_calendar']);
+Route::post('/booking_time', [AuthUsersController::class, 'booking_time']);
 
 
 // for admins

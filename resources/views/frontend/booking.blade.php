@@ -1,5 +1,5 @@
 @extends('frontend.master') @section('content') 
-<section class="bg-no-repeat bg-center bg-cover bg-[#E9F1FF]  flex flex-wrap items-center relative before:absolute before:inset-0 before:content-[''] before:bg-[#000000] before:opacity-[70%]">
+<section class="bg-no-repeat bg-center bg-cover bg-[#E9F1FF] h-[350px] lg:h-[35px] flex flex-wrap items-center relative before:absolute before:inset-0 before:content-[''] before:bg-[#000000] before:opacity-[70%]" style="background-image: url('{{ asset('template/images/contact.webp') }}');">
     <div class="container">
         <div class="grid grid-cols-12">
             <div class="col-span-12">
@@ -23,13 +23,13 @@
             <div class="swiper-slide">
                 <div class="overflow-hidden rounded-md drop-shadow-[0px_0px_5px_rgba(0,0,0,0.1)] bg-[#FFFDFC] text-center transition-all duration-300 hover:-translate-y-[10px]">
                     <div class="relative">
-                        <a href="properties-details.html" class="block"><img src="{{ asset('storage/unit-bisnis') }}/{{ $u->image }}" class="w-full h-full" loading="lazy" width="370" height="266" alt="Orchid Casel de Paradise."></a>
+                        <a href="{{ url('booking_detail') }}/{{ $u->slug }}" class="block"><img src="{{ asset('storage/unit-bisnis') }}/{{ $u->image }}" class="w-full h-full" loading="lazy" width="370" height="266" alt="Orchid Casel de Paradise."></a>
                         
                         <span class="absolute bottom-5 left-5 bg-[#FFFDFC] p-[5px] rounded-[2px] text-primary leading-none text-[14px] font-normal capitalize">available</span>
                     </div>
                     <div class="py-[20px] px-[20px] text-left">
-                        <h3><a href="properties-details.html" class="font-lora leading-tight text-[22px] xl:text-[26px] text-primary hover:text-secondary transition-all font-medium">{{ $u->name_unit }}</a></h3>
-                        <h4><a href="#" class="font-light text-[14px] leading-[1.75] underline">{{ $u->kategori }}</a></h4>
+                        <h3><a href="{{ url('booking_detail') }}/{{ $u->slug }}" class="font-lora leading-tight text-[22px] xl:text-[26px] text-primary hover:text-secondary transition-all font-medium">{{ $u->name_unit }}</a></h3>
+                        <h4><a href="{{ url('booking_detail') }}/{{ $u->slug }}" class="font-light text-[14px] leading-[1.75] underline">{{ $u->kategori }}</a></h4>
                         <span class="font-light text-sm">Added: {{ date('d-M-Y', strtotime($u->created_at)) }}</span>
                         
                         @if(Auth::user()->level == "user")
@@ -97,6 +97,7 @@
                                 </ul>
                             @else
                             <ul class="daftar-harga">
+                                <div style="margin-top:25px"></div>
                                 <li class="flex flex-wrap items-center justify-between">
                                     <span class="font-lora text-base text-primary leading-none font-medium">06:00 - 17:00</span>
                                     <span class="flex flex-wrap items-center">
@@ -112,7 +113,7 @@
                                         Price: {{ number_format($u->harga_umum_1721_weekend) }} (Weekend)
                                     </span>
                                 </li>
-                                <div style="margin-top:75px"></div>
+                                <div style="margin-top:50px"></div>
                             </ul>
                             @endif
                         @endif
