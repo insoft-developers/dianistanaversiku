@@ -123,7 +123,13 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 
 						<li><a href="#download" >DOWNLOAD APPS</a></li><li><a href="{{ url('term') }}" >TERMS & CONDITIONS</a></li><li><a href="{{ url('privacy') }}" >PRIVACY POLICY</a></li><li><a href="{{ url('contact') }}" >contact us</a></li>
 						@if( request()->session()->has('session_id'))
-						<li><a href="{{ url('contact') }}" ><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a></li>
+						<li><a href="{{ url('contact') }}" ><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a>
+							<ul class="sub-login">
+								<a href="{{ url('frontend_dashboard') }}"><div class="sub-login-menu">Dashboard</div></a>
+								<a href="#"><div class="sub-login-menu">Notifications</div></a>
+								<a href="{{ url('frontend_logout') }}"><div class="sub-login-menu">Logout</div></a>
+							</ul>
+						</li>
 						@endif					
 					</ul>
 										<div style="clear:both;"></div>

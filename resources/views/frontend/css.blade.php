@@ -284,7 +284,7 @@ body.modal-open {
     overflow: hidden;
 }
 .table{
-    width: 100%;
+    max-width: 100%;
     background: linear-gradient(146deg, #e9fff4, #c5c3cf);
     background-image: linear-gradient(45deg, rgb(233, 255, 244), rgb(197, 195, 207));
     background-position-x: initial;
@@ -295,11 +295,23 @@ body.modal-open {
     background-origin: initial;
     background-clip: initial;
     background-color: initial;
-   border-radius: 10px;
+    border-radius: 10px;
+    overflow-x: auto !important;
+    margin: 0 auto;
+  
 }
 .table td{
     padding: 15px 20px 15px 20px;
     border: 1px dotted #e9fff4;
+    white-space: nowrap;
+    font-size: 13px;
+    
+}
+.table th{
+    padding: 15px 20px 15px 20px;
+    border: 1px dotted #e9fff4;
+    background: lightblue;
+    font-size: 14px;
 }
 
 .alert-green {
@@ -318,7 +330,32 @@ body.modal-open {
     left: 0;
     right: 0;
 }
+.custom-title{
+    font-size: 36px;
+    font-weight: bold;
+}
+.tablediv{
+    overflow-x: auto;
+    width: 100% !important;
+}
 
-
+.lengkung-atas-kiri{
+    border-top-left-radius: 10px !important;
+}
+.lengkung-atas-kanan{
+    border-top-right-radius: 10px !important;
+}
+.bgred{
+    background: red !important;
+    border-radius: 5px !important;
+}
+.bggreen {
+    background: green !important;
+    border-radius: 5px !important;
+}
+.bgorange {
+    background: orange !important;
+    border-radius: 5px !important;
+}
 
 </style>

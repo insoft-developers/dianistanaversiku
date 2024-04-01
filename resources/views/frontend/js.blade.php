@@ -250,6 +250,7 @@ function close_warning_box() {
                 $("#btn_send_transaction").text("Submit");
                 if(data.success) {
                     alert(data.message);
+                    window.location = "{{ url('riwayat') }}";
                 } else {
                     show_error("Error", data.message);
                 }
@@ -259,6 +260,30 @@ function close_warning_box() {
         });
     }
 
+</script>
+@endif
 
+@if($view == "riwayat")
+<script>
+    function payment_process(id) {
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        $("#btn_payment_"+id).text("Processing...");
+        $("#btn_payment_"+id).attr("disabled", true);
+        $.ajax({
+            url: "{{ url('payment_process') }}",
+            type: "POST",
+            dataType: "JSON",
+            data: {"id":id, "_token":csrf_token},
+            success: function(data) {
+                $("#btn_payment_"+id).html('<i class="fa fa-dollar"></i> Payment');
+                $("#btn_payment_"+id).removeAttr("disabled");
+                if(data.success) {
+                    window.location=data.data;
+
+                }
+                
+            }
+        })
+    }
 </script>
 @endif

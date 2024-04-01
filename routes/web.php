@@ -39,12 +39,16 @@ Route::post('/send_otp', [AuthUsersController::class, 'send_otp'])->name('send.o
 Route::get('/login', [AuthUsersController::class, 'login']);
 Route::post('/frontend_login', [AuthUsersController::class, 'frontend_login'])->name('frontend.login');
 Route::get('/frontend_logout', [AuthUsersController::class, 'logout']);
-Route::get('/frontend_dashboard', [AuthUsersController::class, 'dashboard']);
+Route::get('/frontend_dashboard', [AuthUsersController::class, 'dashboard']); 
 Route::get('/frontend_booking', [AuthUsersController::class, 'booking']);
 Route::get('/booking_detail/{slug}', [AuthUsersController::class, 'booking_detail']);
 Route::get('/display_calendar/{bulan}/{tahun}', [AuthUsersController::class, 'display_calendar']);
 Route::post('/booking_time', [AuthUsersController::class, 'booking_time']);
 Route::post('/transaction', [AuthUsersController::class, 'transaction']);
+Route::get('/riwayat', [AuthUsersController::class, 'riwayat']);
+Route::post('/payment_process', [AuthUsersController::class, 'payment_process']);
+Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
+Route::get('/print_ticket/{id}', [AuthUsersController::class, 'print']);
 
 
 // for admins

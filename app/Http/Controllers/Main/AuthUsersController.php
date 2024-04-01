@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Validator;
 use Session;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class AuthUsersController extends Controller
 {
@@ -637,7 +638,7 @@ class AuthUsersController extends Controller
         try{    
             $input['user_id'] = Auth::user()->id;
             $input['description'] = "order";
-            $input['payment_status'] = "UNPAID";
+            $input['payment_status'] = "PENDING";
             \App\Models\Transaction::create($input);
             return response()->json([
                 "success" => true,
@@ -651,6 +652,67 @@ class AuthUsersController extends Controller
             ]);
         }
         
+    }
+
+    public function riwayat() {
+        $view = "riwayat";
+        $transaction = \App\Models\Transaction::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
+        return view('frontend.riwayat',compact('view', 'transaction'));
+    }
+
+    public function payment_process(Request $request) {
+        $input = $request->all();
+
+        $trans = \App\Models\Transaction::findorFail($input['id']);
+        $user = \App\Models\User::findorFail($trans->user_id);
+        $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
+
+
+        $secret_key = 'Basic '.config('xendit.key_auth');
+        $external_id = $trans->invoice;
+        $data_request = Http::withHeaders([
+            'Authorization' => $secret_key
+        ])->post('https://api.xendit.co/v2/invoices', [
+            'external_id' => $external_id,
+            'amount' => $trans->total_price,
+            'success_redirect_url' => url('/riwayat'),
+            'failure_redirect_url' => url('/riwayat'),
+            'description' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB",
+        ]);
+        
+        $response = $data_request->object();
+        return response()->json([
+            "success" => true,
+            "data" => $response->invoice_url
+        ]);
+    }
+
+    public function callback(Request $request) {
+        $input = $request->all();
+
+        $trans = \App\Models\Transaction::where('invoice', $input['external_id'])
+            ->where('payment_status', 'PENDING')
+            ->first();
+
+        $trans->payment_status = $input['status'];
+        $trans->payment_method = $input['payment_method'];
+        $trans->payment_channel = $input['payment_channel'];
+        $trans->paid_at = date('Y-m-d H:i:s');
+        $trans->save();    
+
+
+        return response()->json([
+            "success" => true,
+            "data" => $trans
+        ]);
+    }
+
+    public function print($id) {
+        $view = 'print-ticket';
+        $trans = \App\Models\Transaction::findorFail($id);
+        $user = \App\Models\User::findorFail($trans->user_id);
+        $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
+        return view('frontend.ticket', compact('view','trans','user','product'));
     }
 }
 
