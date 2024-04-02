@@ -9,6 +9,7 @@ use App\Http\Controllers\Admins\PenyeliaKategoriController;
 use App\Http\Controllers\Admins\UnitBisnisController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
+use App\Http\Controllers\Main\TicketingController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 
@@ -49,6 +50,9 @@ Route::get('/riwayat', [AuthUsersController::class, 'riwayat']);
 Route::post('/payment_process', [AuthUsersController::class, 'payment_process']);
 Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
 Route::get('/print_ticket/{id}', [AuthUsersController::class, 'print']);
+Route::get('/ticketing', [TicketingController::class, 'index'] );
+Route::get('/ticketing_add', [TicketingController::class, 'add']);
+Route::post('/open_ticket', [TicketingController::class, 'open'])->name('open.ticket');
 
 
 // for admins

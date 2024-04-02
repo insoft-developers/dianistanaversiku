@@ -20,5 +20,8 @@ class Transaction extends Model
         "booking_date",
         "description",
         "payment_status",
+        "order_status",
+        "package_id",
+        "package_name",
     ];
 }

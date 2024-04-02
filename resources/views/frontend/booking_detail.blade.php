@@ -26,7 +26,10 @@
                 <input type="hidden" id="current_month" value="{{ date('m') }}">
                 <input type="hidden" id="current_year" value="{{ date('Y') }}">
                 <input type="hidden" id="product_id" value="{{ $data->id }}">
-				
+                <input type="hidden" id="harga_4x" value="{{ $data->harga_membership_4x }}">
+				<input type="hidden" id="harga_8x" value="{{ $data->harga_membership_8x }}">
+                <input type="hidden" id="harga_non_member" value="{{ $data->harga_non_member }}">
+                <input type="hidden" id="harga_tamu_warga" value="{{ $data->harga_tamu_warga }}">
                 
                 <div class="form-group">
                 <select id="bulan" name="bulan" class="custom-input w-100 mr-[10px]">
@@ -45,6 +48,7 @@
                     <option value="12">December</option>
                 </select>
             
+
                 <select id="tahun" name="tahun" class="custom-input w-25">
                     <option value="">Year</option>
                     <?php
@@ -60,16 +64,20 @@
                 <p>Select booking date:    
                 <div id="calendar-sitting"></div>
                 <div id="time-sitting"></div>
+                
 
-                {{-- <div class="relative mb-[25px] bg-white">
+                @if($data->kategori == "Kolam Renang" && Auth::user()->level == "guest")
+                <select id="paket" name="paket" class="custom-input jarak20 w-100 mr-[10px]">
+                    <option value="">Select Package</option>
+                    <option value="1">Membership 4x pertemuan</option>
+                    <option value="2">Membership 8x pertemuan</option>
+                    <option value="3">Non Member</option>
+                    <option value="4">Paket Khusus Tamu Warga</option>
+                </select>
+                
                     
-                    <input class="font-light w-full leading-[1.75] placeholder:opacity-100 placeholder:text-body border border-primary border-opacity-60 rounded-[8px] pl-[40px] pr-[20px] py-[8px] focus:border-secondary focus:border-opacity-60 focus:outline-none focus:drop-shadow-[0px_6px_15px_rgba(0,0,0,0.1)] bg-white" type="text" placeholder="Location">
-                    
-                </div> --}}
-					
-					
-				
-				
+                <input class="custom-input jarak20 w-100 mr-[10px]" type="number" id="input_q"  placeholder="quantity">
+                @endif 
 			</div>
 			
 			
@@ -110,6 +118,11 @@
                     <td><strong>Booking Date</strong></td>
                     <td>:</td>
                     <td><span id="booking-date"></span><input type="hidden" id="booking-date-input"></td>
+                </tr>
+                <tr>
+                    <td><strong>Package</strong></td>
+                    <td>:</td>
+                    <td><span id="package"></span><input type="hidden" id="package-input"></td>
                 </tr>
                 <tr>
                     <td><strong>Start Time</strong></td>

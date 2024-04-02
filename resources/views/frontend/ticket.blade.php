@@ -32,6 +32,15 @@ body {
     top: 25px;
 }
 
+.product-title {
+    font-size: 15px;
+    width: 160px;
+}
+.receipt-title {
+    font-size: 17px;
+
+}
+
 .ticket-system {
   max-width: 385px;
   .top {
@@ -196,16 +205,16 @@ body {
 <main class="ticket-system">
     <div class="top">
     <h1 class="title">Thank you for joining us!</h1>
-    <div class="printer" />
+    <div class="printer"></div>
     </div>
     <div class="receipts-wrapper">
        <div class="receipts">
           <div class="receipt">
              <img src="{{ asset('template/images/dian.png') }}">
              
-                <h2>UNIT BUSINESS BOOKING TICKET</h2>
+                <h2 class="receipt-title">UNIT BUSINESS BOOKING TICKET</h2>
                 
-             <p>INVOICE : {{ $trans->invoice }}</p>
+             <p style="font-size: 14px;">ORDER ID : {{ $trans->invoice }}</p>
              <div class="details">
                 <div class="item">
                    <span>Name</span>
@@ -223,20 +232,29 @@ body {
                    <span>Start</span>
                    <h3><i class="fa fa-clock"></i> {{ $trans->start_time.":00" }}</h3>
                 </div>
-                <div class="item">
-                   <span>Price</span>
-                   <h3>Rp. {{ number_format($trans->total_price, 2) }}</h3>
-                </div>
+                
                 <div class="item">
                    <span>Finish</span>
                    <h3><i class="fa fa-clock"></i> {{ $trans->finish_time.":00" }}</h3>
                 </div>
+                <div class="item">
+                    <span>Quantity</span>
+                    @if($product->kategori == "Kolam Renang")
+                    <h3><i class="fa fa-user"></i> {{ $trans->quantity }}</h3>
+                    @else
+                    <h3><i class="fa fa-clock"></i> {{ $trans->quantity }}</h3>
+                    @endif
+                </div>
+                <div class="item">
+                    <span>Price</span>
+                    <h3>{{ $trans->total_price == 0 ? "FREE           " : "Rp. ".number_format($trans->total_price, 2) }}</h3>
+                 </div>
              </div>
           </div>
           <div class="receipt qr-code">
              
              <div class="description">
-                <h2>{{ $product->name_unit }}</h2>
+                <h2 class="product-title">{{ $product->name_unit }} - [ {{ $trans->package_name }} ]</h2>
                 <div class="myqrcode">{!! QrCode::size(70)->generate($trans->invoice) !!}</div>
              </div>
           </div>

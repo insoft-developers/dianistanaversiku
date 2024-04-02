@@ -15,11 +15,7 @@
 
     <!-- CSS (Font, Vendor, Icon, Plugins & Style CSS files) -->
 
-    <!-- Font CSS -->
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=karla:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet"> -->
-
+   
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +35,7 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('template/frontend') }}/assets/css/style.css" />
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-   
+    <link rel="stylesheet" href=" https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css"/>
 
 
 
@@ -80,11 +76,11 @@
                                 <img class="w-full h-full" src="{{ asset('template/images/dian.png') }}/" loading="lazy" width="99" height="46" alt="brand logo">
                             </a>
                             <nav class="flex flex-wrap items-center">
-                                <ul class="hidden lg:flex flex-wrap items-center font-lora text-[16px] xl:text-[18px] leading-none text-black">
+                                <ul class="hidden menu-atas lg:flex flex-wrap items-center font-lora text-[16px] xl:text-[18px] leading-none text-black">
                                     @if( request()->session()->missing('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="#" class="transition-all hover:text-secondary">Login Or Register</a>
+                                        <a href="#" class="transition-all hover:text-secondary">LOGIN OR REGISTER</a>
                                         <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
                 group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
                 
@@ -103,32 +99,32 @@
                                     @endif
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="about.html" class="transition-all hover:text-secondary">Download Apps</a>
+                                        <a href="about.html" class="transition-all hover:text-secondary">DONWLOAD APPS</a>
 
                                         
 
                                     </li>
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('term') }}" class="transition-all hover:text-secondary">Terms & Conditions</a>
+                                        <a href="{{ url('term') }}" class="transition-all hover:text-secondary">TERMS & CONDITIONS</a>
                                         
                                     </li>
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('privacy') }}" class="transition-all hover:text-secondary">Privacy Policy</a>
+                                        <a href="{{ url('privacy') }}" class="transition-all hover:text-secondary">PRIVACY POLICY</a>
                                         
                                     </li>
                                    
                                    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary">Contact US</a>
+                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary">CONTACT US</a>
 
                                     </li>
                                     @if( request()->session()->has('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a>
+                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MY ACCOUNT</a>
                                         <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
                 group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
                 
@@ -467,7 +463,8 @@
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/jquery.magnific-popup.min.js"></script>
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/jquery.ajaxchimp.min.js"></script>
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/parallax.min.js"></script>
-
+     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+    
     <!-- Activation JS -->
     <script src="{{ asset('template/frontend') }}/assets/js/main.js"></script>
     @include('frontend.js')

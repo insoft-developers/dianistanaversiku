@@ -62,6 +62,8 @@ function close_warning_box() {
     let selected_booking_date = "";
     let selected_price_start = "";
     let selected_price_finish = "";
+    let selected_package= "";
+    let selected_package_price = "";
 
     $(document).ready(function(){
         var bulan = $("#current_month").val();
@@ -240,11 +242,13 @@ function close_warning_box() {
         var quantity = $("#quantity-input").val();
         var totalPrice = $("#price-input").val();
         var bookingDate = $("#booking-date-input").val();
+        var packageId = $("#package-input").val();
+        var packageName = $("#package").text();
         $.ajax({
             url: "{{ url('transaction') }}",
             type: "POST",
             dataType: "JSON",
-            data: {"business_unit_id":productId, "invoice":invoice, "start_time":startTime, "finish_time":finishTime, "quantity":quantity, "total_price":totalPrice, "booking_date":bookingDate, "_token":csrf_token},
+            data: {"business_unit_id":productId, "invoice":invoice, "start_time":startTime, "finish_time":finishTime, "quantity":quantity, "total_price":totalPrice, "booking_date":bookingDate, "package_id":packageId, "package_name":packageName, "_token":csrf_token},
             success: function(data) {
                 console.log(data);
                 $("#btn_send_transaction").text("Submit");
@@ -259,6 +263,49 @@ function close_warning_box() {
 
         });
     }
+    
+    $("#paket").change(function(){
+        var paket = $(this).val();
+        $("#package-input").val(paket);
+        
+        
+        if(paket == 1) {
+           $("#package").text("Membership 4x pertemuan");
+           var harga = $("#harga_4x").val();
+           selected_package_price = harga;
+           
+        }
+        else if(paket == 2) {
+           $("#package").text("Membership 8x pertemuan");
+           var harga = $("#harga_8x").val();
+           selected_package_price = harga;
+        }
+        else if(paket == 3) {
+           $("#package").text("Non Member");
+           var harga = $("#harga_non_member").val();
+           selected_package_price = harga;
+        }
+        else if(paket == 4) {
+           $("#package").text("Paket Khusus Tamu Warga");
+           var harga = $("#harga_tamu_warga").val();
+           selected_package_price = harga;
+        }
+
+        $("#quantity").text("");
+        $("#quantity-input").val("");
+        $("#price").text("");
+        $("#price-input").val("");
+        $("#input_q").val("");
+    });
+
+    $("#input_q").keyup(function(){
+        var nilai = $(this).val();
+        $("#quantity").text(nilai+" orang");
+        $("#quantity-input").val(nilai);
+        var totalharga = selected_package_price * nilai;
+        $("#price").text("Rp. "+formatAngka(totalharga));
+        $("#price-input").val(totalharga);
+    })
 
 </script>
 @endif
@@ -285,5 +332,14 @@ function close_warning_box() {
             }
         })
     }
+
+    let table = new DataTable('#table-riwayat');
+</script>
+@endif
+
+@if($view == "ticketing")
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace("message");
 </script>
 @endif

@@ -1,9 +1,18 @@
 <style>
+body {
+    font-family: "Roboto", Sans-serif !important;
+}
+
 .footer-logo {
     width: 260px;
     margin-top: -18px;
 }
 
+ul.menu-atas{
+    font-family: "Roboto", Sans-serif !important;
+    font-size: 13px !important;
+    font-weight: bold !important;
+}
 .jarak10{margin-top: 10px;}
 .jarak15{margin-top: 15px;}
 .jarak20{margin-top: 20px;}
@@ -66,8 +75,8 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    left: 0;
-    top: 12px;
+    left: -7px;
+    top: 10px;
     background: white;
     border-radius: 15px;
     padding: 2px;
@@ -119,14 +128,28 @@
     width: 25% !important;
 }
 .custom-input{
-    border: 2px solid whitesmoke;
-    padding-left: 20px;
-    padding-right: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border-radius: 10px;
-    font-size: 20px;
+    border: 2px solid whitesmoke !important;
+    padding-left: 20px !important;
+    padding-right: 10px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    border-radius: 10px !important;
+    font-size: 20px !important;
 }
+
+.input-ticket{
+    border: 2px solid whitesmoke !important;
+    padding-left: 20px !important;
+    padding-right: 10px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 6px !important;
+    font-size: 16px !important;
+    background:white;
+
+}
+
+
 .form-group {
     display: inline-flex;
     width: 100%;
@@ -221,15 +244,29 @@
     color: white;
     text-align: center;
     border-radius: 5px;
-    
     width: 89px;
-    cursor: pointer;background: #7a7373;
     color: white;
     text-align: center;
     border-radius: 5px;
     margin-bottom: 8px;
     width: 89px;
     cursor: pointer;
+}
+
+.hour-book{
+    background: #100e7c;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    
+    width: 89px;
+    
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    width: 89px;
+
 }
 
 .hour-work:hover{
@@ -284,7 +321,7 @@ body.modal-open {
     overflow: hidden;
 }
 .table{
-    max-width: 100%;
+    width: 100%;
     background: linear-gradient(146deg, #e9fff4, #c5c3cf);
     background-image: linear-gradient(45deg, rgb(233, 255, 244), rgb(197, 195, 207));
     background-position-x: initial;
@@ -346,16 +383,71 @@ body.modal-open {
     border-top-right-radius: 10px !important;
 }
 .bgred{
+    width: 80px !important;
     background: red !important;
     border-radius: 5px !important;
 }
 .bggreen {
+    width: 80px !important;
     background: green !important;
     border-radius: 5px !important;
 }
 .bgorange {
+    width: 80px !important;
     background: orange !important;
     border-radius: 5px !important;
+}
+.button-new-ticket{
+    background: green;
+    float: right;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 1.0;
+    margin-bottom: 20px;
+}
+.button-new-ticket:hover{
+    opacity: 0.8;
+}
+.card-box{
+    background: whitesmoke;
+    padding: 30px;
+    border-radius: 5px;
+}
+label{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.buttons{
+    background: white;
+    width: 150px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.buttons:hover{
+    opacity: 0.8;
+}
+
+.btn-success{
+    background: rgb(7, 146, 7);
+    color: white;
+}
+.btn-warning{
+    background: orange;
+    color: white;
+}
+.btn-danger{
+    background: red;
+    color: white;
 }
 
 </style>
