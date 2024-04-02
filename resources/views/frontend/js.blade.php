@@ -341,5 +341,6 @@ function close_warning_box() {
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace("message");
+    let table = new DataTable('#table-ticketing');
 </script>
 @endif

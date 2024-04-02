@@ -32,7 +32,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+                            @foreach($data as $d)
+                            @php
+                                $category = \App\Models\TicketingCategory::findorFail($d->department);
+                            @endphp
+                            <tr>
+                            <td><a href="{{ url('/ticketing_detail') }}/{{ $d->ticket_number }}"><span style="color:blue;font-weight:bold;">{{ $d->ticket_number }}</span></a></td>
+                            <td>{{ $category->category_name }}</td>
+                            <td><strong>{{ $d->subject }}</strong><br><span style="font-style: italic"><?= substr($d->message, 0, 100) ;?>...</span></td>
+                            <td>
+                                @if($d->status == 0)
+                                <span class="badge b-green">Open</span>
+                                @else 
+                                <span class="badge b-grey">Closed</span>
+                                @endif
+                            </td>
+                            <td>{{ date('d-m-Y', strtotime($d->created_at)) }}<br>{{ date('H:i:s', strtotime($d->created_at)) }} WIB</td>
+                            <td>{{ date('d-m-Y', strtotime($d->updated_at)) }}<br>{{ date('H:i:s', strtotime($d->updated_at)) }} WIB</td>
+                            </tr>
+                            @endforeach
                         </tbody>
                      </table>
                     </div>

@@ -109,6 +109,7 @@ ul.menu-atas{
 }
 .bg-red {
     color: red !important;
+
 }
 .side-booking-image{
     width: 500px;
@@ -147,6 +148,33 @@ ul.menu-atas{
     font-size: 16px !important;
     background:white;
 
+}
+.badge{
+    display: block;
+    background: black;
+    color: white;
+    padding: 2px;
+    border-radius: 20px;
+    width: 89px !important;
+    text-align: center;
+    font-size: 12px !important;
+}
+
+.b-red{
+    background: red !important;
+    color: white;
+}
+.b-green{
+    background: green !important;
+    color: white;
+}
+.b-orange{
+    background: orange !important;
+    color: white;
+}
+.b-grey{
+    background: grey !important;
+    color: white;
 }
 
 
@@ -414,9 +442,10 @@ body.modal-open {
     opacity: 0.8;
 }
 .card-box{
-    background: whitesmoke;
+    background:linear-gradient(320deg, #5ad5db, #f2fde7) !important;
     padding: 30px;
     border-radius: 5px;
+    opacity: 0.8;
 }
 label{
     font-size: 18px;
@@ -431,6 +460,21 @@ label{
     border-radius: 20px;
     font-weight: 600;
     cursor: pointer;
+}
+
+.buttons-small{
+    background: white;
+    width: 118px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.fr {
+    float:right !important;
 }
 
 .buttons:hover{
@@ -449,5 +493,14 @@ label{
     background: red;
     color: white;
 }
+.text-judul {
+    font-size: 23px;
+    font-weight: bold;
+}
+.custom-position {
+    margin-top: -15px;
+}
+
+
 
 </style>

@@ -9,12 +9,16 @@ use Validator;
 use Session;
 use App\Models\Ticketing;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class TicketingController extends Controller
 {
     public function index() {
         $view = "ticketing";
-         return view("frontend.ticketing", compact('view'));
+       
+        $data = Ticketing::where('user_id', Auth::user()->id)->orderBy('created_at','desc')->get();
+         return view("frontend.ticketing", compact('view','data'));
     }
 
     public function add() {
@@ -46,6 +50,13 @@ class TicketingController extends Controller
             return redirect('/ticketing_add');
         }
 
+        $input['document'] = null;
+        $unique = uniqid();
+        if($request->hasFile('document')){
+            $input['document'] = Str::slug($unique, '-').'.'.$request->document->getClientOriginalExtension();
+            $request->document->move(public_path('/template/images/ticketing'), $input['document']);
+        }
+
         $input['user_id'] = Auth::user()->id;
         $input['status'] = 0;
         $input['ticket_number'] = "DIT-".random_int(10000000, 99999999);
@@ -53,5 +64,12 @@ class TicketingController extends Controller
         Session::flash('success', "");
         return redirect('/ticketing');
         
+    }
+
+    public function ticketing_detail($number) {
+        $view = "ticketing-detail";
+        $detail = Ticketing::where('ticket_number', $number)->first();
+        $category = TicketingCategory::findorFail($detail->department);
+        return view("frontend.ticketing_detail", compact('view','detail','category'));
     }
 }
