@@ -54,6 +54,17 @@ Route::get('/ticketing', [TicketingController::class, 'index'] );
 Route::get('/ticketing_add', [TicketingController::class, 'add']);
 Route::post('/open_ticket', [TicketingController::class, 'open'])->name('open.ticket');
 Route::get('/ticketing_detail/{number}', [TicketingController::class, 'ticketing_detail']);
+Route::get('/donwload_ticketing/{file}', [TicketingController::class, 'download']);
+Route::post('/reply_ticket', [TicketingController::class, 'reply'])->name('reply.ticket');
+
+Route::get('/update_iuran', function(){
+
+   $array = [
+   
+   ];
+
+
+});
 
 // for admins
 

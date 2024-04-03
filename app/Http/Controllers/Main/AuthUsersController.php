@@ -15,6 +15,8 @@ use Validator;
 use Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+
 
 class AuthUsersController extends Controller
 {
@@ -1089,7 +1091,7 @@ class AuthUsersController extends Controller
 
     public function transaction(Request $request) {
         $input = $request->all();
-
+       
         $un = \App\Models\UnitBisnis::findorFail($input['business_unit_id']);
 
         if($un->kategori != "Kolam Renang") {
@@ -1150,12 +1152,12 @@ class AuthUsersController extends Controller
         try{    
             $input['user_id'] = Auth::user()->id;
             
-            if($input['total_price'] > 0) {
-                $input['payment_status'] = "PENDING";
-                $input['description'] = "order";
-            } else {
+            if($input['total_price'] == 0 || $input['total_price'] == "0") {
                 $input['payment_status'] = "PAID";
                 $input['description'] = "free for user";
+            } else {
+                $input['payment_status'] = "PENDING";
+                $input['description'] = "order";
             }
 
             if($request->start_time == null) {

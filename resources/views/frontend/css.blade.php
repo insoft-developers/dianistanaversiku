@@ -29,16 +29,18 @@ ul.menu-atas{
 .alert-danger{
     color: white;
     background: #c3515b;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 21px;
+    border-radius: 5px;
     margin-bottom: 19px;
+    font-size: 15px;
 }
 .alert-success {
     color: white;
     background: green;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 21px;
+    border-radius: 5px;
     margin-bottom: 19px;
+    font-size: 15px;
 }
 .btn-colse{
     position: relative;
@@ -442,10 +444,11 @@ body.modal-open {
     opacity: 0.8;
 }
 .card-box{
-    background:linear-gradient(320deg, #5ad5db, #f2fde7) !important;
+    background: #ffffff;
     padding: 30px;
     border-radius: 5px;
     opacity: 0.8;
+    border: 1px solid whitesmoke;
 }
 label{
     font-size: 18px;
@@ -464,11 +467,11 @@ label{
 
 .buttons-small{
     background: white;
-    width: 118px;
+    width: 94px;
     padding-top: 3px;
     padding-bottom: 3px;
-    border-radius: 10px;
-    font-weight: 500;
+    border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
     font-size: 14px;
 }
@@ -485,6 +488,10 @@ label{
     background: rgb(7, 146, 7);
     color: white;
 }
+.btn-primary{
+    background: navy;
+    color: white;
+}
 .btn-warning{
     background: orange;
     color: white;
@@ -494,13 +501,55 @@ label{
     color: white;
 }
 .text-judul {
-    font-size: 23px;
-    font-weight: bold;
+    font-size: 21px;
+    font-weight: 500;
 }
 .custom-position {
     margin-top: -15px;
 }
+.paper{
+    margin-bottom: 20px;
+    background: whitesmoke;
+    padding: 15px;
+    border-radius: 2px;
+}
+.paper-profile{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+}
+.paper-user-name{
+    position: relative;
+    left: 64px;
+    top: -48px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #6767af;
+}
+.paper-date{
+    position: relative;
+    top: -54px;
+    font-size: 13px;
+    left: 64px;
+    opacity: 0.7;
+}
+.paper-content{
+    margin-left: 63px;
+    font-size: 15px;
+    margin-top: -34px;
+}
+.paper-attachment {
+    position: relative;
+    top: -48px;
+    left: 64px;
+    font-size: 14px;
+  
+    cursor: pointer;
+}
 
+.paper-attachment:hover {
+    text-decoration: underline;
+}
 
 
 </style>

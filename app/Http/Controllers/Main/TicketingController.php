@@ -11,6 +11,11 @@ use App\Models\Ticketing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use App\Models\TicketingContent;
+use Illuminate\Support\Facades\Storage;
+use Redirect;
+
+
 
 class TicketingController extends Controller
 {
@@ -54,7 +59,7 @@ class TicketingController extends Controller
         $unique = uniqid();
         if($request->hasFile('document')){
             $input['document'] = Str::slug($unique, '-').'.'.$request->document->getClientOriginalExtension();
-            $request->document->move(public_path('/template/images/ticketing'), $input['document']);
+            $request->document->move(public_path('/storage/ticketing'), $input['document']);
         }
 
         $input['user_id'] = Auth::user()->id;
@@ -70,6 +75,35 @@ class TicketingController extends Controller
         $view = "ticketing-detail";
         $detail = Ticketing::where('ticket_number', $number)->first();
         $category = TicketingCategory::findorFail($detail->department);
-        return view("frontend.ticketing_detail", compact('view','detail','category'));
+        $data = TicketingContent::where('ticket_number', $number)->orderBy('id', 'desc')->get();
+        return view("frontend.ticketing_detail", compact('view','detail','category','data'));
+    }
+
+    public function download($file_name) {
+        $file_path = public_path('storage/ticketing/'.$file_name);
+        return response()->download($file_path);
+    }
+
+    public function reply(Request $request) {
+        $input = $request->all();
+        
+        $rules = array(
+            "message" => "required",
+        );
+
+        $validator = Validator::make($input,$rules);
+        if($validator->fails()) {
+            return Redirect::back()->with('error', $validator->errors());
+        }
+
+        $input['document'] = null;
+        $unique = uniqid();
+        if($request->hasFile('document')){
+            $input['document'] = Str::slug($unique, '-').'.'.$request->document->getClientOriginalExtension();
+            $request->document->move(public_path('/storage/ticketing'), $input['document']);
+        }
+
+        TicketingContent::create($input);
+        return Redirect::back()->with('success', "Reply Successfully Added");
     }
 }

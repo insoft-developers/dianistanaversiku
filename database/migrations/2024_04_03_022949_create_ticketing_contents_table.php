@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('ticketing_contents', function (Blueprint $table) {
             $table->id();
+            $table->string('ticket_number');
+            $table->integer('user_id');
+            $table->text('message');
+            $table->integer('is_reply');
             $table->timestamps();
         });
     }

@@ -333,7 +333,9 @@ function close_warning_box() {
         })
     }
 
-    let table = new DataTable('#table-riwayat');
+    let table = $('#table-riwayat').DataTable({
+        order: [[1, 'desc']]
+    });
 </script>
 @endif
 
@@ -341,6 +343,28 @@ function close_warning_box() {
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace("message");
-    let table = new DataTable('#table-ticketing');
+    let table = $("#table-ticketing").DataTable({
+        order: [[4, 'desc']]
+    });
+</script>
+@endif
+@if($view == "ticketing-detail")
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace("message");
+    $("#btn-reply").click(function(){
+        $(this).hide();
+        $("#btn-reply-cancel").show();
+
+        $("#form-ticket-container").slideDown();
+    });
+
+    $("#btn-reply-cancel").click(function(){
+        $(this).hide();
+        $("#btn-reply").show();
+
+        $("#form-ticket-container").slideUp();
+    })
+
 </script>
 @endif

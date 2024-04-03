@@ -18,7 +18,7 @@
                         <thead>
                             <tr>
                                 <th class="lengkung-atas-kiri">#</th>
-                                <th>No</th>
+                                <th>ID</th>
                                 <th>Payment</th>
                                 <th>Date</th>
                                 <th>Name</th>
@@ -49,7 +49,7 @@
                                 @else
                                 <td><button id="btn_payment_{{ $t->id }}" onclick="payment_process({{$t->id}})" type="button" class="bgorange block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[10px] py-[8px] capitalize font-small text-white text-[13px] xl:text-[13px] relative after:block after:absolute after:inset-0 after:z-[-2] after:rounded-md after:transition-all"><i class="fa fa-dollar"></i> payment</button></td>
                                 @endif
-                                <td>{{ $no }}</td>
+                                <td>{{ $t->id }}</td>
                                 @if($t->payment_status == 'PAID')
                                 <td><i class="fa fa-check"></i> <span style="color:green;">{{ $t->payment_status }}</span></td>
                                 @else
