@@ -37,34 +37,32 @@ Route::get('/frontend_register', [AuthUsersController::class, 'register']);
 Route::post('/register_now', [AuthUsersController::class, 'register_now'])->name('register_now');
 Route::get('/otp', [AuthUsersController::class, 'otp']);
 Route::post('/send_otp', [AuthUsersController::class, 'send_otp'])->name('send.otp');
-Route::get('/login', [AuthUsersController::class, 'login']);
+Route::get('/login', [AuthUsersController::class, 'login'])->name('login_user');
 Route::post('/frontend_login', [AuthUsersController::class, 'frontend_login'])->name('frontend.login');
 Route::get('/frontend_logout', [AuthUsersController::class, 'logout']);
-Route::get('/frontend_dashboard', [AuthUsersController::class, 'dashboard']); 
-Route::get('/frontend_booking', [AuthUsersController::class, 'booking']);
-Route::get('/booking_detail/{slug}', [AuthUsersController::class, 'booking_detail']);
-Route::get('/display_calendar/{bulan}/{tahun}', [AuthUsersController::class, 'display_calendar']);
-Route::post('/booking_time', [AuthUsersController::class, 'booking_time']);
-Route::post('/transaction', [AuthUsersController::class, 'transaction']);
-Route::get('/riwayat', [AuthUsersController::class, 'riwayat']);
-Route::post('/payment_process', [AuthUsersController::class, 'payment_process']);
-Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
-Route::get('/print_ticket/{id}', [AuthUsersController::class, 'print']);
-Route::get('/ticketing', [TicketingController::class, 'index'] );
-Route::get('/ticketing_add', [TicketingController::class, 'add']);
-Route::post('/open_ticket', [TicketingController::class, 'open'])->name('open.ticket');
-Route::get('/ticketing_detail/{number}', [TicketingController::class, 'ticketing_detail']);
-Route::get('/donwload_ticketing/{file}', [TicketingController::class, 'download']);
-Route::post('/reply_ticket', [TicketingController::class, 'reply'])->name('reply.ticket');
 
-Route::get('/update_iuran', function(){
-
-   $array = [
-   
-   ];
-
-
+Route::group(['middleware' => 'auth'], function () {
+   Route::get('/frontend_dashboard', [AuthUsersController::class, 'dashboard']); 
+   Route::get('/frontend_booking', [AuthUsersController::class, 'booking']);
+   Route::get('/booking_detail/{slug}', [AuthUsersController::class, 'booking_detail']);
+   Route::get('/display_calendar/{bulan}/{tahun}', [AuthUsersController::class, 'display_calendar']);
+   Route::post('/booking_time', [AuthUsersController::class, 'booking_time']);
+   Route::post('/transaction', [AuthUsersController::class, 'transaction']);
+   Route::get('/riwayat', [AuthUsersController::class, 'riwayat']);
+   Route::post('/payment_process', [AuthUsersController::class, 'payment_process']);
+   Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
+   Route::get('/print_ticket/{id}', [AuthUsersController::class, 'print']);
+   Route::get('/ticketing', [TicketingController::class, 'index'] );
+   Route::get('/ticketing_add', [TicketingController::class, 'add']);
+   Route::post('/open_ticket', [TicketingController::class, 'open'])->name('open.ticket');
+   Route::get('/ticketing_detail/{number}', [TicketingController::class, 'ticketing_detail']);
+   Route::get('/donwload_ticketing/{file}', [TicketingController::class, 'download']);
+   Route::post('/reply_ticket', [TicketingController::class, 'reply'])->name('reply.ticket');
+   Route::get('/user_data', [AuthUsersController::class, 'user_data']);
+   Route::get('/frontend_setting', [AuthUsersController::class, 'setting']);
 });
+
+
 
 // for admins
 
@@ -118,11 +116,7 @@ Route::prefix("backdata")
 
 });
 
-Route::get("insert", function(){
-   DB::table("admins")->where('id', 1)->update([
-      "password" => Hash::make("123456")
-   ]);
-});
+
 
 
 Route::group(['prefix' => 'filemanager', 'middleware' => ['authAdmins']], function () {

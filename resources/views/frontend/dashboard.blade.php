@@ -68,7 +68,25 @@
                 </a>
             </div>
             <div class="relative group">
-                <a href="properties-details.html" class="block">
+                <a href="{{ url('user_data') }}" class="block">
+                    <img src="{{ asset('template/images/unit') }}/datamenu.png" class="menu-image" loading="lazy" width="270" height="290" alt="Buy Property">
+                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                        <h3 class="font-lora font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">User Data<span class="text-secondary group-hover:text-primary">.</span> </h3>
+                        <p class="font-light text-tiny">Provide System for User to send questions, requests or complains.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="relative group">
+                <a href="{{ url('ticketing') }}" class="block">
+                    <img src="{{ asset('template/images/unit') }}/notif_menu.png" class="menu-image" loading="lazy" width="270" height="290" alt="Buy Property">
+                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                        <h3 class="font-lora font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Nofitications<span class="text-secondary group-hover:text-primary">.</span> </h3>
+                        <p class="font-light text-tiny">Provide System for User to send questions, requests or complains.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="relative group">
+                <a href="{{ url('frontend_setting') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/setting.png" class="menu-image" loading="lazy" width="270" height="290" alt="Mortgage">
                     <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="font-lora font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Setting<span class="text-secondary group-hover:text-primary">.</span> </h3>

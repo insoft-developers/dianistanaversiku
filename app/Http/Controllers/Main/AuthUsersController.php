@@ -20,83 +20,18 @@ use Illuminate\Support\Facades\Storage;
 
 class AuthUsersController extends Controller
 {
-    // public function index_register(): View
-    // {
-    //     return view("main.authusers.index_register");
-    // }
+    
+    public function user_data() {
+        $view = "user-data";
+        $data = User::findorFail(Auth::user()->id);
+        return view('frontend.user_data', compact('view','data'));
+    }
 
-    // public function prosesRegister(Request $request): JsonResponse
-    // {
-    //     $rules = [
-    //         'email'  =>  'required|email',
-    //         'password'  =>  'required|min:8',
-    //         'confirm_password'  =>  'required|same:password|min:8',
-    //     ];
-
-    //     $validator = $this->validateRed($request, $rules);
-    //     if ($validator !== null) {
-    //         Resp::error($validator);
-    //     } else {
-    //         $checkEmail = UsersData::getFirst(["email" => $request->email]);
-    //         if ($checkEmail) {
-    //             Resp::error(spanRed("Email <i><u>".$request->email."</u></i> Sudah Terdaftar"));
-    //         } else {
-    //             $data = [
-    //                 'email'     =>  $request->email,
-    //                 'password'  =>  Hash::make($request->password),
-    //                 'token'     =>  Str::random(80),
-    //             ];
-    //             $register = UsersData::insertId($data);
-    //             if($register){
-    //                 // send email
-
-
-    //             } else {
-    //                 Resp::error(alertDanger("Gagal Daftar Akun.!"));
-    //             }
-    //         }
-    //     }
-        
-    //     return Resp::json();
-    // }
-
-    // public function index_login(): View 
-    // {
-    //     return view("main.authusers.index_login");
-    // }
-
-    // public function index_slider(): View 
-    // {
-    //     return view("main.slider");
-    // }
-
-
-
-    // public function prosesAuth(Request $request): JsonResponse
-    // {
-    //     $rules = [
-    //         'email'  =>  'required|email',
-    //         'password'  =>  'required',
-    //     ];
-
-    //     $validator = $this->validateRed($request, $rules);
-    //     if ($validator !== null) {
-    //         Resp::error($validator);
-    //     } else {
-    //         $checkEmail = UsersData::getFirst(["email"=>$request->email]);
-    //         // nanti buat validate cek email yang belum verifikasi email ya....
-            
-    //         $credential = $request->only('email','password');
-    //         $remember_me = $request->remember_me == null ? false : true;
-    //         if (Auth::guard('web')->attempt($credential, $remember_me)) {
-    //             Resp::success(alertSuccess("Berhasil Login"),["redirect" => route("home_main")]);
-    //         } else {
-    //             Resp::error(spanRed("Email atau Password yang anda masukkan salah.!"));
-    //         }
-    //     }
-        
-    //     return Resp::json();
-    // }
+    public function setting() {
+        $view = "frontend-setting";
+        $data = User::findorFail(Auth::user()->id);
+        return view('frontend.setting', compact('view','data'));
+    }
 
     public function dashboard() {
         $view = 'frontend-dashboard';

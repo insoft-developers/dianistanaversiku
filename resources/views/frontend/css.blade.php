@@ -551,5 +551,18 @@ label{
     text-decoration: underline;
 }
 
+.cust-label{
+    font-size: 12px;
+    font-weight: bold;
+    color: red;
+}
+
+.title-setting{
+    position: relative !important;
+    left: -253px !important;
+    top: -157px !important;
+    font-size: 33px;
+    font-weight: bold;
+}
 
 </style>
