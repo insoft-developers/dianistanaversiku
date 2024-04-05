@@ -95,13 +95,15 @@ ul.menu-atas{
 }
 .menu-image{
     height: 204px;
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     border: 2px solid whitesmoke;
     padding: 15px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    
 }
+
 .daftar-harga{
     background: #d7f3d7;
     padding: 12px;
@@ -559,10 +561,88 @@ label{
 
 .title-setting{
     position: relative !important;
-    left: -253px !important;
+    left: -24px !important;
     top: -157px !important;
     font-size: 33px;
     font-weight: bold;
+    margin-top: 57px;
+}
+
+.input-setting {
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 15px;
+
+}
+.setting-container{
+    position: relative;
+    left: 16px;
+    top: -157px;
+    width: 537px;
+    background: #bed6e3;
+    padding: 20px;
+    float: right !important;
+    border-radius: 4px;
+}
+.form-place{
+    margin-top: 10px;
+}
+
+.dashboard-title{
+    font-size: 22px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #73bf43;
+}
+
+.rata-tengah {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.readonly{
+    background: whitesmoke;
+    color: #918b8b;
+}
+.img-pro{
+    margin: auto;
+    width: 130px;
+    height: 130px;
+    border-radius: 65px;
+    border: 6px solid yellow;
+    object-fit: cover;
+}
+.image-pickup:hover{
+    background: orange;
+    border: 2px solid white;
+}
+.image-pickup{
+    position: relative;
+    right: -533px;
+    top: -41px;
+    background: green;
+    color: white;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+.cancel-upload-container{
+    position: absolute;
+    right: 609px;
+    top: 146px;
+    background: red;
+    color: white;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 2px;
+    padding-bottom: 0px;
+    border-radius: 30px;
+    cursor: pointer;
+    border: 3px solid white;
 }
 
 </style>

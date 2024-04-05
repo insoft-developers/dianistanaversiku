@@ -124,7 +124,7 @@
                                     @if( request()->session()->has('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ asset('template/images/profil.png') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MY ACCOUNT</a>
+                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ Auth::user()->foto == NULL || Auth::user()->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.Auth::user()->foto)  }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MY ACCOUNT</a>
                                         <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
                 group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
                 

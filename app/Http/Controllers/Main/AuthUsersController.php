@@ -16,6 +16,7 @@ use Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Redirect;
 
 
 class AuthUsersController extends Controller
@@ -27,15 +28,66 @@ class AuthUsersController extends Controller
         return view('frontend.user_data', compact('view','data'));
     }
 
+    public function change_password() {
+        $view = "change-password";
+        $data = User::findorFail(Auth::user()->id);
+        return view('frontend.change_password', compact('view','data'));
+    }
+
+    public function password_update(Request $request) {
+        $input = $request->all();
+        
+    }
+
+
     public function setting() {
         $view = "frontend-setting";
         $data = User::findorFail(Auth::user()->id);
         return view('frontend.setting', compact('view','data'));
     }
+    
+
+    public function profile_update(Request $request) {
+        $input = $request->all();
+        $rules = array(
+            "whatsapp_number" => "required",
+            "jenis_kelamin" => "required",
+        );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $pesan = $validator->errors();
+            $pesanarr = explode(",", $pesan);
+            $find = array("[","]","{","}");
+            $html = '';
+            foreach($pesanarr as $p ) {
+                $html .= str_replace($find,"",$p).'<br>';
+            }
+            return Redirect::back()->with('error', $html);
+        }
+
+        $input['foto'] = null;
+        $unique = uniqid();
+        if($request->hasFile('foto')){
+            $input['foto'] = Str::slug($unique, '-').'.'.$request->foto->getClientOriginalExtension();
+            $request->foto->move(public_path('/storage/profile'), $input['foto']);
+        }
+
+        $user = User::findorfail(Auth::user()->id);
+        $user->no_hp = $input['whatsapp_number'];
+        $user->jenis_kelamin = $input['jenis_kelamin'];
+        $user->whatsapp_emergency = $input['whatsapp_emergency'];
+        $user->foto = $input['foto'];
+        $user->save();
+
+        return Redirect::back()->with('success', "Your Profile Successfully Updated!");
+        
+    }
 
     public function dashboard() {
         $view = 'frontend-dashboard';
-        return view('frontend.dashboard', compact('view'));
+        $data = User::findorFail(Auth::user()->id);
+        return view('frontend.dashboard', compact('view','data'));
     }
 
 
@@ -76,6 +128,7 @@ class AuthUsersController extends Controller
             session(['session_email' => $data->email]);
             session(['session_hp' => $data->no_hp]);
             session(['session_level' => $data->level]);
+            session(['session_foto' => $data->foto]);
             return redirect(route('home_public'));
 
 
@@ -1184,5 +1237,8 @@ class AuthUsersController extends Controller
         $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
         return view('frontend.ticket', compact('view','trans','user','product'));
     }
+
+
+    
 }
 

@@ -368,3 +368,19 @@ function close_warning_box() {
 
 </script>
 @endif
+
+@if($view == 'frontend-setting')
+<script>
+    $('.image-pickup').click(function(){ $('#foto').trigger('click'); });
+     
+    $("#foto").change(function() {
+        document.getElementById('img-pro').src = window.URL.createObjectURL(this.files[0]); 
+        $(".cancel-upload-container").show();
+    });
+    function remove_foto() {
+        $("#foto").val(null);
+        $("#img-pro").attr('src', '{{ asset('template/images/profil_icon.png') }}');
+        $(".cancel-upload-container").hide();
+    }
+</script>
+@endif

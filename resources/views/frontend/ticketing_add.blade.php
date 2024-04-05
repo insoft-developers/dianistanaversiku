@@ -29,6 +29,8 @@
                     <div class="card-box jarak20">
                         <form method="POST" action="{{ route('open.ticket') }}" enctype="multipart/form-data">
                             @csrf
+
+                        <img class="img-pro" src="{{ asset('template/images/person.webp') }}">    
                         <label>Department : </label>
                         <select class="input-ticket w-100" id="department" name="department">
                             <option value="">Select Department</option>

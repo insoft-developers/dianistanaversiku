@@ -6,7 +6,7 @@
         <div class="grid grid-cols-12">
             <div class="col-span-12">
                 <div class="max-w-[650px]  mx-auto text-center text-white relative z-[1]">
-                    <div class="mb-5"><span class="text-base block"><img class="dashboard-foto" src="{{ asset('template/images/person.webp') }}"><br> Welcome, {{ Auth::user()->name }} ({{ Auth::user()->level }})</span></div>
+                    <div class="mb-5"><span class="text-base block"><img class="dashboard-foto" src="{{ $data->foto == NULL || $data->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.$data->foto)  }}"><br> Welcome, {{ Auth::user()->name }} ({{ Auth::user()->level }})</span></div>
                     <h1 class="font-lora text-[36px] sm:text-[50px] md:text-[68px] lg:text-[50px] leading-tight xl:text-2xl font-medium">
                         User Data
                     </h1>

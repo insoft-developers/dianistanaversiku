@@ -60,6 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
    Route::post('/reply_ticket', [TicketingController::class, 'reply'])->name('reply.ticket');
    Route::get('/user_data', [AuthUsersController::class, 'user_data']);
    Route::get('/frontend_setting', [AuthUsersController::class, 'setting']);
+   Route::post('/profile_update', [AuthUsersController::class, 'profile_update'])->name('profile.update');
+   Route::get('/frontend_change_password', [AuthUsersController::class, 'change_password']);
+   Route::post('frontend_password_update', [AuthUsersController::class, 'password_update'])->name('password.update');
 });
 
 

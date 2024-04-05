@@ -58,9 +58,11 @@
                             if($d->is_reply == 1) {
                                 $query = \App\Models\AdminsData::findorFail($d->user_id);
                                 $user = $query->name;
+                                $foto = $query->foto;
                             } else {
                                 $query = \App\Models\User::findorFail($d->user_id);
                                 $user = $query->name;
+                                $foto = $query->foto;
                             }
 
 
@@ -70,7 +72,7 @@
                                 @if($d->is_reply== 1)
                                 <img class="paper-profile" src="{{ asset('template/images/profil.png') }}">
                                 @else
-                                <img class="paper-profile" src="{{ asset('template/images/person.webp') }}">
+                                <img class="paper-profile" src="{{ $foto == NULL || $foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.$foto) }}">
                                 @endif
                                 <span class="paper-user-name">{{ $user }}</span>
                                 <div class="paper-date">{{ date('d F Y', strtotime($d->created_at)) }} Pukul {{ date('H:i:s', strtotime($d->created_at)) }} WIB</div>
