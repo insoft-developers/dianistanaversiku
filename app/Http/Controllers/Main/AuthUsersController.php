@@ -22,6 +22,20 @@ use Redirect;
 class AuthUsersController extends Controller
 {
     
+    public function fcm_token(Request $request){
+        try{
+            $request->user()->update(['token'=>$request->token]);
+            return response()->json([
+                'success'=>true
+            ]);
+        }catch(\Exception $e){
+            report($e);
+            return response()->json([
+                'success'=>false
+            ],500);
+        }
+    }
+    
     public function user_data() {
         $view = "user-data";
         $data = User::findorFail(Auth::user()->id);
@@ -36,7 +50,33 @@ class AuthUsersController extends Controller
 
     public function password_update(Request $request) {
         $input = $request->all();
+        $rules = array(
+            "old_password" => "required",
+            "password" => "required|min:6|confirmed"
+        );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $pesan = $validator->errors();
+            $pesanarr = explode(",", $pesan);
+            $find = array("[","]","{","}");
+            $html = '';
+            foreach($pesanarr as $p ) {
+                $html .= str_replace($find,"",$p).'<br>';
+            }
+            return Redirect::back()->with('error', $html);
+        }
+
+        if(Auth::attempt(['username'=> $input['username'] ,'password'=> $input['old_password']])) {
+            $user = User::findorFail(Auth::user()->id);
+            $user->password = bcrypt($input['password']);
+            $user->save();
+            return Redirect::back()->with('success', 'Your password successfully updated!!');
         
+        } else {
+            return Redirect::back()->with('error', 'Password anda masih salah!!');
+        }
+
     }
 
 
@@ -129,6 +169,10 @@ class AuthUsersController extends Controller
             session(['session_hp' => $data->no_hp]);
             session(['session_level' => $data->level]);
             session(['session_foto' => $data->foto]);
+
+            $data->token = session('session_frm_key');
+            $data->save();
+
             return redirect(route('home_public'));
 
 
@@ -1238,6 +1282,60 @@ class AuthUsersController extends Controller
         return view('frontend.ticket', compact('view','trans','user','product'));
     }
 
+
+    
+    public function notify() {
+        $title ="It is a long established fact that a reader";
+        $message = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
+        $regid ="cih6Wo03OOpg9vSS3QBaWW:APA91bEw0Rx8qj_CFTp46WMrfK7AbUMaA6hP4fYybwz5TaJMkMoLoDodN4T6SxZmGZajM7YaAR4dxoiBMWKW-w2VJYoRXMfXA4fcSxi4Dh-R2Xi2MpwioQrM-UuRQ1P7Dh8oDTKYa-ch";
+        
+
+        $SERVER_API_KEY = 'AAAAwbylMgg:APA91bF2ALenum4cb5ossrjcPIXOGJbUyjrSDu7YUS6LS8RQI2WDKsliccvbH8JHP3zYJIaZSpS-emPRjDy3EzAZjEZu4NHTfPu1L4rtknAZgeYqpc5Ck-uzbc_nA0cgPYDmTH-5EQV7';
+
+        $data = [
+
+            // "to" => '/topics/comment',
+            "to" => $regid,
+            "notification" => [
+                "title" => $title,
+                "body" => $message,
+                "sound"=> "default",
+                    // required for sound on ios
+            ],
+        ];
+    
+        
+        
+    
+        $dataString = json_encode($data);
+    
+        $headers = [
+    
+            'Authorization: key=' . $SERVER_API_KEY,
+    
+            'Content-Type: application/json',
+    
+        ];
+    
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+    
+        curl_setopt($ch, CURLOPT_POST, true);
+    
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+    
+        $response = curl_exec($ch);
+        
+        return $response;
+        
+    }
 
     
 }

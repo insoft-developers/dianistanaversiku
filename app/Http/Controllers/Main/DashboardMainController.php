@@ -69,4 +69,9 @@ class DashboardMainController extends Controller
 		echo $res=curl_exec($ch);
 		curl_close($ch);
     }
+
+
+	public function save_fcm_token($token) {
+		session(['session_frm_key' => $token]);
+	}
 }

@@ -10,7 +10,7 @@ body {
 
 ul.menu-atas{
     font-family: "Roboto", Sans-serif !important;
-    font-size: 13px !important;
+    font-size: 12px !important;
     font-weight: bold !important;
 }
 .jarak10{margin-top: 10px;}
@@ -643,6 +643,33 @@ label{
     border-radius: 30px;
     cursor: pointer;
     border: 3px solid white;
+}
+
+.detail-notif-image{
+
+}
+.notif-badge{
+    background: white;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.notif-number{
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 13px;
+    padding-top: 4px;
+    position: relative;
+    right: 11px;
+    top: -14px;
+    padding-bottom: 3px;
 }
 
 </style>

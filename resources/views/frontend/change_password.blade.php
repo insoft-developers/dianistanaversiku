@@ -17,7 +17,7 @@
                 @if($message = Session::get('success'))
                     <div class="alert alert-success" role="alert">
                         <span onclick="tutup_alert()" class="btn-colse">x</span>
-                        <?= $message ;?>
+                        <i class="fa fa-check"></i> <?= $message ;?>
                     </div>
                 @endif
 
@@ -28,7 +28,7 @@
                 <div class="card-box jarak20">
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
-                    
+                    <input type="hidden" value="{{ Auth::user()->username }}" name="username">
                     <label>Your Old Password : </label>
                     <input name="old_password" type="password" class="input-ticket w-100" placeholder="Enter your old password">
                     <div class="jarak20"></div>

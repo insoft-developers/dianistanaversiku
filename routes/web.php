@@ -10,6 +10,7 @@ use App\Http\Controllers\Admins\UnitBisnisController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
+use App\Http\Controllers\Main\NotifController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 
@@ -63,9 +64,17 @@ Route::group(['middleware' => 'auth'], function () {
    Route::post('/profile_update', [AuthUsersController::class, 'profile_update'])->name('profile.update');
    Route::get('/frontend_change_password', [AuthUsersController::class, 'change_password']);
    Route::post('frontend_password_update', [AuthUsersController::class, 'password_update'])->name('password.update');
+   Route::patch('/fcm_token', [AuthUsersController::class, 'fcm_token'])->name('fcm.token');
+   Route::get('/notify', [AuthUsersController::class, 'notify']);
+   Route::get('/notif_list', [NotifController::class, 'index']);
+   Route::get('/notif_detail/{slug}', [NotifController::class, 'notif_detail']);
+   
 });
 
+Route::get('/save_firebase_token/{token}', [DashboardMainController::class, 'save_fcm_token']);
 
+Route::get('/notify', [AuthUsersController::class, 'notify']);
+Route::get('/update_notif_number', [NotifController::class, 'update_notif_number']);
 
 // for admins
 

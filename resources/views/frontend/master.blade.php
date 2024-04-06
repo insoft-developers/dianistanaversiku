@@ -143,7 +143,13 @@
                                     </li>
                                     @endif
                                 </ul>
-
+                                <a href="{{ url('/notif_list') }}"><div class="notif-badge"><i class="fa fa-bell"></i></div></a>
+                                <span id="notif-number">
+                                    @if(session('session_notification_number') == null || session('session_notification_number') == 0)
+                                    @else
+                                    <span class="notif-number">{{ session('session_notification_number') == null ? 0 : session('session_notification_number')}}</span>
+                                    @endif
+                                </span>
                                 <ul class="flex flex-wrap items-center">
                                    
                                     
@@ -459,14 +465,76 @@
     <!-- Plugins JS -->
     
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/swiper-bundle.min.js"></script>
+    
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/popper.min.js"></script>
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/jquery.magnific-popup.min.js"></script>
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/jquery.ajaxchimp.min.js"></script>
     <script src="{{ asset('template/frontend') }}/assets/js/plugins/parallax.min.js"></script>
-     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
     
     <!-- Activation JS -->
     <script src="{{ asset('template/frontend') }}/assets/js/main.js"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+    
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+        
+        <script type="module">
+        
+        
+          const firebaseConfig = {
+            apiKey: "AIzaSyD4_3G9UpqpWg-Xk7On-PwzaY9bU-wiMl8",
+            authDomain: "my-dian-istana.firebaseapp.com",
+            projectId: "my-dian-istana",
+            storageBucket: "my-dian-istana.appspot.com",
+            messagingSenderId: "832093630984",
+            appId: "1:832093630984:web:a0d969f7afe0a1a212d7bd"
+        };
+      
+      
+        // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            const messaging = firebase.messaging();
+
+            function initFirebaseMessagingRegistration() {
+                
+                messaging.requestPermission().then(function () {
+                    return messaging.getToken()
+                }).then(function(token) {
+                   $.ajax({
+                        url:"{{ url('save_firebase_token') }}"+"/"+token,
+                        type: "GET",
+                        dataType: "JSON",
+                        success: function(data) {
+                            console.log(data);
+                        }
+                   }) 
+                   
+                }).catch(function (err) {
+                    console.log(`Token Error :: ${err}`);
+                });
+            }
+
+            initFirebaseMessagingRegistration();
+
+            messaging.onMessage(function(data){
+              
+                new Notification(data.notification.title, {data});
+                $.ajax({
+                    url: "{{ url('update_notif_number') }}",
+                    type: "GET",
+                    success: function(data) {
+                        $("#notif-number").html(data);
+                    }
+                })
+            });
+    </script>
     @include('frontend.js')
 
 </body>

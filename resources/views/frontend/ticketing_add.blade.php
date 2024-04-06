@@ -30,7 +30,7 @@
                         <form method="POST" action="{{ route('open.ticket') }}" enctype="multipart/form-data">
                             @csrf
 
-                        <img class="img-pro" src="{{ asset('template/images/person.webp') }}">    
+                        <img class="img-pro" src="{{ $data->foto == NULL || $data->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.$data->foto)  }}">    
                         <label>Department : </label>
                         <select class="input-ticket w-100" id="department" name="department">
                             <option value="">Select Department</option>

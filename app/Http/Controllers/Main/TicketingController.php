@@ -8,6 +8,7 @@ use App\Models\TicketingCategory;
 use Validator;
 use Session;
 use App\Models\Ticketing;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
@@ -29,7 +30,8 @@ class TicketingController extends Controller
     public function add() {
         $view = "ticketing";
         $category = TicketingCategory::all();
-        return view("frontend.ticketing_add", compact('view','category'));
+        $data = User::findorFail(Auth::user()->id);
+        return view("frontend.ticketing_add", compact('view','category','data'));
     }
 
     public function open(Request $request) {

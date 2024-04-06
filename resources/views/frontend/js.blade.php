@@ -384,3 +384,14 @@ function close_warning_box() {
     }
 </script>
 @endif
+
+
+@if($view == 'notif')
+<script>
+    let table = $("#table-notif").DataTable({
+        bAutoWidth: false, 
+        order: [[1, 'desc']],
+        columnDefs: [{ width: '3%', targets: 0 },{ width: '10%', targets: 1 },{ width: '20%', targets: 2 }, { width: '30%', targets: 3 }]
+    });
+</script>
+@endif

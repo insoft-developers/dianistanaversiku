@@ -77,7 +77,7 @@
                 </a>
             </div>
             <div class="relative group">
-                <a href="{{ url('ticketing') }}" class="block">
+                <a href="{{ url('notif_list') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/notif_menu.png" class="menu-image" loading="lazy" width="270" height="290" alt="Buy Property">
                     <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-lora font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Nofitications<span class="text-secondary group-hover:text-primary"></span> </h3>
