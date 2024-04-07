@@ -1,24 +1,15 @@
 @extends('frontend.master') @section('content') 
-<section class="bg-no-repeat bg-center bg-cover bg-[#E9F1FF] h-[350px] lg:h-[35px] flex flex-wrap items-center relative before:absolute before:inset-0 before:content-[''] before:bg-[#000000] before:opacity-[70%]" style="background-image: url('{{ asset('template/images/contact.webp') }}');">
-    <div class="container">
-        <div class="grid grid-cols-12">
-            <div class="col-span-12">
-                <div class="max-w-[600px] mx-auto text-center text-white relative z-[1]">
-                    <div class="mb-5">
-                        <span class="text-base block">Our Unit Business</span>
-                    </div>
-                    <h1 class="font-lora text-[36px] sm:text-[50px] md:text-[68px] lg:text-[50px] leading-tight xl:text-2xl font-medium">Booking</h1>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-    </section>
+
     <!-- Hero section end -->
     <!-- Popular Properties start -->
-    <section class="popular-properties py-[80px] lg:py-[120px]">
+    <section class="popular-properties py-[10px] lg:py-[10px]">
     <div class="container">
+        <h3 class="font-lora jarak30 custom-title">
+            Booking Feature
+        </h3>
+        <div class="jarak20"></div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-[30px]">
+            
             @foreach($unit as $u)
             <div class="swiper-slide">
                 <div class="overflow-hidden rounded-md drop-shadow-[0px_0px_5px_rgba(0,0,0,0.1)] bg-[#FFFDFC] text-center transition-all duration-300 hover:-translate-y-[10px]">

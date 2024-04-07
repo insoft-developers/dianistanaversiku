@@ -1,23 +1,13 @@
 @extends('frontend.master') @section('content') 
-<!-- Hero section start -->
-<section class="bg-no-repeat bg-center bg-cover bg-[#FFF6F0] h-[350px] lg:h-[350px] flex flex-wrap items-center relative before:absolute before:inset-0 before:content-[''] before:bg-[#000000] before:opacity-[70%]" style="background-image: url('{{ asset('template/images/contact.webp') }}');">
-<div class="container">
-	<div class="grid grid-cols-12">
-		<div class="col-span-12">
-			<div class="max-w-[600px] mx-auto text-center text-white relative z-[1]">
-				<div class="mb-5">
-					<span class="text-base block">{{ $data->name_unit }}</span>
-				</div>
-				<h1 class="font-lora text-[36px] sm:text-[50px] md:text-[68px] lg:text-[50px] leading-tight xl:text-2xl font-medium">Booking Details</h1>
-			</div>
-		</div>
-	</div>
-</div>
-</section>
+
 <!-- Hero section end -->
 <!-- Popular Properties start -->
-<section class="popular-properties py-[80px] lg:py-[120px]">
+<section class="popular-properties pb-[60px] lg:pb-[60px]">
 <div class="container">
+    <h3 class="font-lora jarak30 custom-title">
+        Booking Detail
+    </h3>
+    <div class="jarak20"></div>
 	<div class="grid grid-cols-12 mb-[-30px] gap-[30px] xl:gap-[50px]">
         <div class="col-span-12 md:col-span-6 lg:col-span-6 mb-[30px]">
 			<aside class="mb-[-60px] asidebar">

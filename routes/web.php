@@ -11,6 +11,7 @@ use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
 use App\Http\Controllers\Main\NotifController;
+use App\Http\Controllers\Main\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 
@@ -51,7 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
    Route::post('/transaction', [AuthUsersController::class, 'transaction']);
    Route::get('/riwayat', [AuthUsersController::class, 'riwayat']);
    Route::post('/payment_process', [AuthUsersController::class, 'payment_process']);
-   Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
+  
    Route::get('/print_ticket/{id}', [AuthUsersController::class, 'print']);
    Route::get('/ticketing', [TicketingController::class, 'index'] );
    Route::get('/ticketing_add', [TicketingController::class, 'add']);
@@ -59,7 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
    Route::get('/ticketing_detail/{number}', [TicketingController::class, 'ticketing_detail']);
    Route::get('/donwload_ticketing/{file}', [TicketingController::class, 'download']);
    Route::post('/reply_ticket', [TicketingController::class, 'reply'])->name('reply.ticket');
+   
    Route::get('/user_data', [AuthUsersController::class, 'user_data']);
+   
    Route::get('/frontend_setting', [AuthUsersController::class, 'setting']);
    Route::post('/profile_update', [AuthUsersController::class, 'profile_update'])->name('profile.update');
    Route::get('/frontend_change_password', [AuthUsersController::class, 'change_password']);
@@ -69,12 +72,21 @@ Route::group(['middleware' => 'auth'], function () {
    Route::get('/notif_list', [NotifController::class, 'index']);
    Route::get('/notif_detail/{slug}', [NotifController::class, 'notif_detail']);
    
+   Route::get('/payment', [PaymentController::class, 'index']);
+   Route::post('/payment_post', [PaymentController::class, 'payment_post'])->name('payment.post');
+   Route::get('/print_kwitansi/{id}', [PaymentController::class, 'kwitansi']);
 });
 
 Route::get('/save_firebase_token/{token}', [DashboardMainController::class, 'save_fcm_token']);
 
 Route::get('/notify', [AuthUsersController::class, 'notify']);
 Route::get('/update_notif_number', [NotifController::class, 'update_notif_number']);
+Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
+// Route::get('/test', function(){
+//    $data = "MK-120102013919310";
+//    $left  = substr($data, 0,2);
+//    dd($left);
+// });
 
 // for admins
 

@@ -90,13 +90,43 @@ body{
 }
 .profile-image{
 	position: absolute;
-    width: 30px;
-    height: 30px !important;
-    left: 19px;
-    top: 15px;
-    background: white;
-    border-radius: 15px !important;
-    padding: 2px;
+	width: 30px;
+	height: 30px !important;
+	left: 18px;
+	top: 17px;
+	background: white;
+	border-radius: 15px !important;
+  padding: 2px;
+}
+.notif-badge{
+	background: white;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 9px;
+    padding-bottom: 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    top: -1px;
+}
+.notif-number{
+    background: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding-left: 8px;
+  padding-right: 9px;
+  border-radius: 13px;
+  padding-top: 4px;
+  position: relative;
+  right: -30px;
+  top: -62px;
+  padding-bottom: 4px;
+}
+.panah-kiri, .panah-kanan{
+	width: 64px;
+    height: 121px !important;
+    opacity: 0.7;
 }
 svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertical-align: middle; margin-top: -2px; } 
 </style>
@@ -128,9 +158,22 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 						<li><a href="{{ url('contact') }}" ><img class="profile-image" src="{{ Auth::user()->foto == NULL || Auth::user()->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.Auth::user()->foto)  }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a>
 							<ul class="sub-login">
 								<a href="{{ url('frontend_dashboard') }}"><div class="sub-login-menu">Dashboard</div></a>
-								<a href="#"><div class="sub-login-menu">Notifications</div></a>
+								<a href="{{ url('/frontend_booking') }}"><div class="sub-login-menu">Booking</div></a>
+								<a href="{{ url('/riwayat') }}"><div class="sub-login-menu">Booking History</div></a>
+								<a href="{{ url('/ticketing') }}"><div class="sub-login-menu">Ticketing</div></a>
+								@if(Auth::user()->lvel == "user")
+								<a href="{{ url('/payment') }}"><div class="sub-login-menu">Payment</div></a>
+								@endif
 								<a href="{{ url('frontend_logout') }}"><div class="sub-login-menu">Logout</div></a>
 							</ul>
+						</li>
+						<li><a href="{{ url('/notif_list') }}"><i class="fa fa-bell notif-badge"></i></a>
+                                <span id="notif-number">
+                                    @if(session('session_notification_number') == null || session('session_notification_number') == 0)
+                                    @else
+                                    <span class="notif-number">{{ session('session_notification_number') == null ? 0 : session('session_notification_number')}}</span>
+                                    @endif
+                                </span>
 						</li>
 						@endif					
 					</ul>
@@ -239,10 +282,10 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 											<div class="bdt-position-z-index bdt-position-center bdt-visible@m">
 				<div class="bdt-arrows-container bdt-slidenav-container">
 					<div class="bdt-navigation-prev bdt-slidenav-previous bdt-icon bdt-slidenav">
-						<i class="ep-icon-arrow-left-0" aria-hidden="true"></i>
+						<img class="panah-kiri" src="{{ asset('assets/tambahan/image/panah_kiri.png') }}">
 					</div>
 					<div class="bdt-navigation-next bdt-slidenav-next bdt-icon bdt-slidenav">
-						<i class="ep-icon-arrow-right-0" aria-hidden="true"></i>
+						<img class="panah-kanan" src="{{ asset('assets/tambahan/image/panah_kanan.png') }}">
 					</div>
 				</div>
 			</div>
@@ -716,5 +759,68 @@ var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/dibeli.online\/wp-admin\/
 <script type="text/javascript" src="{{ asset('assets/tambahan/js') }}/animate-circle.min.js?ver=9.0.6" id="animate-circle-js"></script>
 <script type="text/javascript" src="{{ asset('assets/tambahan/js') }}/elementor.js?ver=9.0.6" id="elementskit-elementor-js"></script>
 <script type="text/javascript" src="{{ asset('assets/tambahan') }}/js/script.min.js?ver=9.4.2" id="landingpress-js"></script>
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+	https://firebase.google.com/docs/web/setup#available-libraries -->
+
+	
+	<script type="module">
+	
+	
+	  const firebaseConfig = {
+		apiKey: "AIzaSyD4_3G9UpqpWg-Xk7On-PwzaY9bU-wiMl8",
+		authDomain: "my-dian-istana.firebaseapp.com",
+		projectId: "my-dian-istana",
+		storageBucket: "my-dian-istana.appspot.com",
+		messagingSenderId: "832093630984",
+		appId: "1:832093630984:web:a0d969f7afe0a1a212d7bd"
+	};
+  
+  
+	// Initialize Firebase
+		firebase.initializeApp(firebaseConfig);
+
+		const messaging = firebase.messaging();
+
+		function initFirebaseMessagingRegistration() {
+			
+			messaging.requestPermission().then(function () {
+				return messaging.getToken()
+			}).then(function(token) {
+			   console.log(token);
+			   jQuery.ajax({
+					url:"{{ url('save_firebase_token') }}"+"/"+token,
+					type: "GET",
+					dataType: "JSON",
+					success: function(data) {
+						console.log(data);
+					}
+			   }) 
+			   
+			}).catch(function (err) {
+				console.log(`Token Error :: jQuery{err}`);
+			});
+		}
+
+		initFirebaseMessagingRegistration();
+
+		messaging.onMessage(function(data){
+		  
+			new Notification(data.notification.title, {data});
+			jQuery.ajax({
+				url: "{{ url('update_notif_number') }}",
+				type: "GET",
+				success: function(data) {
+					jQuery("#notif-number").html(data);
+				}
+			})
+		});
+</script>
 	</body>
 </html>

@@ -37,6 +37,11 @@ class AuthUsersController extends Controller
     }
     
     public function user_data() {
+
+        if(Auth::user()->level != "user" ) {
+            return redirect("frontend_dashboard");
+        }
+
         $view = "user-data";
         $data = User::findorFail(Auth::user()->id);
         return view('frontend.user_data', compact('view','data'));
@@ -173,7 +178,7 @@ class AuthUsersController extends Controller
             $data->token = session('session_frm_key');
             $data->save();
 
-            return redirect(route('home_public'));
+            return redirect('/frontend_dashboard');
 
 
         } else {
@@ -1256,23 +1261,46 @@ class AuthUsersController extends Controller
 
     public function callback(Request $request) {
         $input = $request->all();
+        $cek = substr($input['external_id'], 0, 2);
+        
+        if($cek == "PM") {
+            $trans = \App\Models\PaymentDetail::where('invoice', $input['external_id'])
+                ->where('payment_status', 'PENDING')
+                ->first();
 
-        $trans = \App\Models\Transaction::where('invoice', $input['external_id'])
-            ->where('payment_status', 'PENDING')
-            ->first();
-
-        $trans->payment_status = $input['status'];
-        $trans->payment_method = $input['payment_method'];
-        $trans->payment_channel = $input['payment_channel'];
-        $trans->paid_at = date('Y-m-d H:i:s');
-        $trans->save();    
+            $trans->payment_status = $input['status'];
+            $trans->payment_method = $input['payment_method'];
+            $trans->payment_channel = $input['payment_channel'];
+            $trans->paid_at = date('Y-m-d H:i:s');
+            $trans->save();    
 
 
-        return response()->json([
-            "success" => true,
-            "data" => $trans
-        ]);
+            return response()->json([
+                "success" => true,
+                "data" => $trans
+            ]);
+        } else {
+            $trans = \App\Models\Transaction::where('invoice', $input['external_id'])
+                ->where('payment_status', 'PENDING')
+                ->first();
+
+            $trans->payment_status = $input['status'];
+            $trans->payment_method = $input['payment_method'];
+            $trans->payment_channel = $input['payment_channel'];
+            $trans->paid_at = date('Y-m-d H:i:s');
+            $trans->save();    
+
+
+            return response()->json([
+                "success" => true,
+                "data" => $trans
+            ]);
+        }
+        
+
+        
     }
+
 
     public function print($id) {
         $view = 'print-ticket';

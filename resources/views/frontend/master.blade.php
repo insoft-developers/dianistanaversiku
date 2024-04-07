@@ -51,7 +51,7 @@
     <div class="overflow-hidden">
 
         <!-- header top start -->
-        <div class="bg-primary font-lora text-white py-[11px]">
+        {{-- <div class="bg-primary font-lora text-white py-[11px]">
             <div class="container">
                 <div class="grid items-center grid-cols-12 gap-x-[30px]">
                     <div class="col-span-12 sm:col-span-6 text-center sm:text-left">
@@ -62,7 +62,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- header top end -->
 
         <!-- Header start -->
@@ -99,7 +99,7 @@
                                     @endif
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="about.html" class="transition-all hover:text-secondary">DONWLOAD APPS</a>
+                                        <a href="#" class="transition-all hover:text-secondary">DONWLOAD APPS</a>
 
                                         
 
@@ -133,8 +133,19 @@
                                                 <a href="{{ url('frontend_dashboard') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-t-[12px]">Dashboard</a>
                                             </li>
                                             <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="index-4.html" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Notifications</a>
+                                                <a href="{{ url('frontend_booking') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Booking</a>
                                             </li>
+                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
+                                                <a href="{{ url('riwayat') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Booking History</a>
+                                            </li>
+                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
+                                                <a href="{{ url('ticketing') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Ticketing</a>
+                                            </li>
+                                            @if(Auth::user()->level == "user")
+                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
+                                                <a href="{{ url('payment') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Payment</a>
+                                            </li>
+                                            @endif
                                             <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
                                                 <a href="{{ url('frontend_logout') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-b-[12px]">Log Out</a>
                                             </li>

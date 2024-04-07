@@ -77,7 +77,7 @@ ul.menu-atas{
     position: absolute;
     width: 30px;
     height: 30px;
-    left: -7px;
+    left: -11px;
     top: 10px;
     background: white;
     border-radius: 15px;

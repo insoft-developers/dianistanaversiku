@@ -395,3 +395,41 @@ function close_warning_box() {
     });
 </script>
 @endif
+
+@if($view == 'payment-menu')
+
+<script>
+    
+    let table = $("#table-payment").DataTable({
+        bAutoWidth: false, 
+        order: [[1, 'desc']],
+        columnDefs: [{ width: '3%', targets: 0 },{ width: '10%', targets: 1 },{ width: '20%', targets: 2 }, { width: '30%', targets: 3 }]
+    });
+
+
+    function payment_process(id) {
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        $("#btn_payment_"+id).text("Processing...");
+        $("#btn_payment_"+id).attr("disabled", true);
+        $.ajax({
+            url: "{{ route('payment.post') }}",
+            type: "POST",
+            dataType: "JSON",
+            data: {"id":id, "_token": csrf_token},
+            success: function(data) {
+                $("#btn_payment_"+id).html('<i class="fa fa-dollar"></i> Payment');
+                $("#btn_payment_"+id).removeAttr("disabled");
+                if(data.success) {
+                    window.location=data.data;
+
+                }
+
+            }
+        })
+    }
+</script>
+@endif
+
+
+
+
