@@ -197,14 +197,31 @@ body {
   }
 }
 
+@media print {
+  .judul {
+    display: none; 
+  }
+}
+
+.judul {
+  color: white;
+}
+
+.paid {
+  position: absolute;
+    width: 113px;
+    top: 292px;
+    left: 95px;
+}
 
     </style>
 </head>
 <body>
 <!-- INSPO:  https://www.behance.net/gallery/69583099/Mobile-Flights-App-Concept -->
 <main class="ticket-system">
-    <div class="top">
-    <h1 class="title">Thank you for joining us!</h1>
+    <div class="top" style="margin-top: 50px;">
+    <a class="judul" href="{{ url('frontend_dashboard') }}">Back To Dashboard</a>
+    <div class="top" style="margin-top: 30px;">
     <div class="printer"></div>
     </div>
     <div class="receipts-wrapper">
@@ -214,7 +231,7 @@ body {
              
                 <h2 class="receipt-title">UNIT BUSINESS BOOKING TICKET</h2>
                 
-             <p style="font-size: 14px;">ORDER ID : {{ $trans->invoice }}</p>
+             <p style="font-size: 14px;">BOOKING CODE : {{ $trans->invoice }}</p>
              <div class="details">
                 <div class="item">
                    <span>Name</span>
@@ -258,6 +275,7 @@ body {
                 <div class="myqrcode">{!! QrCode::size(70)->generate($trans->invoice) !!}</div>
              </div>
           </div>
+          <img class="paid" src="{{ asset('template/images/paid.webp') }}">
        </div>
     </div>
  </main>

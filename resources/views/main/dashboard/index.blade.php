@@ -63,6 +63,85 @@ body{
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><script type="text/javascript" src="{{ asset('assets/tambahan/js/extra') }}/jquery.min.js?ver=9.7.1" id="jquery-core-js"></script>
 <script type="text/javascript" src="{{ asset('assets/tambahan') }}/js/jquery-migrate.min.js?ver=9.4.1" id="jquery-migrate-js"></script>
 <style type="text/css">
+
+@media only screen and (max-width: 768px) {
+	.sub-login {
+		position: absolute;
+		top: 44px !important;
+		background: white;
+		padding-right: 30px;
+		padding-top: 15px;
+		padding-bottom: 15px;
+		border-radius: 15px;
+		width: 183px;
+
+	}
+	.sub-login-menu:hover{
+		background: #0b2c3d;
+		color: white;
+		width: 130px;
+		padding-left: 10px;
+		border-radius: 2px;
+
+	}
+
+	.sub-login-menu {
+		color: black;
+		line-height: 3;
+		width:153px !important;
+
+	}
+	.profile-image{
+	position: absolute !important ;
+	width: 30px !important ;
+	height: 30px !important;
+	left: 13px !important;
+	top: 4px !important;
+	background: white !important;
+	border-radius: 15px !important;
+	padding: 2px !important;
+	}
+	.notif-badge{
+		background: white;
+		padding-left: 9px;
+		padding-right: 9px;
+		padding-top: 9px;
+		padding-bottom: 8px;
+		border-radius: 20px;
+		cursor: pointer;
+		position: absolute !important;
+		top: -423px !important;
+		right: 50px;
+	}
+	.notif-number{
+		background: red;
+	color: white;
+	font-size: 12px;
+	font-weight: bold;
+	padding-left: 8px;
+	padding-right: 9px;
+	border-radius: 13px;
+	padding-top: 4px;
+	position: relative;
+	right: -30px;
+	top: -62px;
+	padding-bottom: 4px;
+	}
+	.panah-kiri, .panah-kanan{
+		width: 64px;
+		height: 121px !important;
+		opacity: 0.7;
+	}
+
+	.menu-mobile {
+		display: block !important;
+	}
+}
+
+.menu-mobile  {
+	display: none;
+}
+
 .sub-login {
 	position: absolute;
     top: 44px !important;
@@ -71,7 +150,7 @@ body{
     padding-top: 15px;
     padding-bottom: 15px;
     border-radius: 15px;
-    width: 155px;
+    width: 183px;
 
 }
 .sub-login-menu:hover{
@@ -86,6 +165,7 @@ body{
 .sub-login-menu {
 	color: black;
     line-height: 3;
+	width:153px !important;
 
 }
 .profile-image{
@@ -145,28 +225,30 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 					</div>
 					<ul class="lp-navmenu-items">
 						@if( request()->session()->missing('session_id'))
-						<li><a href="#" >LOGIN OR REGISTER</a>
-							<ul class="sub-login">
-								<a href="{{ url('login') }}"><div class="sub-login-menu">Login</div></a>
-								<a href="{{ url('frontend_register') }}"><div class="sub-login-menu">Register</div></a>
-							</ul>
+						<li><a href="{{ url('/login') }}" >LOGIN OR REGISTER</a>
 						</li>
-						@endif
+						
 
 						<li><a href="#download" >DOWNLOAD APPS</a></li><li><a href="{{ url('term') }}" >TERMS & CONDITIONS</a></li><li><a href="{{ url('privacy') }}" >PRIVACY POLICY</a></li><li><a href="{{ url('contact') }}" >contact us</a></li>
+						@endif
 						@if( request()->session()->has('session_id'))
-						<li><a href="{{ url('contact') }}" ><img class="profile-image" src="{{ Auth::user()->foto == NULL || Auth::user()->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.Auth::user()->foto)  }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a>
+						<li><a href="{{ url('frontend_dashboard') }}" >DASHBOARD</a></li>
+						<li><a href="{{ url('frontend_booking') }}" >BOOKING</a></li>
+						<li><a href="{{ url('riwayat') }}" >BOOKING HISTORY</a></li>
+						<li><a href="{{ url('ticketing') }}" >TICKETING</a></li>
+						@if(Auth::user()->level == "user")
+						<li><a href="{{ url('payment') }}" >PAYMENT</a></li>
+						@endif
+						<li><a href="{{ url('frontend_dashboard') }}" ><img class="profile-image" src="{{ Auth::user()->foto == NULL || Auth::user()->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.Auth::user()->foto)  }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account</a>
 							<ul class="sub-login">
-								<a href="{{ url('frontend_dashboard') }}"><div class="sub-login-menu">Dashboard</div></a>
-								<a href="{{ url('/frontend_booking') }}"><div class="sub-login-menu">Booking</div></a>
-								<a href="{{ url('/riwayat') }}"><div class="sub-login-menu">Booking History</div></a>
-								<a href="{{ url('/ticketing') }}"><div class="sub-login-menu">Ticketing</div></a>
-								@if(Auth::user()->lvel == "user")
-								<a href="{{ url('/payment') }}"><div class="sub-login-menu">Payment</div></a>
-								@endif
+								<a href="{{ url('frontend_setting') }}"><div class="sub-login-menu">Profile</div></a>
+								<a href="{{ url('/frontend_change_password') }}"><div class="sub-login-menu">Change Password</div></a>
 								<a href="{{ url('frontend_logout') }}"><div class="sub-login-menu">Logout</div></a>
 							</ul>
 						</li>
+						<li class="menu-mobile"><a href="{{ url('frontend_setting') }}" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROFILE</a></li>
+						<li class="menu-mobile"><a href="{{ url('frontend_change_password') }}" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHANGE PASSWORD</a></li>
+						<li class="menu-mobile"><a href="{{ url('frontend_logout') }}" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a></li>
 						<li><a href="{{ url('/notif_list') }}"><i class="fa fa-bell notif-badge"></i></a>
                                 <span id="notif-number">
                                     @if(session('session_notification_number') == null || session('session_notification_number') == 0)

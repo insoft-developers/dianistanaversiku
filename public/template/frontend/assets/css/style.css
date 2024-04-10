@@ -2544,11 +2544,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .font-karla {
-  font-family: Karla, sans-serif;
+  font-family: "Roboto", Sans-serif !important;
 }
 
 .font-lora {
-  font-family: Lora, sans-serif;
+  font-family: "Roboto", Sans-serif !important;
 }
 
 .text-tiny {
@@ -5354,6 +5354,10 @@ input:focus {
   .lg\:col-span-2 {
     grid-column: span 2/span 2;
   }
+
+
+  
+  
 
   .lg\:-mx-\[15px\] {
     margin-left: -15px;

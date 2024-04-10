@@ -42,6 +42,7 @@
 
 
     @include('frontend.css')
+    @include('frontend.mobile')
     
 
 </head>
@@ -73,30 +74,23 @@
                     <div class="col-span-12">
                         <div class="flex flex-wrap items-center justify-between">
                             <a href="{{ route('home_public') }}" class="block">
-                                <img class="w-full h-full" src="{{ asset('template/images/dian.png') }}/" loading="lazy" width="99" height="46" alt="brand logo">
+                                <img class="w-full h-full" src="{{ asset('template/images/dian.png') }}" loading="lazy" width="99" height="46" alt="brand logo">
                             </a>
                             <nav class="flex flex-wrap items-center">
                                 <ul class="hidden menu-atas lg:flex flex-wrap items-center font-lora text-[16px] xl:text-[18px] leading-none text-black">
                                     @if( request()->session()->missing('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="#" class="transition-all hover:text-secondary">LOGIN OR REGISTER</a>
+                                        <a href="{{ url('/login') }}" class="transition-all hover:text-secondary">LOGIN OR REGISTER</a>
                                         <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
                 group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
                 
                 ">
-                                           <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('login') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-t-[12px]">login</a>
-                                            </li>
-
-                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('frontend_register') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-b-[12px]">register</a>
-                                            </li>
                                             
                                         </ul>
                                        
                                     </li>
-                                    @endif
+                                    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
                                         <a href="#" class="transition-all hover:text-secondary">DONWLOAD APPS</a>
@@ -121,31 +115,50 @@
                                         <a href="{{ url('contact') }}" class="transition-all hover:text-secondary">CONTACT US</a>
 
                                     </li>
+                                    @endif
                                     @if( request()->session()->has('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('contact') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ Auth::user()->foto == NULL || Auth::user()->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.Auth::user()->foto)  }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MY ACCOUNT</a>
+                                        <a href="{{ url('frontend_dashboard') }}" class="transition-all hover:text-secondary">DASHBOARD</a>
+
+                                    </li>
+                                    <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
+
+                                        <a href="{{ url('frontend_booking') }}" class="transition-all hover:text-secondary">BOOKING</a>
+
+                                    </li>
+                                    <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
+
+                                        <a href="{{ url('riwayat') }}" class="transition-all hover:text-secondary">BOOKING HISTORY</a>
+
+                                    </li>
+                                    <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
+
+                                        <a href="{{ url('ticketing') }}" class="transition-all hover:text-secondary">TICKETING</a>
+
+                                    </li>
+                                    @if(Auth::user()->level =="user")
+                                    <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
+
+                                        <a href="{{ url('payment') }}" class="transition-all hover:text-secondary">PAYMENT</a>
+
+                                    </li>
+                                    @endif
+                                    <li
+                                     class="mr-7 xl:mr-[40px] relative group py-[20px]">
+
+                                        <a href="{{ url('frontend_dashboard') }}" class="transition-all hover:text-secondary"><img class="profile-image" src="{{ Auth::user()->foto == NULL || Auth::user()->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.Auth::user()->foto)  }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MY ACCOUNT</a>
                                         <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
                 group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
                 
                 ">
                                             <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('frontend_dashboard') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-t-[12px]">Dashboard</a>
+                                                <a href="{{ url('frontend_setting') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-t-[12px]">Profile</a>
                                             </li>
                                             <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('frontend_booking') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Booking</a>
+                                                <a href="{{ url('frontend_change_password') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Change Password</a>
                                             </li>
-                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('riwayat') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Booking History</a>
-                                            </li>
-                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('ticketing') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Ticketing</a>
-                                            </li>
-                                            @if(Auth::user()->level == "user")
-                                            <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
-                                                <a href="{{ url('payment') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-secondary hover:text-white text-center my-[-1px]">Payment</a>
-                                            </li>
-                                            @endif
+                                            
                                             <li class="border-b border-dashed border-primary border-opacity-40 last:border-b-0 hover:border-solid transition-all">
                                                 <a href="{{ url('frontend_logout') }}" class="font-lora leading-[1.571] text-[14px] text-primary p-[10px] capitalize block transition-all hover:bg-primary hover:text-white text-center my-[-1px] rounded-b-[12px]">Log Out</a>
                                             </li>
@@ -194,182 +207,70 @@
 
                 <nav class="offcanvas-menu mr-[20px]">
                     <ul>
+                        @if( request()->session()->missing('session_id'))   
                         <li class="relative block border-b-primary border-b first:border-t first:border-t-primary">
-                            <a href="#" class="block capitalize font-normal text-black hover:text-secondary text-base my-2 py-1 px-5">Home</a>
-                            <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="index.html">home 01</a></li>
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="index-2.html">home 02</a></li>
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="index-3.html">home 03</a></li>
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="index-4.html">home 04</a></li>
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="index-5.html">home 05</a></li>
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="index-6.html">home 06</a></li>
-                            </ul>
+                            <a href="{{ url('login') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Login or Register</a>
+                            
                         </li>
                         <li class="relative block border-b-primary border-b">
-                            <a href="about.html" class="block capitalize font-normal text-black hover:text-secondary text-base my-2 py-1 px-5">About</a>
-                            <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="about.html">About</a></li>
-
-                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="about-v2.html">About v2</a></li>
-                            </ul>
-
+                            <a href="#" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Download Apps</a>
+                            
                         </li>
                         <li class="relative block border-b-primary border-b">
-                            <a href="#" class="block capitalize font-normal text-black hover:text-secondary text-base my-2 py-1 px-5">Properties</a>
+                            <a href="{{ url('term') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Terms And Conditions</a>
+                            
+                        </li>
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('privacy') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Privacy Policy</a>
+                            
+                        </li>
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('contact') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Contact US</a>
+                            
+                        </li>
+                        @endif
+
+                        @if( request()->session()->has('session_id'))   
+                        <li class="relative block border-b-primary border-b first:border-t first:border-t-primary">
+                            <a href="{{ url('frontend_dashboard') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Dashboard</a>
+                            
+                        </li>
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('frontend_booking') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Booking</a>
+                            
+                        </li>
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('riwayat') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Booking History</a>
+                            
+                        </li>
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('ticketing') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Ticketing</a>
+                            
+                        </li>
+                        @if(Auth::user()->level == 'user')
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('payment') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Payment</a>
+                            
+                        </li>
+                        @endif
+                        
+
+                        <li class="relative block border-b-primary border-b">
+                            <a href="{{ url('frontend_dashboard') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">My Account</a>
                             <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-                                <li>
-                                    <a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="#">Properties</a>
-                                    <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-
-
-
-                                        <li>
-                                            <a class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary" href="properties-v1.html"> properties v1</a>
-                                        </li>
-                                        <li>
-                                            <a class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary" href="properties-v2.html"> properties v2</a>
-                                        </li>
-                                        <li>
-                                            <a class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary" href="add-properties.html">add properties </a>
-                                        </li>
-
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="#">Properties with sidebar</a>
-                                    <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-
-                                        <li>
-                                            <a href="properties-left-side-bar.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">properties
-                                                left side bar</a>
-                                        </li>
-                                        <li>
-                                            <a href="properties-right-side-bar.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">properties
-                                                right side bar</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="properties-list-left-side-bar.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">properties
-                                                list left side bar</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="properties-list-right-side-bar.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">properties
-                                                list
-                                                right side bar</a>
-                                        </li>
-                                    </ul>
-
-
-                                </li>
-                                <li>
-                                    <a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="#">Property Details</a>
-
-                                    <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-
-                                        <li>
-                                            <a href="add-properties.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">add
-                                                properties</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="properties-details.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">properties
-                                                details</a>
-                                        </li>
-
-                                    </ul>
-
-                                </li>
-
+                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="{{ url('frontend_setting') }}">Profile</a></li>
+                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="{{ url('frontend_change_password') }}">Change Password</a></li>
+                                <li><a class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary" href="{{ url('frontend_logout') }}">Logout</a></li>
+                               
                             </ul>
                         </li>
-                        <li class="relative block border-b-primary border-b"><a href="#" class="relative block capitalize font-normal text-black hover:text-secondary text-base my-2 py-1 px-5">Pages</a>
-
-                            <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-                                <li>
-                                    <a href="service.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">Service</a>
-                                </li>
-                                <li>
-                                    <a href="single-service.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">single
-                                        service</a>
-                                </li>
-                                <li>
-                                    <a href="contact-us.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">contact
-                                        us</a>
-                                </li>
-                                <li>
-                                    <a href="create-agency.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">create
-                                        agency</a>
-                                </li>
-                                <li>
-                                    <a href="login.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">login</a>
-                                </li>
-                                <li>
-                                    <a href="register.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">register</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="relative block border-b-primary border-b"><a href="#" class="relative block capitalize font-normal text-black hover:text-secondary text-base my-2 py-1 px-5">agency</a>
-
-                            <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-                                <li>
-                                    <a href="agency.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">agency</a>
-                                </li>
-                                <li>
-                                    <a href="create-agency.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">create
-                                        agency</a>
-                                </li>
-
-                                <li>
-                                    <a href="agent.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">agent</a>
-                                </li>
-
-                                <li>
-                                    <a href="agency-details.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">agency
-                                        details</a>
-                                </li>
-
-                                <li>
-                                    <a href="agent-details.html" class="text-sm pt-3 px-10 pb-1 text-black font-light block transition-all hover:text-secondary">agent
-                                        details</a>
-                                </li>
-
-                            </ul>
-
-                        </li>
-
-                        <li class="relative block border-b-primary border-b"><a href="#" class="relative block capitalize text-black hover:text-secondary text-base my-2 py-1 px-5">Blog</a>
-
-                            <ul class="offcanvas-submenu static top-auto hidden w-full visible opacity-100 capitalize">
-                                <li>
-                                    <a href="blog-grid.html" class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary">blog
-                                        grid</a>
-                                </li>
-                                <li>
-                                    <a href="blog-grid-left-side-bar.html" class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary">blog
-                                        grid left side bar</a>
-                                </li>
-                                <li>
-                                    <a href="blog-grid-right-side-bar.html" class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary">blog
-                                        grid right side bar</a>
-                                </li>
-                                <li>
-                                    <a href="blog-details.html" class="text-sm py-2 px-[30px] text-black font-light block transition-all hover:text-secondary">blog
-                                        details</a>
-                                </li>
-
-                            </ul>
-                        </li>
-                        <li class="relative block border-b-primary border-b"><a href="contact.html" class="relative block capitalize text-black hover:text-secondary text-base my-2 py-1 px-5">Contact</a></li>
+                        @endif
+                        
                     </ul>
                 </nav>
                 <!-- offcanvas-menu end -->
 
-                <div class="px-5 flex flex-wrap mt-3 sm:hidden">
-                    <a href="#" class="before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:-z-[1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[20px] py-[15px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:-z-[2] after:bg-primary after:rounded-md after:transition-all">Add
-                        Property</a>
-                </div>
+                
 
 
 
@@ -404,10 +305,12 @@
                         <h3 class="font-lora font-normal text-[22px] leading-[1.222] text-primary mb-[20px] lg:mb-[30px]">
                             More Information<span class="text-secondary">.</span></h3>
                         <ul class="text-[16px] leading-none mb-[-20px]">
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="about.html">Login Or Register</a></li>
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="properties-v2.html">Download App For Android</a></li>
+                            @if( request()->session()->missing('session_id'))  
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="{{ url('login') }}">Login Or Register</a></li>
+                            @endif
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Download App For Android</a></li>
                             <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Download App For IPhone</a></li>
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Contact Us</a></li>
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="{{ url('contact') }}">Contact Us</a></li>
                         </ul>
                     </div>
                     <div class="col-span-12 sm:col-span-6 lg:col-span-3 mb-[30px]">
@@ -415,11 +318,11 @@
                             Support<span class="text-secondary">.</span></h3>
                         <ul class="text-[16px] leading-none mb-[-20px]">
                            
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Terms &
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="{{ url('term') }}">Terms &
                                     Conditions</a></li>
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Privacy Policy</a>
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="{{ url('privacy') }}">Privacy Policy</a>
                             </li>
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="agent.html">Return Policy</a></li>
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Return Policy</a></li>
                             <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Data Sharing & Cookies</a></li>
                         </ul>
                     </div>

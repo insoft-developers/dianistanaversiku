@@ -253,8 +253,14 @@ function close_warning_box() {
                 console.log(data);
                 $("#btn_send_transaction").text("Submit");
                 if(data.success) {
-                    alert(data.message);
-                    window.location = "{{ url('riwayat') }}";
+                    // alert(data.message);
+                    if(data.total_price <= 0) {
+                        window.location = "{{ url('riwayat') }}";
+                    } else {
+                        payment_process(data.id);
+                    }
+                    
+                   
                 } else {
                     show_error("Error", data.message);
                 }
@@ -310,7 +316,7 @@ function close_warning_box() {
 </script>
 @endif
 
-@if($view == "riwayat")
+@if($view == "riwayat" || $view == "booking-detail")
 <script>
     function payment_process(id) {
         var csrf_token = $('meta[name="csrf-token"]').attr('content');

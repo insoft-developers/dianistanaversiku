@@ -14,7 +14,7 @@
                     
                 </div>
                 <div class="grid grid-cols-12 jarak20 gap-[30px]">
-                    <div class="col-span-8 md:col-span-8 lg:col-span-8">
+                    <div class="mobile-yes col-span-8 md:col-span-8 lg:col-span-8">
                         <div class="card-box">
                            
                             <div class="text-judul"><i class="fa fa-ticket"></i> {{ $detail->subject }}</div>
@@ -84,7 +84,7 @@
                         @endforeach
                     </div>
                     
-                    <div class="col-span-4 md:col-span-4 lg:col-span-4 mb-[30px]">
+                    <div class="mobile-yes col-span-4 md:col-span-4 lg:col-span-4 mb-[30px]">
                         <div class="card-box">
                             <div class="text-judul">Detail Ticket</div>
                             <div class="jarak20"></div>

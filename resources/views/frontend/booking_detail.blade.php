@@ -9,7 +9,7 @@
     </h3>
     <div class="jarak20"></div>
 	<div class="grid grid-cols-12 mb-[-30px] gap-[30px] xl:gap-[50px]">
-        <div class="col-span-12 md:col-span-6 lg:col-span-6 mb-[30px]">
+        <div class="col-span-12 md:col-span-6 lg:col-span-6 sm:col-span-12 xs:col-span-6  mb-[30px]">
 			<aside class="mb-[-60px] asidebar">
 			<div class="mb-[60px]">
 				<h3 class="text-primary leading-none text-[24px] font-lora underline mb-[40px] font-medium">Please complete this form.</h3>
@@ -76,8 +76,22 @@
 		<div class="col-span-12 md:col-span-6 lg:col-span-6 mb-[30px]">
 			{{-- <img src="{{ asset('storage/unit-bisnis') }}/{{ $data->image }}" class="side-booking-image" loading="lazy" alt="Elite Garden Resedence." width="770" height="465"> --}}
             @php
+                function incrementalHash($len = 5){
+                    $charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                    $base = strlen($charset);
+                    $result = '';
+
+                    $now = explode(' ', microtime())[1];
+                    while ($now >= $base){
+                        $i = $now % $base;
+                        $result = $charset[$i] . $result;
+                        $now /= $base;
+                    }
+                    return substr($result, -5);
+                }
+
                 $random = random_int(1000, 9999);
-                $invoice = date('ymdHis').$random;
+                $invoice = incrementalHash();
             @endphp
 			<table class="table nowrap">
                 <tr>

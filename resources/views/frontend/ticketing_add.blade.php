@@ -35,7 +35,7 @@
                         <select class="input-ticket w-100" id="department" name="department">
                             <option value="">Select Department</option>
                             @foreach($category as $item)
-                                <option value="{{ $item->id }}">{{ $item->category_name }}</option>
+                                <option <?php if($item->category_name == "Komplain") echo 'selected'; ?> value="{{ $item->id }}">{{ $item->category_name }}</option>
                             @endforeach
                         </select>
                         <div class="jarak20"></div>
@@ -43,7 +43,7 @@
                         <select class="input-ticket w-100" id="priority" name="priority">
                             <option value="">Select Priority</option>
                             <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
+                            <option <?php echo 'selected' ;?>  value="Medium">Medium</option>
                             <option value="High">High</option>
                             <option value="Critical">Critical</option>
                         </select>

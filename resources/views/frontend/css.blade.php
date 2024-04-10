@@ -55,7 +55,7 @@ ul.menu-atas{
     cursor: pointer;        
 }
 .otp-text{
-     border: 1px solid whitesmoke;
+    border: 3px solid #87c9b7;
     width: 42%;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -281,7 +281,7 @@ ul.menu-atas{
     text-align: center;
     border-radius: 5px;
     margin-bottom: 8px;
-    width: 89px;
+    width: 162px;
     cursor: pointer;
 }
 
@@ -297,7 +297,7 @@ ul.menu-atas{
     text-align: center;
     border-radius: 5px;
     margin-bottom: 8px;
-    width: 89px;
+    width: 162px;
 
 }
 
@@ -671,5 +671,7 @@ label{
     top: -14px;
     padding-bottom: 3px;
 }
+
+    
 
 </style>

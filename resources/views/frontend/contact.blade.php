@@ -25,7 +25,7 @@
 
 <div class="pt-[80px] lg:pt-[120px]">
     <div class="container">
-        <form id="contact-form" action="assets/php/contact.php" method="post">
+        <form id="form-contact">
             <div class="grid grid-cols-12 gap-x-[30px] mb-[-30px] items-end">
                 <div class="col-span-12 lg:col-span-7 mb-[30px]">
                     <div>

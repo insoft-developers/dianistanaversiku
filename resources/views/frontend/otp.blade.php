@@ -25,12 +25,12 @@
                 <div class="jarak20">
                     <form method="POST" action="{{ route('send.otp') }}">
                     @csrf
-                    <center><p>Masukkan 6 digit angka yang kami kirimkan melalui no whatsapp anda<p></center>
+                    <center><p>Masukkan 6 digit angka yang kami kirimkan melalui no whatsapp / Email anda<p></center>
                     <img class="gambar-otp" src="{{ asset('template/images') }}/otp.png"  alt="about image">   
                     <input type="hidden" name="email" value="{{ session('session_register_otp') }}"> 
                     <center><input type="text" name="passcode" class="form-control otp-text" placeholder="masukkan 6 digit passcode anda"> </center>
 
-                   <center><button id="button_register"  type="submit" class="before:rounded-md jarak20 before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:-z-[1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[40px] py-[15px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:-z-[2] after:bg-primary after:rounded-md after:transition-all">Send Code</button></center>
+                   <center><button id="button_register"  type="submit" class="before:rounded-md jarak20 before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:-z-[1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[40px] py-[15px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:-z-[2] after:bg-primary after:rounded-md after:transition-all">VERIFIKASI</button></center>
                     </form>
                     <div class="jarak40"></div>
                 </div>

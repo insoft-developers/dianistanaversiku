@@ -17,6 +17,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Redirect;
+use Mail;
+use App\Mail\RegisterMail;
 
 
 class AuthUsersController extends Controller
@@ -227,6 +229,7 @@ class AuthUsersController extends Controller
             
             User::create($input);
             $this->send_wa($input['no_hp'], $input['passcode']);
+            $this->sendMail($input['email'], $input['passcode']);
             Session::flash("success", "Registrasi Berhasil, Silahkan aktifkan akun anda terlebih dahulu");
             session(['session_register_otp' => $input['email']]);
             return redirect('/otp');
@@ -267,8 +270,8 @@ class AuthUsersController extends Controller
                 $data->is_active = 1;
                 $data->save();
 
-                Session::flash("success", "akun anda berhasil diaktifkan!");
-                return redirect('otp');
+                Auth::login($data);
+                return redirect('frontend_dashboard');
             } else {
                 Session::flash("error", "akun anda sudah active");
                 return redirect('otp');
@@ -283,7 +286,7 @@ class AuthUsersController extends Controller
 
     public function send_wa($phone, $passcode) {
         
-        $key='c50b2c98d96b93b80307edbb3e85d4eab676044e3ecd3181'; //this is demo key please change with your own key
+        $key='ce0183f4fa3f8a7ce774f4aa6e046899ebcd108f28e064a6'; //this is demo key please change with your own key
         $url='http://116.203.191.58/api/send_message';
         $data = array(
           "phone_no"  => $phone,
@@ -316,6 +319,21 @@ class AuthUsersController extends Controller
         $view = 'otp';
         return view('frontend.otp', compact('view'));
     }
+
+
+    public function sendMail($email, $passcode) {
+
+        $user = User::where('email', $email)->first();
+
+        $details = [
+            'nama' => $user->name,
+            'email' => $email,
+            'passcode' => $passcode
+        ];
+         
+        Mail::to($email)->send(new RegisterMail($details));
+    }
+
 
 
     public function logout(Request $request) {
@@ -618,13 +636,13 @@ class AuthUsersController extends Controller
 
         if($data->kategori == 'Kolam Renang') {
 
-            if(Auth::user()->level == 'user') {
+            // if(Auth::user()->level == 'user') {
                 $HTML .= '<div class="jarak20"></div>';
                 $HTML .= '<p>Select Booking Start Time:</p>';
                 $HTML .= '<div class="jarak10 grid grid-cols-12 items-center">';
                 
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_1" onclick="select_hour(1)" ><i class="fa fa-clock"></i> 06:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_1" value="06">';
                 $HTML .= '<input type="hidden" id="price_start_1" value="'.$price1.'">';
@@ -632,61 +650,61 @@ class AuthUsersController extends Controller
             
             
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_2" onclick="select_hour(2)"><i class="fa fa-clock"></i> 07:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_2" value="07">';
                 $HTML .= '<input type="hidden" id="price_start_2" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_3" onclick="select_hour(3)"><i class="fa fa-clock"></i> 08:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_3" value="08">';
                 $HTML .= '<input type="hidden" id="price_start_3" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_4" onclick="select_hour(4)"><i class="fa fa-clock"></i> 09:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_4" value="09">';
                 $HTML .= '<input type="hidden" id="price_start_4" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_5" onclick="select_hour(5)"><i class="fa fa-clock"></i> 10:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_5" value="10">';
                 $HTML .= '<input type="hidden" id="price_start_5" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_6" onclick="select_hour(6)"><i class="fa fa-clock"></i> 11:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_6" value="11">';
                 $HTML .= '<input type="hidden" id="price_start_6" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_7" onclick="select_hour(7)"><i class="fa fa-clock"></i> 12:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_7" value="12">';
                 $HTML .= '<input type="hidden" id="price_start_7" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_8" onclick="select_hour(8)"><i class="fa fa-clock"></i> 13:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_8" value="13">';
                 $HTML .= '<input type="hidden" id="price_start_8" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_9" onclick="select_hour(9)"><i class="fa fa-clock"></i> 14:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_9" value="14">';
                 $HTML .= '<input type="hidden" id="price_start_9" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_10" onclick="select_hour(10)"><i class="fa fa-clock"></i> 15:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_10" value="15">';
                 $HTML .= '<input type="hidden" id="price_start_10" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_11" onclick="select_hour(11)"><i class="fa fa-clock"></i> 16:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_11" value="16">';
                 $HTML .= '<input type="hidden" id="price_start_11" value="'.$price1.'">';
@@ -699,67 +717,67 @@ class AuthUsersController extends Controller
 
                 $HTML .= '<div class="jarak10 grid grid-cols-12 items-center">';
                 
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_2" onclick="select_finish_hour(2)"><i class="fa fa-clock"></i> 07:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_2" value="07">';
                 $HTML .= '<input type="hidden" id="price_finish_2" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_3" onclick="select_finish_hour(3)"><i class="fa fa-clock"></i> 08:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_3" value="08">';
                 $HTML .= '<input type="hidden" id="price_finish_3" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_4" onclick="select_finish_hour(4)"><i class="fa fa-clock"></i> 09:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_4" value="09">';
                 $HTML .= '<input type="hidden" id="price_finish_4" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_5" onclick="select_finish_hour(5)"><i class="fa fa-clock"></i> 10:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_5" value="10">';
                 $HTML .= '<input type="hidden" id="price_finish_5" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_6" onclick="select_finish_hour(6)"><i class="fa fa-clock"></i> 11:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_6" value="11">';
                 $HTML .= '<input type="hidden" id="price_finish_6" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_7" onclick="select_finish_hour(7)"><i class="fa fa-clock"></i> 12:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_7" value="12">';
                 $HTML .= '<input type="hidden" id="price_finish_7" value="'.$price1.'">';
                 $HTML .= '</div>';
         
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_8" onclick="select_finish_hour(8)"><i class="fa fa-clock"></i> 13:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_8" value="13">';
                 $HTML .= '<input type="hidden" id="price_finish_8" value="'.$price1.'">';
                 $HTML .= '</div>';
         
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_9" onclick="select_finish_hour(9)"><i class="fa fa-clock"></i> 14:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_9" value="14">';
                 $HTML .= '<input type="hidden" id="price_finish_9" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_10" onclick="select_finish_hour(10)"><i class="fa fa-clock"></i> 15:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_10" value="15">';
                 $HTML .= '<input type="hidden" id="price_finish_10" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_11" onclick="select_finish_hour(11)"><i class="fa fa-clock"></i> 16:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_11" value="16">';
                 $HTML .= '<input type="hidden" id="price_finish_11" value="'.$price1.'">';
                 $HTML .= '</div>';
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_12" onclick="select_finish_hour(12)"><i class="fa fa-clock"></i> 17:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_12" value="17">';
                 $HTML .= '<input type="hidden" id="price_finish_12" value="'.$price1.'">';
@@ -768,9 +786,9 @@ class AuthUsersController extends Controller
                 
             
                 $HTML .= '</div>';
-            } else {
+            // } else {
                 
-            }
+            // }
 
             
         } else {
@@ -779,11 +797,11 @@ class AuthUsersController extends Controller
             $HTML .= '<div class="jarak10 grid grid-cols-12 items-center">';
             
             if($jam6 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_1" onclick="select_hour(1)" ><i class="fa fa-clock"></i> 06:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_1" value="06">';
                 $HTML .= '<input type="hidden" id="price_start_1" value="'.$price1.'">';
@@ -791,22 +809,22 @@ class AuthUsersController extends Controller
             }
             
             if($jam7 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_2" onclick="select_hour(2)"><i class="fa fa-clock"></i> 07:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_2" value="07">';
                 $HTML .= '<input type="hidden" id="price_start_2" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam8 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_3" onclick="select_hour(3)"><i class="fa fa-clock"></i> 08:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_3" value="08">';
                 $HTML .= '<input type="hidden" id="price_start_3" value="'.$price1.'">';
@@ -814,134 +832,134 @@ class AuthUsersController extends Controller
             }    
             
             if($jam9 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_4" onclick="select_hour(4)"><i class="fa fa-clock"></i> 09:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_4" value="09">';
                 $HTML .= '<input type="hidden" id="price_start_4" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam10 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_5" onclick="select_hour(5)"><i class="fa fa-clock"></i> 10:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_5" value="10">';
                 $HTML .= '<input type="hidden" id="price_start_5" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam11 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_6" onclick="select_hour(6)"><i class="fa fa-clock"></i> 11:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_6" value="11">';
                 $HTML .= '<input type="hidden" id="price_start_6" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam12 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
 
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_7" onclick="select_hour(7)"><i class="fa fa-clock"></i> 12:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_7" value="12">';
                 $HTML .= '<input type="hidden" id="price_start_7" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam13 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_8" onclick="select_hour(8)"><i class="fa fa-clock"></i> 13:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_8" value="13">';
                 $HTML .= '<input type="hidden" id="price_start_8" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam14 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_9" onclick="select_hour(9)"><i class="fa fa-clock"></i> 14:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_9" value="14">';
                 $HTML .= '<input type="hidden" id="price_start_9" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam15 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_10" onclick="select_hour(10)"><i class="fa fa-clock"></i> 15:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_10" value="15">';
                 $HTML .= '<input type="hidden" id="price_start_10" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam16 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_11" onclick="select_hour(11)"><i class="fa fa-clock"></i> 16:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_11" value="16">';
                 $HTML .= '<input type="hidden" id="price_start_11" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam17 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
             
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_12" onclick="select_hour(12)"><i class="fa fa-clock"></i> 17:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_12" value="17">';
                 $HTML .= '<input type="hidden" id="price_start_12" value="'.$price2.'">';
                 $HTML .= '</div>';
             }
             if($jam18 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_13" onclick="select_hour(13)"><i class="fa fa-clock"></i> 18:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_13" value="18">';
                 $HTML .= '<input type="hidden" id="price_start_13" value="'.$price2.'">';
                 $HTML .= '</div>';
             }
             if($jam19 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_14" onclick="select_hour(14)"><i class="fa fa-clock"></i> 19:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_14" value="19">';
                 $HTML .= '<input type="hidden" id="price_start_14" value="'.$price2.'">';
                 $HTML .= '</div>';
             }
             if($jam20 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="hour_15" onclick="select_hour(15)"><i class="fa fa-clock"></i> 20:00</div>';
                 $HTML .= '<input type="hidden" id="hour_start_15" value="20">';
                 $HTML .= '<input type="hidden" id="price_start_15" value="'.$price2.'">';
@@ -955,165 +973,165 @@ class AuthUsersController extends Controller
 
             $HTML .= '<div class="jarak10 grid grid-cols-12 items-center">';
             if($jam6 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_2" onclick="select_finish_hour(2)"><i class="fa fa-clock"></i> 07:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_2" value="07">';
                 $HTML .= '<input type="hidden" id="price_finish_2" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam7 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_3" onclick="select_finish_hour(3)"><i class="fa fa-clock"></i> 08:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_3" value="08">';
                 $HTML .= '<input type="hidden" id="price_finish_3" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam8 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_4" onclick="select_finish_hour(4)"><i class="fa fa-clock"></i> 09:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_4" value="09">';
                 $HTML .= '<input type="hidden" id="price_finish_4" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam9 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_5" onclick="select_finish_hour(5)"><i class="fa fa-clock"></i> 10:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_5" value="10">';
                 $HTML .= '<input type="hidden" id="price_finish_5" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam10 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_6" onclick="select_finish_hour(6)"><i class="fa fa-clock"></i> 11:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_6" value="11">';
                 $HTML .= '<input type="hidden" id="price_finish_6" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam11 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_7" onclick="select_finish_hour(7)"><i class="fa fa-clock"></i> 12:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_7" value="12">';
                 $HTML .= '<input type="hidden" id="price_finish_7" value="'.$price1.'">';
                 $HTML .= '</div>';
         }
         if($jam12 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_8" onclick="select_finish_hour(8)"><i class="fa fa-clock"></i> 13:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_8" value="13">';
                 $HTML .= '<input type="hidden" id="price_finish_8" value="'.$price1.'">';
                 $HTML .= '</div>';
         }
         if($jam13 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_9" onclick="select_finish_hour(9)"><i class="fa fa-clock"></i> 14:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_9" value="14">';
                 $HTML .= '<input type="hidden" id="price_finish_9" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam14 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_10" onclick="select_finish_hour(10)"><i class="fa fa-clock"></i> 15:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_10" value="15">';
                 $HTML .= '<input type="hidden" id="price_finish_10" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam15 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_11" onclick="select_finish_hour(11)"><i class="fa fa-clock"></i> 16:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_11" value="16">';
                 $HTML .= '<input type="hidden" id="price_finish_11" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam16 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_12" onclick="select_finish_hour(12)"><i class="fa fa-clock"></i> 17:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_12" value="17">';
                 $HTML .= '<input type="hidden" id="price_finish_12" value="'.$price1.'">';
                 $HTML .= '</div>';
             }
             if($jam17 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_13" onclick="select_finish_hour(13)"><i class="fa fa-clock"></i> 18:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_13" value="18">';
                 $HTML .= '<input type="hidden" id="price_finish_13" value="'.$price2.'">';
                 $HTML .= '</div>';
         }
         if($jam18 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_14" onclick="select_finish_hour(14)"><i class="fa fa-clock"></i> 19:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_14" value="19">';
                 $HTML .= '<input type="hidden" id="price_finish_14" value="'.$price2.'">';
                 $HTML .= '</div>';
             }
             if($jam19 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_15" onclick="select_finish_hour(15)"><i class="fa fa-clock"></i> 20:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_15" value="20">';
                 $HTML .= '<input type="hidden" id="price_finish_15" value="'.$price2.'">';
                 $HTML .= '</div>';
             }    
             if($jam20 > 0) {
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-book"><i class="fa fa-book"></i> Booked</div>';
                 $HTML .= '</div>';
             } else{
-                $HTML .= '<div class="col-span-2 md:col-span-2 lg:col-span-2">';
+                $HTML .= '<div class="col-span-4 md:col-span-4 lg:col-span-4">';
                 $HTML .= '<div class="hour-work" id="finish_16" onclick="select_finish_hour(16)"><i class="fa fa-clock"></i> 21:00</div>';
                 $HTML .= '<input type="hidden" id="hour_finish_16" value="21">';
                 $HTML .= '<input type="hidden" id="price_finish_16" value="'.$price2.'">';
@@ -1211,10 +1229,13 @@ class AuthUsersController extends Controller
             }
 
             $input['order_status'] = 1;
-            \App\Models\Transaction::create($input);
+            $data = \App\Models\Transaction::create($input);
+            
             return response()->json([
                 "success" => true,
-                "message" => "success"
+                "message" => "success",
+                "id" => $data->id,
+                "total_price" => $input['total_price']
             ]);
 
         }catch(\Exception $e) {
@@ -1236,6 +1257,8 @@ class AuthUsersController extends Controller
         $input = $request->all();
 
         $trans = \App\Models\Transaction::findorFail($input['id']);
+
+        
         $user = \App\Models\User::findorFail($trans->user_id);
         $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
 
@@ -1247,7 +1270,7 @@ class AuthUsersController extends Controller
         ])->post('https://api.xendit.co/v2/invoices', [
             'external_id' => $external_id,
             'amount' => $trans->total_price,
-            'success_redirect_url' => url('/riwayat'),
+            'success_redirect_url' => url('/print_ticket/'.$input['id']),
             'failure_redirect_url' => url('/riwayat'),
             'description' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB",
         ]);
@@ -1304,7 +1327,11 @@ class AuthUsersController extends Controller
 
     public function print($id) {
         $view = 'print-ticket';
-        $trans = \App\Models\Transaction::where('id', $id)->where('payment_status', 'PAID')->first();
+        $tran = \App\Models\Transaction::where('id', (int)$id)->where('payment_status', 'PAID');
+        if($tran->count() <= 0) {
+            return redirect('/riwayat');
+        }
+        $trans = $tran->first();
         $user = \App\Models\User::findorFail($trans->user_id);
         $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
         return view('frontend.ticket', compact('view','trans','user','product'));
