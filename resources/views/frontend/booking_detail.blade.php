@@ -139,7 +139,7 @@
                     <td><span id="finish-time"></span><input type="hidden" id="finish-time-input"></td>
                 </tr>
                 <tr>
-                    <td><strong>Quantity</strong></td>
+                    <td><strong>Number Of Users</strong></td>
                     <td>:</td>
                     <td><span id="quantity"></span><input type="hidden" id="quantity-input"></td>
                 </tr>
@@ -151,7 +151,7 @@
             </table>
 
             <div class="jarak20"></div>	
-                <button id="btn_send_transaction" onclick="send_order()" type="button" class="block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[30px] py-[12px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:z-[-2] after:bg-primary after:rounded-md after:transition-all">Submit</button>
+                <button id="btn_send_transaction" onclick="send_order()" type="button" class="block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[30px] py-[12px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:z-[-2] after:bg-primary after:rounded-md after:transition-all">BOOKING NOW</button>
 		</div>
 		
 	</div>

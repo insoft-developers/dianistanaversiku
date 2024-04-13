@@ -220,7 +220,7 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 						<div class="elementor-element elementor-element-528e99a elementor-invisible elementor-widget elementor-widget-lp_navigation_menu" data-id="528e99a" data-element_type="widget" data-settings="{&quot;_animation&quot;:&quot;fadeInDown&quot;}" data-widget_type="lp_navigation_menu.default">
 				<div class="elementor-widget-container">
 					<div class="lp-navmenu-wrapper lp-navmenu-sticky">
-			<div class="lp-navmenu-logo"><a href="{{ url('dashboard') }}"><img decoding="async" src="{{ asset('assets/tambahan') }}/image/Desain-tanpa-judul.png" alt="" /></a></div>												<div class="lp-navmenu-button">
+			<div class="lp-navmenu-logo"><a href="{{ url('/') }}"><img decoding="async" src="{{ asset('assets/tambahan') }}/image/Desain-tanpa-judul.png" alt="" /></a></div>												<div class="lp-navmenu-button">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
 					</div>
 					<ul class="lp-navmenu-items">

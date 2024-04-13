@@ -157,11 +157,12 @@ ul.menu-atas{
     display: block;
     background: black;
     color: white;
-    padding: 2px;
+    padding: 5px 11px 5px 11px;
     border-radius: 20px;
     width: 89px !important;
     text-align: center;
     font-size: 12px !important;
+    white-space: normal;
 }
 
 .b-red{
@@ -672,6 +673,26 @@ label{
     padding-bottom: 3px;
 }
 
-    
+.banner-image{
+    height: 205px;
+    object-fit: cover;
+}    
+
+.menu-dashboard{
+    min-height: 226px;
+}
+
+.hour-disabled{
+    opacity: 0.2;
+    cursor: default;
+
+}
+.hour-disabled:hover{
+    opacity: 0.2;
+    cursor: default;
+    background: #7a7373 !important;
+
+
+}
 
 </style>

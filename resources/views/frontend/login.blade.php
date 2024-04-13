@@ -31,7 +31,7 @@
                             	
                             		
                                 <div class="col-span-12">
-                                    <input class="font-light w-full sm:w-[400px] leading-[1.75] placeholder:opacity-100 placeholder:text-body border border-primary border-opacity-60 rounded-[8px] p-[15px] focus:border-secondary focus:border-opacity-60 focus:outline-none focus:drop-shadow-[0px_6px_15px_rgba(0,0,0,0.1)] " type="text" name="username" placeholder="Username">
+                                    <input title="untuk login dengan no whatsapp masukkan no whatsapp anda lengkap dengan kode negera (+6282166775544)" class="font-light w-full sm:w-[400px] leading-[1.75] placeholder:opacity-100 placeholder:text-body border border-primary border-opacity-60 rounded-[8px] p-[15px] focus:border-secondary focus:border-opacity-60 focus:outline-none focus:drop-shadow-[0px_6px_15px_rgba(0,0,0,0.1)] " type="text" name="username" placeholder="masukkan username/email/no whatsapp">
                                 </div>
 
 

@@ -118,6 +118,7 @@ trait DataTablesTraitStatic
         self::$varDB->limit(intval(self::$req->input('length')));
         self::$varDB->offset(intval($no));
         $result = self::$varDB->get();
+        
         foreach ($result as $val) {
             $no++;
             $val->no = $no;

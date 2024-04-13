@@ -44,7 +44,7 @@
                                                 <th>Tgl Input</th>
                                                 <th>Gambar Banner</th>
                                                 <th>Judul Banner</th>
-                                                <th>Content</th>
+                                                <th>Link To</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -88,8 +88,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Content :</label>
-                                                <textarea name="content" id="content_banner" class="form-control" rows="10"></textarea>
+                                                <label>Link Terkait :</label>
+                                                <input id="link_terkait" name="link_terkait" class="form-control" type="text" placeholder="Masukkan link">
                                             </div>
                                         </form>
                                     </div>

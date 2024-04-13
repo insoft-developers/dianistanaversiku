@@ -7,6 +7,7 @@ use App\Http\Controllers\Admins\DashboardController;
 use App\Http\Controllers\Admins\PenyeliaController;
 use App\Http\Controllers\Admins\PenyeliaKategoriController;
 use App\Http\Controllers\Admins\UnitBisnisController;
+use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -131,12 +132,25 @@ Route::prefix("backdata")
    Route::post("banner-iklan/{id}/restore",[BannerIklanController::class,'restore']) ;
    Route::resource("banner-iklan",BannerIklanController::class);
 
+
+   // user data
+   Route::get("user-list",[UserController::class,'ajax_list'])->name('user.list') ;
+   Route::post("user-list-trash",[UserController::class,'ajax_list_trash']) ;
+   Route::get("user/{id}/trash",[UserController::class,'editTrash']) ;
+   Route::post("user/{id}/restore",[UserController::class,'restore']) ;
+   Route::resource("user",UserController::class);
+
    // unit bisnis
    Route::post("unit-bisnis-list",[UnitBisnisController::class,'ajax_list']) ;
    Route::post("unit-bisnis-list-trash",[UnitBisnisController::class,'ajax_list_trash']) ;
    Route::get("unit-bisnis/{id}/trash",[UnitBisnisController::class,'editTrash']) ;
    Route::post("unit-bisnis/{id}/restore",[UnitBisnisController::class,'restore']) ;
    Route::resource("unit-bisnis",UnitBisnisController::class);
+
+   Route::get('testing', function(){
+      $data = Storage::url('/');
+      dd($data);
+   });
 
 });
 

@@ -140,6 +140,8 @@ function close_warning_box() {
     }
 
     var selected_hour_index = 0;
+    var selected_j=0;
+    var selected_k=0;
     function select_hour(id) {
         if($("#hour_"+id).hasClass("active")) {
 
@@ -152,10 +154,31 @@ function close_warning_box() {
             $("#start-time").text('PK '+selected_hour_start+':00 WIB');
             $("#start-time-input").val(selected_hour_start);
             selected_price_start = $("#price_start_"+id).val();
-        }
+        }   
+        disabled_option(id);
+        
+    }
 
+    // onclick="select_finish_hour(2)"
+
+    function disabled_option(id) {
+        var j = +id + 1;
+        var k = +id + 2;
+        selected_j = j;
+        selected_k = k;
+        for(var n=1; n<17; n++) {
+            if(n != j && n != k) {
+                $("#finish_"+n).addClass("hour-disabled");
+                $("#finish_"+n).removeAttr("onclick");
+                $("#finish_"+n).removeClass("actived");
+                
+            }
+        }
         
-        
+        $("#finish_"+selected_j).removeClass("hour-disabled");
+        $("#finish_"+selected_j).attr("onclick", "select_finish_hour("+selected_j+")");
+        $("#finish_"+selected_k).removeClass("hour-disabled");
+        $("#finish_"+selected_k).attr("onclick", "select_finish_hour("+selected_k+")");
     }
 
     var selected_finish_hour_index = 0;

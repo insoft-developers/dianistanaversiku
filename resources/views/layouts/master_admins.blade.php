@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title_admin') | DianIstana </title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('') }}assets/template/src/assets/img/favicon.ico"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
     <link href="{{ asset('') }}assets/template/layouts/modern-light-menu/css/light/loader.css" rel="stylesheet" type="text/css" />
     <link href="{{ asset('') }}assets/template/layouts/modern-light-menu/css/dark/loader.css" rel="stylesheet" type="text/css" />
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -40,6 +40,8 @@
     <!-- BEGIN PAGE LEVEL STYLES -->
     @yield("level_styles_admin")
     <!-- END PAGE LEVEL STYLES -->
+
+    @include('css');
 </head>
 <body class="layout-boxed">
     <!-- BEGIN LOADER -->
@@ -303,33 +305,16 @@
                             </div>
                         </a>
                     </li>
-                    @php
-                        $groupActivePenyelia = "";
-                        $groupShowPenyelia = "";
-                        if(requestGroupActive(['backdata/penyelia','backdata/penyelia-kategori'])){
-                            $groupActivePenyelia = "active";
-                            $groupShowPenyelia = "show";
-                        }
-                    @endphp
-                    <li class="menu {{ $groupActivePenyelia }}">
-                        <a href="#datapenyelia" data-bs-toggle="collapse" aria-expanded="{{ $groupActivePenyelia }}" class="dropdown-toggle">
+                    
+                    <li class="menu {{ requestIsActive('backdata/user') }}">
+                        <a href="{{ url('backdata/user') }}" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                                <span>Data Penyelia</span>
-                            </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                                <span>Data User</span>
                             </div>
                         </a>
-                        <ul class="collapse submenu list-unstyled {{ $groupShowPenyelia }}" id="datapenyelia" data-bs-parent="#accordionExample">
-                            <li class="{{ requestIsActive('backdata/penyelia') }}">
-                                <a href="{{ url('backdata/penyelia') }}"> Penyelia </a>
-                            </li>
-                            <li class="{{ requestIsActive('backdata/penyelia-kategori') }}">
-                                <a href="{{ url('backdata/penyelia-kategori') }}"> Kategori </a>
-                            </li>
-                        </ul>
                     </li>
+                    
 
                     <li class="menu menu-heading">
                         <div class="heading"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Data Pengguna</span></div>
@@ -441,5 +426,7 @@
     <!-- END PAGE LEVEL SCRIPTS -->
     
     @yield("script_admin")
+
+    @include('js')
 </body>
 </html>

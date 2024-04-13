@@ -53,7 +53,7 @@ function listDataTables(idTable,urlAjax,btnRefresh,btnAdd="")
                 orderable:false,
             },
             { data:'title' },
-            { data:'content_limit' },
+            { data:'link_terkait' },
         ]
     })
 }
@@ -95,11 +95,7 @@ function editData(id) {
         if (resp.status == true) {
             $("#showImg_banner").children().attr("src",resp.data.image_src);
             $("#title").val(resp.data.title);
-            // console.log(resp.data.content);
-
-            if (resp.data.content != null) {
-                tinymce.get("content_banner").setContent(resp.data.content);
-            }
+            $("#link_terkait").val(resp.data.link_terkait);
         } else {
             setTimeout(function() {
                 showTables();
@@ -121,10 +117,6 @@ $("#btnSave").click(function() {
     $("#btnSave").attr("disabled",true);
     $("#btnSave").html('Sedang Proses Simpan...<i class="fa fa-spinner fa-spin"></i>');
 
-    let content = tinymce.get("content_banner").getContent();
-    // console.log(content);
-    $("textarea[name=content]").val(content);
-    
     if (save_method == "add") {
         var url = url_back+'/banner-iklan';
     } else {

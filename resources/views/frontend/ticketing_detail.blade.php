@@ -96,9 +96,13 @@
                             <div class="jarak15"></div>
                             <label>Status</label>
                             @if($detail->status == 0)
-                            <span class="badge b-green">Open</span>
-                            @else 
-                            <span class="badge b-grey">Closed</span>
+                            <span class="badge b-green">Menunggu Jawaban Admin</span>
+                            @elseif($detail->status == 1)
+                            <span class="badge b-green">Menunggu Jawaban User</span>
+                            @elseif($detail->status == 2)
+                            <span class="badge b-orange">On Hold</span>
+                            @elseif($detail->status == 3)
+                            <span class="badge b-grey">Selesai</span>
                             @endif
                             <div class="jarak15"></div>
                             <label>Submitted</label>

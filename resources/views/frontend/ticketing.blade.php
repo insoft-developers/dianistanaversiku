@@ -39,13 +39,18 @@
                             <tr>
                             <td><a href="{{ url('/ticketing_detail') }}/{{ $d->ticket_number }}"><span style="color:blue;font-weight:bold;">{{ $d->ticket_number }}</span></a></td>
                             <td>{{ $category->category_name }}</td>
-                            <td><strong>{{ $d->subject }}</strong><br><span style="font-style: italic"><?= substr($d->message, 0, 100) ;?>...</span></td>
+                            <td><a href="{{ url('/ticketing_detail') }}/{{ $d->ticket_number }}"><span style="color:blue;font-weight:bold;">{{ $d->subject }}</span></a><br><span style="font-style: italic"><?= substr($d->message, 0, 100) ;?>...</span></td>
                             <td>
                                 @if($d->status == 0)
-                                <span class="badge b-green">Open</span>
-                                @else 
-                                <span class="badge b-grey">Closed</span>
+                                <span class="badge b-green">Menunggu Jawaban Admin</span>
+                                @elseif($d->status == 1)
+                                <span class="badge b-green">Menunggu Jawaban User</span>
+                                @elseif($d->status == 2)
+                                <span class="badge b-orange">On Hold</span>
+                                @elseif($d->status == 3)
+                                <span class="badge b-grey">Selesai</span>
                                 @endif
+                                
                             </td>
                             <td>{{ date('d-m-Y', strtotime($d->created_at)) }}<br>{{ date('H:i:s', strtotime($d->created_at)) }} WIB</td>
                             <td>{{ date('d-m-Y', strtotime($d->updated_at)) }}<br>{{ date('H:i:s', strtotime($d->updated_at)) }} WIB</td>

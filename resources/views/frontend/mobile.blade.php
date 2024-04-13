@@ -678,5 +678,30 @@
     .mobile-yes {
         grid-column: span 12/span 12;
     }
+
+    #sticky-header {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+
+    #btn_send_transaction {
+        position: relative;
+        margin: auto;
+        padding-top: 21px;
+        padding-bottom: 21px;
+    }
+
+    .dt-search{
+        position: relative;
+        left: -26px;
+    }
+
+    
+    .dt-length{
+        position: relative;
+        left: -64px;
+    }
+
+   
 }
-    </style>
+</style>

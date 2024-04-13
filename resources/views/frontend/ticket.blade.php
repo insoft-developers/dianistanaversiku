@@ -2,8 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+	
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Dian Istana</title>
+  <meta name="AdsBot-Google" content="noindex follow" />
+  <meta name="description" content="Bery-Real Estate Listing Template">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />  
+  <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
         * {
@@ -16,7 +23,7 @@ html, body {
 body {
   @import url('https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700');
   font-family: 'Ubuntu', sans-serif;
-  background-color: #3f32e5;
+  background-color: #3a394a;
   height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -214,6 +221,20 @@ body {
     left: 95px;
 }
 
+.footnote{
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .footnote{
+    display: block !important;
+    color: white;
+    margin-left: 41px;
+    margin-right: 41px;
+    font-size: 18px;
+  }
+}
+
     </style>
 </head>
 <body>
@@ -255,7 +276,7 @@ body {
                    <h3><i class="fa fa-clock"></i> {{ $trans->finish_time.":00" }}</h3>
                 </div>
                 <div class="item">
-                    <span>Quantity</span>
+                    <span>Number of User</span>
                     @if($product->kategori == "Kolam Renang")
                     <h3><i class="fa fa-user"></i> {{ $trans->quantity }}</h3>
                     @else
@@ -278,6 +299,7 @@ body {
           <img class="paid" src="{{ asset('template/images/paid.webp') }}">
        </div>
     </div>
+    <p class="footnote">Please Screenshot this page and show it to the staff on-site</p>
  </main>
 </body>
 </html>

@@ -18,7 +18,8 @@ class AdminsController extends Controller
      */
     public function index(): View
     {
-        return view("admins.admin.index");
+        $view = "admin";
+        return view("admins.admin.index", compact('view'));
     }
     
     private static function set_ajax_list($request,bool $trash=false)

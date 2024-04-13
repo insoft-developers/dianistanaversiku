@@ -6,33 +6,56 @@
     }
 </style>
 
-<section class="bg-no-repeat bg-center bg-cover bg-[#FFF6F0] h-[350px] lg:h-[513px] flex flex-wrap items-center relative before:absolute before:inset-0 before:content-[''] before:bg-[#000000] before:opacity-[70%]" style="background-image: url('{{ asset('template/images/contact.webp') }}');">
+
+
+<!-- Hero section end -->
+   <!-- Explore Cities Start-->
+   <section class="explore-cities-section pt-[30px] pb-[120px] lg:py-[100px]">
     <div class="container">
         <div class="grid grid-cols-12">
             <div class="col-span-12">
-                <div class="max-w-[650px]  mx-auto text-center text-white relative z-[1]">
-                    <div class="mb-5"><span class="text-base block"><img class="dashboard-foto" src="{{ $data->foto == NULL || $data->foto == '' ? asset('template/images/profil_icon.png') : asset('storage/profile/'.$data->foto)  }}"><br> Welcome, {{ Auth::user()->name }} ({{ Auth::user()->level }})</span></div>
-                    <h1 class="text-[36px] sm:text-[50px] md:text-[68px] lg:text-[50px] leading-tight xl:text-2xl font-medium">
+                <div class="mb-[30px] lg:mb-[60px] text-center">
+                   
+                    <h3 class="font-lora jarak30 custom-title">
                         Dashboard
-                    </h1>
+                    </h3>
+                    <div class="jarak20"></div>
+                </div>
+                <div class="cities-slider">
+                    <div class="swiper  -mx-[30px] -my-[60px] px-[30px] py-[60px]">
+                        <div class="swiper-wrapper">
+                            @foreach($banner as $b)
+                            <div class="swiper-slide text-center">
+                                <div class="relative group">
+                                    <a href="{{ $b->link_terkait }}" target="_blank" class="block group-hover:shadow-[0_10px_15px_0px_rgba(0,0,0,0.1)] transition-all duration-300">
+                                        <img src="{{ asset('template/images/banners') }}/{{ $b->image }}" class="banner-image w-full h-full block mx-auto rounded-[6px]" loading="lazy" alt="New York">
+                                        <div class="bg-[rgb(255,253,252,0.9)] rounded-[6px] px-[5px] py-[15px] absolute group-hover:bottom-[25px] group-hover:opacity-100 bottom-[0px] opacity-0 left-[25px] right-[25px] transition-all duration-500">
+                                            <span class="font-lora font-normal text-[18px] text-primary transition-all leading-none">{{ $b->title }}</span>
+                                            <p class="font-light text-[14px] capitalize text-secondary transition-all leading-none"></p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
 
-                    <p class="text-base mt-5 max-w-[500px] mx-auto text-center">
-                        
-                    </p>
+
+                            <!-- swiper-slide end-->
+                        </div>
+                        <!-- Add Pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Hero section end -->
-
+<!-- Explore Cities End-->
 
 
 
 <!-- service Section Start-->
 
-<section class="pt-[80px] pb-[120px] lg:py-[120px]">
+<section class="pt-[60px] pb-[120px] lg:py-[60px]">
     <div class="container">
         <div class="grid grid-cols-12">
             <div class="col-span-12">
@@ -46,18 +69,18 @@
             <div class="relative group">
                 <a href="{{ url('frontend_booking') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/booking.png" class="menu-image" loading="lazy" width="270" height="290" alt="Sale Property">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Booking<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide unit business place or comunal facility to book for user to enjoy.</p>
+                        <p class="font-light text-tiny">You can reserve public facilities like swimming pools, tennis courts, basketball courts and communal spaces.</p>
                     </div>
                 </a>
             </div>
             <div class="relative group">
                 <a href="{{ url('ticketing') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/ticketing.png" class="menu-image" loading="lazy" width="270" height="290" alt="Buy Property">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Ticketing<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide System for User to send questions, requests or complains.</p>
+                        <p class="font-light text-tiny">A menu for requesting services, upgrades, lodging complaints about community facilities and communicating with the admin team.</p>
                     </div>
                 </a>
             </div>
@@ -65,18 +88,18 @@
             <div class="relative group">
                 <a href="{{ url('payment') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/payment.png" class="menu-image" loading="lazy" width="270" height="290" alt="Rent Property">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Payment<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide billing system for user to pay according to bill of amount </p>
+                        <p class="font-light text-tiny">System for making various payments including monthly housing dues, routine charges and more... </p>
                     </div>
                 </a>
             </div>
             <div class="relative group">
                 <a href="{{ url('user_data') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/datamenu.png" class="menu-image" loading="lazy" width="270" height="290" alt="Buy Property">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">User Data<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide System for User to send questions, requests or complains.</p>
+                        <p class="font-light text-tiny">Providing information on property ownership within Dian Istana Residential Area.</p>
                     </div>
                 </a>
             </div>
@@ -84,27 +107,27 @@
             <div class="relative group">
                 <a href="{{ url('notif_list') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/notif_menu.png" class="menu-image" loading="lazy" width="270" height="290" alt="Buy Property">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Nofitications<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide System for User to send questions, requests or complains.</p>
+                        <p class="font-light text-tiny">Receiving the latest updates and news from the admin.</p>
                     </div>
                 </a>
             </div>
             <div class="relative group">
                 <a href="{{ url('frontend_setting') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/menu_profiles.png" class="menu-image" loading="lazy" width="270" height="290" alt="Mortgage">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Profile<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide Setting for user to customize profile image, adress and phone number. </p>
+                        <p class="font-light text-tiny">You can update your personal information details within he myDianistana app. </p>
                     </div>
                 </a>
             </div>
             <div class="relative group">
                 <a href="{{ url('frontend_change_password') }}" class="block">
                     <img src="{{ asset('template/images/unit') }}/menu_password.png" class="menu-image" loading="lazy" width="270" height="290" alt="Mortgage">
-                    <div class="drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
+                    <div class="menu-dashboard drop-shadow-[0px_2px_15px_rgba(0,0,0,0.1)] hover:drop-shadow-[0px_8px_20px_rgba(0,0,0,0.15)] bg-[#FFFDFC] rounded-[0px_0px_6px_6px] px-[25px] py-[25px]">
                         <h3 class="dashboard-title font-normal text-[24px] xl:text-lg text-primary group-hover:text-secondary transition-all mb-[5px]">Change Password<span class="text-secondary group-hover:text-primary"></span> </h3>
-                        <p class="font-light text-tiny">Provide Setting for user to customize profile image, adress and phone number.. </p>
+                        <p class="font-light text-tiny">A menu for changing your password to the access the myDianistana application </p>
                     </div>
                 </a>
             </div>

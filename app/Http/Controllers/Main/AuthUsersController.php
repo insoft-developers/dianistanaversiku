@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Redirect;
 use Mail;
 use App\Mail\RegisterMail;
-
+use App\Models\BannerIklan;
 
 class AuthUsersController extends Controller
 {
@@ -134,7 +134,8 @@ class AuthUsersController extends Controller
     public function dashboard() {
         $view = 'frontend-dashboard';
         $data = User::findorFail(Auth::user()->id);
-        return view('frontend.dashboard', compact('view','data'));
+        $banner = BannerIklan::where('is_active', 1)->get();
+        return view('frontend.dashboard', compact('view','data','banner'));
     }
 
 
@@ -181,9 +182,44 @@ class AuthUsersController extends Controller
             $data->save();
 
             return redirect('/frontend_dashboard');
+        }
+        
+        else if(Auth::attempt(['email'=>$input['username'],'password'=>$input['password']])) {
+            
+            $data = User::where('email', $input['username'])->first();
+            session(['session_id' => $data->id]);
+            session(['session_name' => $data->name]);
+            session(['session_email' => $data->email]);
+            session(['session_hp' => $data->no_hp]);
+            session(['session_level' => $data->level]);
+            session(['session_foto' => $data->foto]);
+
+            $data->token = session('session_frm_key');
+            $data->save();
+
+            return redirect('/frontend_dashboard');
+        }
+
+        else if(Auth::attempt(['no_hp'=>$input['username'],'password'=>$input['password']])) {
+            
+            $data = User::where('no_hp', $input['username'])->first();
+            session(['session_id' => $data->id]);
+            session(['session_name' => $data->name]);
+            session(['session_email' => $data->email]);
+            session(['session_hp' => $data->no_hp]);
+            session(['session_level' => $data->level]);
+            session(['session_foto' => $data->foto]);
+
+            $data->token = session('session_frm_key');
+            $data->save();
+
+            return redirect('/frontend_dashboard');
 
 
-        } else {
+        }
+        
+        
+        else {
             Session::flash('error', 'username atau password masih salah!');
             return redirect('/login');
         }

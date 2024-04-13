@@ -21,15 +21,16 @@ class BannerIklanController extends Controller
      */
     public function index(): View
     {
-        return view("admins.banner_iklan.index");
+        $view = "banner";
+        return view("admins.banner_iklan.index", compact('view'));
     }
 
     private static function set_ajax_list($request, bool $trash = false)
     {
         self::dataTablesQuery(BannerIklan::query());
         self::dataTablesRequest($request);
-        self::dataTablesOrderBy([null,null,'created_at',null,'title','content']);
-        self::dataTablesSearch(['created_at','title','content']);
+        self::dataTablesOrderBy([null,null,'created_at',null,'title','link_terkait']);
+        self::dataTablesSearch(['created_at','title','link_terkait']);
         if ($trash) {
             self::dataTablesOnlyTrashed();
         }
@@ -39,15 +40,13 @@ class BannerIklanController extends Controller
             $item->created_at_carbon = tagSmall(Carbon::parse($item->created_at)->format("Y-m-d H:i:s"));
             $item->image_src = assetImg_thumbnail();
             if ($item->image != "") {
-                if (Storage::disk("local")->exists("public/banner/".$item->image)) {
-                    $item->image_src = Storage::url("public/banner/".$item->image);
+                if (file_exists(public_path('template/images/banners/'.$item->image))) {
+                    $item->image_src = asset('template/images/banners/'.$item->image);
                 }
             }
 
-            $content_limit = Str::of($item->content)->stripTags('<br>');
-            $content_limit = str_replace(['<br />','<br \/>'],' ',$content_limit);
-            $item->content_limit = Str::limit($content_limit,40);
-
+            
+            $item->link_terkait = $item->link_terkait;
             $item->image_src = '<div class="avatar avatar-lg"><img alt="'.$item->title.'" src="'.$item->image_src.'" class="rounded" /></div>';
             
             $btnAction = "";
@@ -86,10 +85,12 @@ class BannerIklanController extends Controller
      */
     public function store(Request $request)
     {
+        $input = $request->all();
+        
         $rules = [
             'image' => 'required|mimes:jpg,jpeg,png,gif|max:2048',
             'title' => 'required',
-            'content' => 'required',
+            'link_terkait' => 'required',
         ];
 
         $validator = $this->validateRed($request, $rules);
@@ -102,14 +103,22 @@ class BannerIklanController extends Controller
                 $slug_title = $slug_title . time();
             }
 
-            $image = $request->file('image');
-            $image->storeAs('public/banner', $image->hashName());
+            
+
+            $input['image'] = null;
+            $unique = uniqid();
+            if($request->hasFile('image')){
+                $input['image'] = str::slug($unique, '-').'.'.$request->image->getClientOriginalExtension();
+                $request->image->move(public_path('/template/images/banners'), $input['image']);
+            }
+            
             
             $data = [
-                'image' => $image->hashName(),
+                'image' => $input['image'],
                 'title' => $request->title,
                 'slug_title' => Str::slug($slug_title),
-                'content' => $request->content,
+                'link_terkait' => $request->link_terkait,
+                'is_active' => 1
             ];
 
             $insert = BannerIklan::create($data);
@@ -140,8 +149,9 @@ class BannerIklanController extends Controller
             $getData->created_at_carbon = tagSmall(Carbon::parse($getData->created_at)->format("Y-m-d H:i:s"));
             $getData->image_src = assetImg_thumbnail();
             if ($getData->image != "") {
-                if (Storage::disk("local")->exists("public/banner/".$getData->image)) {
-                    $getData->image_src = Storage::url("public/banner/".$getData->image);
+                $path = public_path('template/images/banners/'.$getData->image);
+                if (file_exists($path)) {
+                    $getData->image_src = asset('template/images/banners/'.$getData->image);
                 }
             }
             
@@ -175,38 +185,49 @@ class BannerIklanController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $input = $request->all();
         $getData = BannerIklan::getFirst(where: ["id" => $id]);
         if ($getData) {
             $rules = [
                 'image' => 'mimes:jpg,jpeg,png,gif|max:2048',
                 'title' => 'required',
-                'content' => 'required',
+                'link_terkait' => 'required',
             ];
 
             $validator = $this->validateRed($request, $rules);
             if ($validator !== null) {
                 Resp::error($validator);
             } else {
-                $data = [
-                    'title' => $request->title,
-                    'content'=> $request->content,
-                ];
+                
                 
                 $image = $request->file('image');
+                $input['image'] = $getData->image;
                 if (!empty($image)) {
-                    if (Storage::disk("local")->exists("public/banner/".$getData->image)) {
-                        Storage::disk("local")->delete("public/banner/".$getData->image);
+                    $path = public_path('/template/images/banners/'.$getData->image);
+                    if(file_exists($path)) {
+                        unlink($path);
                     }
-                    $image->storeAs('public/banner', $image->hashName());
-                    $data["image"] = $image->hashName();
+
+                    $unique = uniqid();
+                    if($request->hasFile('image')){
+                        $input['image'] = str::slug($unique, '-').'.'.$request->image->getClientOriginalExtension();
+                        $request->image->move(public_path('/template/images/banners'), $input['image']);
+                    }
+            
                 } else {
                     if ($request->is_remove == 1) {
-                        if (Storage::disk("local")->exists("public/banner/".$getData->image)) {
-                            Storage::disk("local")->delete("public/banner/".$getData->image);
+                        $path = public_path('template/images/banners/'.$getData->image);
+                        if(file_exists($path)) {
+                            unlink($path);
                         }
                         $data["image"] = "";
                     }
                 }
+                $data = [
+                    'title' => $request->title,
+                    'link_terkait'=> $request->link_terkait,
+                    'image'=> $input['image']
+                ];
 
                 $update = BannerIklan::updateWhere(["id" => $getData->id], $data);
                 if ($update) {

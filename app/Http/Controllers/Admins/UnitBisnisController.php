@@ -19,7 +19,8 @@ class UnitBisnisController extends Controller
      */
     public function index(): View
     {
-        return view("admins.unit_bisnis.index");
+        $view = "unit";
+        return view("admins.unit_bisnis.index", compact('view'));
     }
 
     private static function set_ajax_list($request, bool $trash = false)
@@ -182,10 +183,11 @@ class UnitBisnisController extends Controller
         if ($getData) {
             $getData->image_src = assetImg_thumbnail();
             if ($getData->image != "") {
-                if (Storage::disk("local")->exists("public/unit-bisnis/".$getData->image)) {
-                    $getData->image_src = Storage::url("public/unit-bisnis/".$getData->image);
+                if (file_exists(public_path('storage/unit-bisnis/'.$getData->image))) {
+                    $getData->image_src = asset('storage/unit-bisnis/'.$getData->image);
                 }
             }
+
 
             $getData->harga_warga_1721_weekday = numberFormat($getData->harga_warga_1721_weekday);
             $getData->harga_warga_1721_weekend = numberFormat($getData->harga_warga_1721_weekend);
@@ -211,9 +213,11 @@ class UnitBisnisController extends Controller
         $getData = UnitBisnis::getFirstOnlyTrashed(where: ["id" => $id]);
         if ($getData) {
             $getData->image_src = assetImg_thumbnail();
+            
+
             if ($getData->image != "") {
-                if (Storage::disk("local")->exists("public/unit-bisnis/".$getData->image)) {
-                    $getData->image_src = Storage::url("public/unit-bisnis/".$getData->image);
+                if (file_exists(public_path('storage/unit-bisnis/'.$getData->image))) {
+                    $getData->image_src = asset('storage/unit-bisnis/'.$getData->image);
                 }
             }
 
@@ -293,15 +297,15 @@ class UnitBisnisController extends Controller
                 
                 $image = $request->file('image');
                 if (!empty($image)) {
-                    if (Storage::disk("local")->exists("public/unit-bisnis/".$getData->image)) {
-                        Storage::disk("local")->delete("public/unit-bisnis/".$getData->image);
+                    if (file_exists(public_path('storage/unit-bisnis/'.$getData->image))) {
+                        unlink(public_path('storage/unit-bisnis/'.$getData->image));
                     }
                     $image->storeAs('public/unit-bisnis', $image->hashName());
                     $data["image"] = $image->hashName();
                 } else {
                     if ($request->is_remove == 1) {
-                        if (Storage::disk("local")->exists("public/unit-bisnis/".$getData->image)) {
-                            Storage::disk("local")->delete("public/unit-bisnis/".$getData->image);
+                        if (file_exists(public_path('storage/unit-bisnis/'.$getData->image))) {
+                            unlink(public_path('storage/unit-bisnis/'.$getData->image));
                         }
                         $data["image"] = "";
                     }
