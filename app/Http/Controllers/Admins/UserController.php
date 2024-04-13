@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\DBcustom\DataTablesTraitStatic;
 use DataTables;
+use Validator;
 
 class UserController extends Controller
 {
@@ -59,75 +60,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'image' => 'mimes:jpg,jpeg,png,gif|max:2048',
-            'kategori' => 'required',
-            'name_unit' => 'required',
-            'jenis_harga' => 'required',
-            'status_booking' => 'required',
-        ];
+        $input = $request->all();
 
-        if ($request->jenis_harga == "Per Jam") {
-            $rules["harga_warga_1721_weekday"] = 'required';
-            $rules["harga_warga_1721_weekend"] = 'required';
-            $rules["harga_umum_0617_weekday"] = 'required';
-            $rules["harga_umum_0617_weekend"] = 'required';
-            $rules["harga_umum_1721_weekday"] = 'required';
-            $rules["harga_umum_1721_weekend"] = 'required';
-        } else if ($request->jenis_harga == "Kedatangan") {
-            $rules["harga_membership_4x"] = 'required';
-            $rules["harga_membership_8x"] = 'required';
-            $rules["harga_non_member"] = 'required';
-            $rules["harga_tamu_warga"] = 'required';
-        }
+        $rules = array(
+            "name" => "required",
+            "username" => "required",
+            "email" => "required",
+            "password" => "required",
+            "jenis_kelamin" => "required",
+            "no_hp" => "required",
+            "level" => "required",
+            "is_active" => "required",
+        );
 
-        $validator = $this->validateRed($request, $rules);
-        if ($validator !== null) {
-            Resp::error($validator);
-        } else {
-            $slug = $request->name_unit;
-            $checkData = UnitBisnis::getFirst(where: ["name_unit" => $slug]);
-            if ($checkData) {
-                $slug = $slug . time();
-            }
-            
-            $data = [
-                'kategori' => $request->kategori,
-                'name_unit' => $request->name_unit,
-                'slug' => Str::slug($slug),
-                'jenis_harga' => $request->jenis_harga,
-                'status_booking' => $request->status_booking,
-                'id_admin' => adminAuth()->id,
-            ];
-
-            $image = $request->file('image');
-            if (!empty($image)) {
-                $image->storeAs('public/unit-bisnis', $image->hashName());
-                $data["image"] = $image->hashName();
-            }
-
-            if ($request->jenis_harga == "Per Jam") {
-                $data["harga_warga_1721_weekday"] = self::intReplace($request->harga_warga_1721_weekday);
-                $data["harga_warga_1721_weekend"] = self::intReplace($request->harga_warga_1721_weekend);
-                $data["harga_umum_0617_weekday"] = self::intReplace($request->harga_umum_0617_weekday);
-                $data["harga_umum_0617_weekend"] = self::intReplace($request->harga_umum_0617_weekend);
-                $data["harga_umum_1721_weekday"] = self::intReplace($request->harga_umum_1721_weekday);
-                $data["harga_umum_1721_weekend"] = self::intReplace($request->harga_umum_1721_weekend);
-            } else if ($request->jenis_harga == "Kedatangan") {
-                $data["harga_membership_4x"] = self::intReplace($request->harga_membership_4x);
-                $data["harga_membership_8x"] = self::intReplace($request->harga_membership_8x);
-                $data["harga_non_member"] = self::intReplace($request->harga_non_member);
-                $data["harga_tamu_warga"] = self::intReplace($request->harga_tamu_warga);
-            }
-
-            $insert = UnitBisnis::create($data);
-            if ($insert) {
-                Resp::success(alertSuccess("Data Berhasil di Simpan"));
-            } else {
-                Resp::error(alertDanger("Gagal Simpan Data"));
-            }
-        }
-        return Resp::json();
+        
     }
 
     /**
