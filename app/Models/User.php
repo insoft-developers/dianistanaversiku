@@ -24,9 +24,24 @@ class User extends Authenticatable
         'email',
         'password',
         'no_hp',
+        'foto',
         'level',
+        'jenis_kelamin',
         'passcode',
-        'is_active'
+        'is_active',
+        'penyelia',
+        'blok',
+        'nomor_rumah',
+        'daya_listrik',
+        'luas_tanah',
+        'iuran_bulanan',
+        'whatsapp_emergency',
+        'keterangan',
+        'alamat_surat_menyurat',
+        'nomor_telepon_rumah',
+        'id_pelanggan_pdam',
+        'nomor_meter_pln',
+        'mulai_menempati'
     ];
 
     /**

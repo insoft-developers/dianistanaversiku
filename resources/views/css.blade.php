@@ -52,5 +52,12 @@
         width: 25px;
         height: 25px;
     }
-
+    .img-list-data{
+        width: 50px;
+        height: 50px;
+        border-radius: 3px;
+        object-fit: cover;
+        border: 2px solid green;
+        padding: 2px;
+    }
 </style>
