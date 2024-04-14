@@ -6,6 +6,7 @@
     .dataTables_paginate{
         margin-top: 15px !important;
         margin-bottom: 15px !important;
+        float: right;
     }
     .previous .page-link{
         margin-right: 30px !important;
@@ -16,7 +17,7 @@
         background: transparent !important;
     }   
     .dataTables_length{
-        margin-bottom: 10px;
+        margin-bottom: -40px;
     }
     .dataTables_filter{
         margin-bottom: 10px;
@@ -59,5 +60,16 @@
         object-fit: cover;
         border: 2px solid green;
         padding: 2px;
+    }
+    .dt-buttons{
+        position: absolute;
+        left: 232px;
+        top: 21px;
+    }
+    .img-detail{
+        width: 141px;
+        height: 176px;
+        object-fit: cover;
+        border-radius: 5px;
     }
 </style>

@@ -29,6 +29,14 @@
         var table = $('#listTable').DataTable({
             processing:true,
             serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
             ajax: "{{ route('user.list') }}",
             order: [[ 0, "desc" ]],
             columns: [
@@ -152,6 +160,22 @@
             });
         }
         
+        function detailData(id) {
+            $.ajax({
+                url: "{{ url('backdata/user') }}"+"/"+id,
+                type: "GET",
+                success: function(data) {
+                    $("#detail-content").html(data); 
+                    $("#modal-detail").modal("show");
+                }
+            });    
+        }
+
+        $("#btn-print-detail").click(function(){
+            var id = $("#id-detail").val();
+            window.open('{{ url('backdata/print_detail') }}'+'/'+id, '_blank');
+
+        });
         
         function resetForm() {
             $("#name").val("");

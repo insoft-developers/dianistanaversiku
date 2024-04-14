@@ -19,6 +19,7 @@
     
     <link rel="stylesheet" type="text/css" href="{{ asset('') }}assets/template/src/plugins/css/light/table/datatable/dt-global_style.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('') }}assets/template/src/plugins/css/dark/table/datatable/dt-global_style.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('') }}assets/template/src/plugins/css/light/table/datatable/custom_dt_miscellaneous.css">
 
     <link rel="stylesheet" href="{{ asset('') }}assets/template/src/plugins/src/font-icons/fontawesome-5.15.4/css/all.css">
 
@@ -412,6 +413,13 @@
     <script src="{{ asset('') }}assets/template/src/plugins/src/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="{{ asset('') }}assets/template/src/plugins/src/mousetrap/mousetrap.min.js"></script>
     <script src="{{ asset('') }}assets/template/src/plugins/src/table/datatable/datatables.js"></script>
+    
+    <script src="{{ asset('') }}assets/template/src/plugins/src/table/datatable/button-ext/dataTables.buttons.min.js"></script>
+    <script src="{{ asset('') }}assets/template/src/plugins/src/table/datatable/button-ext/jszip.min.js"></script>    
+    <script src="{{ asset('') }}assets/template/src/plugins/src/table/datatable/button-ext/buttons.html5.min.js"></script>
+    <script src="{{ asset('') }}assets/template/src/plugins/src/table/datatable/button-ext/buttons.print.min.js"></script>
+    <script src="{{ asset('') }}assets/template/src/plugins/src/table/datatable/custom_miscellaneous.js"></script>
+
     <script src="{{ asset('') }}assets/template/src/plugins/src/waves/waves.min.js"></script>
     <script src="{{ asset('') }}assets/template/layouts/modern-light-menu/app.js?vm=934598"></script>
 

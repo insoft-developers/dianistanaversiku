@@ -139,6 +139,9 @@ Route::prefix("backdata")
    Route::get("user/{id}/trash",[UserController::class,'editTrash']) ;
    Route::post("user/{id}/restore",[UserController::class,'restore']) ;
    Route::resource("user",UserController::class);
+   Route::get('/print_detail/{id}', [UserController::class, 'print_detail']);
+
+
 
    // unit bisnis
    Route::post("unit-bisnis-list",[UnitBisnisController::class,'ajax_list']) ;

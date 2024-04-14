@@ -132,7 +132,78 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        abort(404);
+        $user = User::findorFail($id);
+        
+        $HTML = "";
+        $HTML .= '<input type="hidden" value="'.$id.'" id="id-detail">';
+        $HTML .= '<div class="row">';
+        $HTML .= '<div class="col-md-6">';
+        $HTML .= '<div class="card">';
+        $HTML .= '<div class="card-body">';
+        $HTML .= '<table class="table table-bordered table-striped">';
+        $HTML .= '<tbody>';
+        if($user->foto != null && $user->foto != '') {
+            $HTML .= '<tr><th>Foto</th><th><img class="img-detail" src="'.asset('storage/profile/'.$user->foto).'"></th></tr>';
+        } else {
+            $HTML .= '<tr><th>Foto</th><th><img class="img-detail" src="'.asset('template/images/profil_icon.png').'"></th></tr>';
+        }
+        
+        $HTML .= '<tr><th>Name</th><th>'.$user->name.'</th></tr>';
+        $HTML .= '<tr><th>Username</th><th>'.$user->username.'</th></tr>';
+        $HTML .= '<tr><th>Email</th><th>'.$user->email.'</th></tr>';
+        $HTML .= '<tr><th>Jenis Kelamin</th><th>'.$user->jenis_kelamin.'</th></tr>';
+        $HTML .= '<tr><th>Whatsapp</th><th>'.$user->no_hp.'</th></tr>';
+        $HTML .= '<tr><th>Level</th><th>'.$user->level.'</th></tr>';
+        if($user->is_active == 1) {
+            $HTML .= '<tr><th>Status</th><th>Active</th></tr>';
+        } else {
+            $HTML .= '<tr><th>Status</th><th>Not Active</th></tr>';
+        }
+        
+      
+        $HTML .= '</tbody>';
+        $HTML .= '</table>';
+
+
+        $HTML .= '</div>'; //cardbody
+        $HTML .= '</div>'; //card
+
+        $HTML .= '</div>'; //col-md-6
+        $HTML .= '<div class="col-md-6">';
+        $HTML .= '<div class="card">';
+        $HTML .= '<div class="card-body">'; 
+        $HTML .= '<table class="table table-bordered table-striped">';
+        $HTML .= '<tbody>';
+        
+        $HTML .= '<tr><th>Penyelia</th><th>'.$user->penyelia.'</th></tr>';
+        $HTML .= '<tr><th>Blok/No Rumah</th><th>'.$user->blok.' / '.$user->nomor_rumah.'</th></tr>';
+        $HTML .= '<tr><th>Daya Listrik</th><th>'.$user->daya_listrik.'</th></tr>';
+        $HTML .= '<tr><th>Luas Tanah</th><th>'.$user->luas_tanah.'</th></tr>';
+        $HTML .= '<tr><th>Iuran Bulanan</th><th>Rp. '.number_format($user->iuran_bulanan).'</th></tr>';
+        $HTML .= '<tr><th>Whatsapp Emergency</th><th>'.$user->whatsapp_emergency.'</th></tr>';
+        $HTML .= '<tr><th>Keterangan</th><th>'.$user->keterangan.'</th></tr>';
+        $HTML .= '<tr><th>Alamat Surat Menyurat</th><th>'.$user->alamat_surat_menyurat.'</th></tr>';
+        $HTML .= '<tr><th>No Telp Rumah</th><th>'.$user->nomor_telepon_rumah.'</th></tr>';
+        $HTML .= '<tr><th>PDAM ID</th><th>'.$user->id_pelanggan_pdam.'</th></tr>';
+        $HTML .= '<tr><th>PLN Meter</th><th>'.$user->nomor_meter_pln.'</th></tr>';
+        $HTML .= '<tr><th>Mulai Menempati</th><th>'.date('d-m-Y', strtotime($user->mulai_menempati)).'</th></tr>';
+        $HTML .= '<tr><th>Created At</th><th>'.date('d-m-Y', strtotime($user->created_at)).'</th></tr>';
+       
+      
+        $HTML .= '</tbody>';
+        $HTML .= '</table>';
+
+
+        $HTML .= '</div>'; //cardbody
+        $HTML .= '</div>'; //card
+
+        $HTML .= '</div>';
+        $HTML .= '</div>'; //row
+    
+     
+    
+
+        return $HTML;
     }
 
     /**
@@ -221,6 +292,12 @@ class UserController extends Controller
     {
        $query = User::destroy($id);
        return $query;
+    }
+
+
+    public function print_detail($id) {
+        $user = User::findorFail($id);
+        return view('admins.user.print', compact('user'));
     }
 
    
