@@ -8,6 +8,7 @@ use App\Http\Controllers\Admins\PenyeliaController;
 use App\Http\Controllers\Admins\PenyeliaKategoriController;
 use App\Http\Controllers\Admins\UnitBisnisController;
 use App\Http\Controllers\Admins\UserController;
+use App\Http\Controllers\Admins\TransactionController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -140,6 +141,13 @@ Route::prefix("backdata")
    Route::post("user/{id}/restore",[UserController::class,'restore']) ;
    Route::resource("user",UserController::class);
    Route::get('/print_detail/{id}', [UserController::class, 'print_detail']);
+
+   // transaction data
+   Route::get("transaction-list",[TransactionController::class,'ajax_list'])->name('transaction.list') ;
+   Route::resource("transaction",TransactionController::class);
+   Route::get('/print_detail/{id}', [TransactionController::class, 'print_detail']);
+   Route::post('/payment', [TransactionController::class, 'payment']);
+   Route::get('/print_ticket/{id}', [TransactionController::class, 'print_ticket']);
 
 
 
