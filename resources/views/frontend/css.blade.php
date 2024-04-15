@@ -158,7 +158,7 @@ ul.menu-atas{
     background: black;
     color: white;
     padding: 5px 11px 5px 11px;
-    border-radius: 20px;
+    border-radius: 5px;
     width: 89px !important;
     text-align: center;
     font-size: 12px !important;

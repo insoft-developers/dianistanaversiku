@@ -3,7 +3,7 @@
 @section('title_admin', 'Booking List')
 
 @section('breadcrumb_admin')
-    <li class="breadcrumb-item" aria-current="page">Master Data</li>
+    <li class="breadcrumb-item" aria-current="page">Transaction</li>
     <li class="breadcrumb-item active" aria-current="page">Booking List</li>
 @endsection
 
@@ -214,7 +214,7 @@
 
      
       <div class="modal fade bd-example-modal-xl" id="modal-detail" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
                   <h5 class="modal-title" id="myExtraLargeModalLabel">Detail Title</h5>

@@ -105,7 +105,13 @@ class TicketingController extends Controller
             $request->document->move(public_path('/storage/ticketing'), $input['document']);
         }
 
-        TicketingContent::create($input);
+        $query = TicketingContent::create($input);
+        if($query) {
+            $data = \App\Models\Ticketing::where('ticket_number', $input['ticket_number'])->first();
+            $data->status = 0;
+            $data->updated_at = date('Y-m-d H:i:s');
+            $data->save();
+        }
         return Redirect::back()->with('success', "Reply Successfully Added");
     }
 }

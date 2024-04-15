@@ -241,7 +241,7 @@
         function deleteData(id) {
             Swal.fire({
                 icon: 'question',
-                title: 'Delete this data?',
+                title: 'Delete this transaction ?',
                 
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -252,7 +252,7 @@
                 if (result.isConfirmed) {
                     var csrf_token = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url  : "{{ url('/backdata/user') }}" + '/'+id,
+                        url  : "{{ url('/backdata/transaction') }}" + '/'+id,
                         type : "POST",
                         data : {'_method':'DELETE', '_token':csrf_token},
                         success : function($data){
@@ -265,7 +265,7 @@
         
         function detailData(id) {
             $.ajax({
-                url: "{{ url('backdata/user') }}"+"/"+id,
+                url: "{{ url('backdata/transaction') }}"+"/"+id,
                 type: "GET",
                 success: function(data) {
                     $("#detail-content").html(data); 
@@ -275,8 +275,8 @@
         }
 
         $("#btn-print-detail").click(function(){
-            var id = $("#id-detail").val();
-            window.open('{{ url('backdata/print_detail') }}'+'/'+id, '_blank');
+            var id = $("#id-transaction").val();
+            window.open('{{ url('backdata/print_transaction') }}'+'/'+id, '_blank');
 
         });
 
@@ -312,6 +312,195 @@
         function printData(id) {
             window.location = "{{ url('/backdata/print_ticket') }}"+"/"+id;
         }
+        
+    </script>
+@endif
+@if($view == "ticketing")
+        <script>
+
+        $("#btn-on-hold").click(function(){
+            var id = $("#ticket_id").val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Set This Ticket to On Hold ?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Set to On Hold',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('/backdata/set_on_hold') }}",
+                        type : "POST",
+                        data : {'id':id, '_token':csrf_token},
+                        success : function(data){
+                            if(data.success) {
+                                table.ajax.reload(null, false);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: data.message,
+                                    showConfirmButton: false,
+                                    scrollbarPadding: false,
+                                });
+                                $("#modal-detail").modal("hide");
+                            }
+                            
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $("#btn-resolved").click(function(){
+            var id = $("#ticket_id").val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Set This Ticket to Resolved ?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Set to Resolved',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('/backdata/set_resolved') }}",
+                        type : "POST",
+                        data : {'id':id, '_token':csrf_token},
+                        success : function(data){
+                            if(data.success) {
+                                table.ajax.reload(null, false);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: data.message,
+                                    showConfirmButton: false,
+                                    scrollbarPadding: false,
+                                });
+                                $("#modal-detail").modal("hide");
+                            }
+                            
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $(document).ready(function(){
+            $("#form-reply").submit(function(e){
+                loading("btn-post-reply");
+                e.preventDefault();
+                var message = CKEDITOR.instances.message.getData();
+                var formdata = new FormData($('#modal-detail form')[0]);
+                formdata.append('pesan', message);
+                $.ajax({
+                    url : "{{ url('backdata/ticketing') }}",
+                    type : "POST",
+                    data : formdata,
+                    contentType:false,
+                    processData:false,
+                    success : function(data){
+                        unloading("btn-post-reply", "Post");
+                        if(data.success){
+                            $('#modal-detail').modal('hide');
+                            table.ajax.reload(null, false);
+                            Swal.fire({
+                                icon: 'success',
+                                title: data.message,
+                                showConfirmButton: false,
+                                scrollbarPadding: false,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: data.message,
+                                showConfirmButton: false,
+                                scrollbarPadding: false,
+                            });
+                        }
+                    }
+
+                });
+            });
+        
+        });
+    
+
+        var table = $('#listTable').DataTable({
+            processing:true,
+            serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            ajax: "{{ route('ticketing.list') }}",
+            order: [[ 0, "desc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'status', name: 'status'},
+                {data:'created_at', name: 'created_at'},
+                {data:'ticket_number', name: 'ticket_number'},
+                {data:'user_id', name: 'user_id'},
+                {data:'subject', name: 'subject'},
+                {data:'department', name: 'department'},
+                {data:'priority', name: 'priority'},
+                {data:'document', name: 'document'},
+                
+                {data:'updated_at', name: 'updated_at'},
+               
+            ]
+        });
+        
+        function deleteData(id) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Delete this Ticket ?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('/backdata/ticketing') }}" + '/'+id,
+                        type : "POST",
+                        data : {'_method':'DELETE', '_token':csrf_token},
+                        success : function($data){
+                            table.ajax.reload(null, false);
+                        }
+                    });
+                }
+            });
+        }
+        
+        function detailData(id) {
+            $.ajax({
+                url: "{{ url('backdata/ticketing') }}"+"/"+id,
+                type: "GET",
+                success: function(data) {
+                    $(".modal-title").text("Ticketing Summary");
+                    $("#detail-content").html(data); 
+                    $("#modal-detail").modal("show");
+                    CKEDITOR.replace('message');    
+                }
+            });    
+        }
+
+        
         
     </script>
 @endif

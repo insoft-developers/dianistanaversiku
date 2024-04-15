@@ -62,14 +62,47 @@
         padding: 2px;
     }
     .dt-buttons{
-        position: absolute;
+        position: relative;
         left: 232px;
-        top: 21px;
+        top: 41px;
     }
     .img-detail{
         width: 141px;
         height: 176px;
         object-fit: cover;
         border-radius: 5px;
+    }
+    .image-ticket{
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 30px;
+        border: 4px solid whitesmoke;
+    }
+    .problem-name{
+        position: relative;
+        top: -54px;
+        left: 72px;
+        font-size: 17px;
+        font-weight: 600;
+        color: purple;
+    }
+    .problem-time{
+        position: relative;
+        left: 72px;
+        top: -54px;
+    }
+    .problem-content{
+        font-size: 15px;
+        margin-left: 71px;
+        margin-right: 5px;
+        margin-bottom: 30px;
+    }
+    .problem-doc{
+        position: relative;
+        top: -45px;
+        left: 73px;
+        cursor: pointer;
+        color: steelblue;
     }
 </style>

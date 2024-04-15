@@ -9,6 +9,7 @@ use App\Http\Controllers\Admins\PenyeliaKategoriController;
 use App\Http\Controllers\Admins\UnitBisnisController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Admins\TransactionController;
+use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -145,9 +146,18 @@ Route::prefix("backdata")
    // transaction data
    Route::get("transaction-list",[TransactionController::class,'ajax_list'])->name('transaction.list') ;
    Route::resource("transaction",TransactionController::class);
-   Route::get('/print_detail/{id}', [TransactionController::class, 'print_detail']);
+   Route::get('/print_transaction/{id}', [TransactionController::class, 'print_transaction']);
    Route::post('/payment', [TransactionController::class, 'payment']);
    Route::get('/print_ticket/{id}', [TransactionController::class, 'print_ticket']);
+
+   // ticketing data
+   Route::get("ticketing-list",[TicketController::class,'ajax_list'])->name('ticketing.list') ;
+   Route::resource("ticketing",TicketController::class);
+   Route::get('/print_ticketing/{id}', [TicketController::class, 'print_ticketing']);
+   Route::post('/payment', [TicketController::class, 'payment']);
+   Route::get('/print_ticket/{id}', [TicketController::class, 'print_ticket']);
+   Route::post('set_on_hold', [TicketController::class, 'set_on_hold']);
+   Route::post('set_resolved', [TicketController::class, 'set_resolved']);
 
 
 

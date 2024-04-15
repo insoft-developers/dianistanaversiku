@@ -42,13 +42,13 @@
                             <td><a href="{{ url('/ticketing_detail') }}/{{ $d->ticket_number }}"><span style="color:blue;font-weight:bold;">{{ $d->subject }}</span></a><br><span style="font-style: italic"><?= substr($d->message, 0, 100) ;?>...</span></td>
                             <td>
                                 @if($d->status == 0)
-                                <span class="badge b-green">Menunggu Jawaban Admin</span>
+                                <span class="badge b-green">Waiting for Admin Response</span>
                                 @elseif($d->status == 1)
-                                <span class="badge b-green">Menunggu Jawaban User</span>
+                                <span class="badge b-green">Waiting For Your Response</span>
                                 @elseif($d->status == 2)
                                 <span class="badge b-orange">On Hold</span>
                                 @elseif($d->status == 3)
-                                <span class="badge b-grey">Selesai</span>
+                                <span class="badge b-grey">Ticket Resolved</span>
                                 @endif
                                 
                             </td>
