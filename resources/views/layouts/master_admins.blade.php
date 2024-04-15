@@ -36,6 +36,8 @@
     <link href="{{ asset('') }}assets/template/src/assets/css/dark/components/carousel.css" rel="stylesheet" type="text/css">
     <link href="{{ asset('') }}assets/template/src/assets/css/dark/components/modal.css" rel="stylesheet" type="text/css" />
     <link href="{{ asset('') }}assets/template/src/assets/css/dark/components/tabs.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!-- END GLOBAL MANDATORY STYLES -->
 
     <!-- BEGIN PAGE LEVEL STYLES -->
@@ -338,8 +340,8 @@
                         </a>
                     </li>
 
-                    <li class="menu {{ requestIsActive('backdata/payment') }}">
-                        <a href="{{ url('backdata/payment') }}" aria-expanded="false" class="dropdown-toggle">
+                    <li class="menu {{ requestIsActive('backdata/pembayaran') }}">
+                        <a href="{{ url('backdata/pembayaran') }}" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
                                 <span>Payment</span>
@@ -458,6 +460,7 @@
     <script src="{{ asset('') }}assets/template/src/assets/js/custom.js"></script>
     <script src="{{ asset('') }}assets/template/src/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     {{-- <script src="{{ asset('') }}assets/template/src/assets/js/scrollspyNav.js"></script> --}}
     <!-- END GLOBAL MANDATORY SCRIPTS -->
 

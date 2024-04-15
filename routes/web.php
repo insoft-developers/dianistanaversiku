@@ -10,6 +10,7 @@ use App\Http\Controllers\Admins\UnitBisnisController;
 use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Admins\TransactionController;
 use App\Http\Controllers\Admins\TicketController;
+use App\Http\Controllers\Admins\PembayaranController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -159,6 +160,14 @@ Route::prefix("backdata")
    Route::post('set_on_hold', [TicketController::class, 'set_on_hold']);
    Route::post('set_resolved', [TicketController::class, 'set_resolved']);
 
+   Route::get("pembayaran-list",[PembayaranController::class,'ajax_list'])->name('pembayaran.list') ;
+   Route::resource("pembayaran",PembayaranController::class);
+   Route::get('kwitansi/{id}', [PembayaranController::class, 'kwitansi']);
+   Route::post('delete_payment', [PembayaranController::class, 'delete_payment']);
+   Route::post('process_payment', [PembayaranController::class, 'process_payment']);
+   Route::get('payment_admin/{id}', [PembayaranController::class, 'payment_admin']);
+   Route::get('get_iuran_bulanan/{id}', [PembayaranController::class, 'get_iuran_bulanan']);
+  
 
 
    // unit bisnis

@@ -105,4 +105,16 @@
         cursor: pointer;
         color: steelblue;
     }
+    #select2-payment_dedication-container, #select2-payment_dedication_admin-container{
+        position: absolute;
+        top: 11px;
+        left: 16px;
+    }
+    .select2-selection--single{
+        height: 49px !important;
+    }
+
+    .agak-terang{
+        color:black !important;
+    }
 </style>

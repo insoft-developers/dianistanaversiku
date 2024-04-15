@@ -504,3 +504,301 @@
         
     </script>
 @endif
+@if($view == "pembayaran-list")
+        <script>
+
+        $(document).ready(function(){
+            $("#payment_dedication").select2({
+                theme: "classic",
+                dropdownParent: $("#modal-tambah .modal-content")
+            });
+            $("#payment_dedication_admin").select2({
+                theme: "classic",
+                dropdownParent: $("#modal-payment .modal-content")
+            });  
+        })    
+          
+        $('.profile-image').click(function(){ $('#image').trigger('click'); });
+     
+        $("#image").change(function() {
+            document.getElementById('profile-image').src = window.URL.createObjectURL(this.files[0]); 
+            $("#remove-profile-image").show();
+        });
+
+        function remove_foto() {
+            $("#image").val(null);
+            $("#profile-image").attr('src', '{{ asset('template/images/profil_icon.png') }}');
+            $("#remove-profile-image").hide();
+        }    
+
+        var table = $('#listTable').DataTable({
+            processing:true,
+            serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            ajax: "{{ route('pembayaran.list') }}",
+            order: [[ 0, "desc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'created_at', name: 'created_at'},
+                {data:'payment_name', name: 'payment_name'},
+                {data:'payment_type', name: 'payment_type'},
+                {data:'due_date', name: 'due_date'},
+                {data:'periode', name: 'periode'},
+                {data:'payment_amount', name: 'payment_amount'},
+                {data:'payment_dedication', name: 'payment_dedication'},
+               
+            ]
+        });
+
+        function addData() {
+            resetForm();
+            
+            save_method = "add";
+            $('input[name=_method]').val('POST');
+            $(".modal-title").text("Add Data");
+            $("#modal-tambah").modal("show");
+        }
+
+        $("#form-tambah").submit(function(e){
+            loading("btn-save-data");
+            e.preventDefault();
+            var id = $('#id').val();
+            if(save_method == "add")  url = "{{ url('/backdata/pembayaran') }}";
+            else url = "{{ url('/backdata/pembayaran') .'/'}}"+ id;
+            $.ajax({
+                url : url,
+                type : "POST",
+                data : new FormData($('#modal-tambah form')[0]),
+                contentType:false,
+                processData:false,
+                success : function(data){
+                    unloading("btn-save-data", "Save");
+                    if(data.success){
+                        $('#modal-tambah').modal('hide');
+                        table.ajax.reload(null, false);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.message,
+                            showConfirmButton: false,
+                            scrollbarPadding: false,
+                        });
+                    }
+                }
+
+            });
+        });
+
+        function editData(id) {
+            save_method = "edit";
+            $('input[name=_method]').val('PATCH');
+            $.ajax({
+                url: "{{ url('/backdata/pembayaran') }}" +"/"+id+"/edit",
+                type: "GET",
+                dataType: "JSON",
+                success: function(data){
+                    $('#modal-tambah').modal("show");
+                    $('.modal-title').text("Edit Data");
+                    $('#id').val(data.id);
+                    $("#payment_name").val(data.payment_name);
+                    $("#payment_desc").val(data.payment_desc);
+                    $("#payment_type").val(data.payment_type);
+                    $("#due_date").val(data.due_date);
+                    $("#periode").val(data.periode);
+                    $("#payment_amount").val(data.payment_amount);
+                    $("#payment_dedication").val(data.payment_dedication).trigger('change');
+                   
+
+                }
+            })
+        }
+
+        function deleteData(id) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Delete this data?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('/backdata/pembayaran') }}" + '/'+id,
+                        type : "POST",
+                        data : {'_method':'DELETE', '_token':csrf_token},
+                        success : function($data){
+                            table.ajax.reload(null, false);
+                        }
+                    });
+                }
+            });
+        }
+        
+        function detailData(id) {
+            $.ajax({
+                url: "{{ url('backdata/pembayaran') }}"+"/"+id,
+                type: "GET",
+                success: function(data) {
+                    $("#detail-content").html(data); 
+                    $("#modal-detail").modal("show");
+                }
+            });    
+        }
+
+        function print_kwitansi(id) {
+            window.open('{{ url('backdata/kwitansi') }}'+'/'+id, '_blank');
+        }
+        
+        function resetForm() {
+            $("#payment_name").val("");
+            $("#payment_desc").val("");
+            $("#payment_type").val("");
+            $("#due_date").val("");
+            $("#periode").val("");
+            $("#payment_amount").val("");
+            $("#payment_dedication").val("").trigger('change');
+            
+        }
+
+        function delete_payment(id){
+            Swal.fire({
+                icon: 'question',
+                title: 'Delete this Payment...?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: "{{ url('backdata/delete_payment') }}",
+                        type : "POST",
+                        data: {'id':id, '_token':csrf_token},
+                        success : function(data){
+                            $("#modal-detail").modal("hide");
+                            detailData(data);
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function paymentData(id){
+            $.ajax({
+                url : "{{ url('backdata/payment_admin') }}"+"/"+id,
+                type : "GET",
+                dataType: "JSON",
+                success: function(data) {
+                    $("#modal-payment").modal("show");
+                    $("#payment_id_admin").val(data.id);
+                    $("#payment_name_admin").val(data.payment_name);
+                    $("#payment_type_hidden").val(data.payment_type);
+                    if(data.payment_type == 1) {
+                        $("#payment_type_admin").val("Iuran Bulanan Komplek");
+                        $("#payment_amount_admin").val("");
+                        
+                    }
+                    else if(data.payment_type == 2) {
+                        $("#payment_type_admin").val("Iuran Rutin");
+                        $("#payment_amount_admin").val(data.payment_amount);
+                       
+                    }
+                    else if(data.payment_type == 3) {
+                        $("#payment_type_admin").val("Sekali Bayar");
+                        $("#payment_amount_admin").val(data.payment_amount);
+                    }
+                    $("#payment_dedication_admin").val(data.payment_dedication).trigger('change');
+                    if(data.payment_dedication < 0) {
+                        $("#payment_dedication_admin").removeAttr("disabled");
+                    } else {
+                        $("#payment_dedication_admin").attr("disabled", true);
+                    }
+                
+                }
+            })
+            
+            // Swal.fire({
+            //     icon: 'question',
+            //     title: 'Process this Payment...?',
+            //     showCancelButton: true,
+            //     confirmButtonColor: '#3085d6',
+            //     cancelButtonColor: '#d33',
+            //     confirmButtonText: 'Yes, Process',
+            //     cancelButtonText: 'Cancel',
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+            //         var csrf_token = $('meta[name="csrf-token"]').attr('content');
+            //         $.ajax({
+            //             url: "{{ url('backdata/process_payment') }}",
+            //             type : "POST",
+            //             data: {'id':id, '_token':csrf_token},
+            //             success : function(data){
+            //                 detailData(id);
+            //             }
+            //         });
+            //     }
+            // });
+        }
+
+
+        $("#payment_dedication_admin").change(function(){
+            
+            var nilai = $(this).val();
+            var ptype = $("#payment_type_hidden").val();
+            if(ptype > 1 ) {
+
+            } else {
+                $.ajax({
+                    url : "{{ url('backdata/get_iuran_bulanan') }}"+"/"+nilai,
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function(data) {
+                        $("#payment_amount_admin").val(data);
+                    }
+                });
+            }
+        
+        });
+
+        $("#form-payment-admin").submit(function(e){
+            var id = $("#payment_id_admin").val();
+            e.preventDefault();
+            $.ajax({
+                url: "{{ url('backdata/process_payment') }}",
+                type: "POST",
+                datType: "JSON",
+                data: $(this).serialize(),
+                success: function(data) {
+                    console.log(data);
+                    if(data.success) {
+                        $("#modal-payment").modal("hide");
+                         detailData(id);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.message,
+                            showConfirmButton: false,
+                            scrollbarPadding: false,
+                        });
+                    }
+                   
+                }
+            })
+        });
+    </script>
+@endif
