@@ -78,6 +78,8 @@ Route::group(['middleware' => 'auth'], function () {
    
    Route::get('/payment', [PaymentController::class, 'index']);
    Route::post('/payment_post', [PaymentController::class, 'payment_post'])->name('payment.post');
+   Route::get('/payment_link_share/{id}', [PaymentController::class, 'payment_link_share']);
+
    Route::get('/print_kwitansi/{id}', [PaymentController::class, 'kwitansi']);
 });
 

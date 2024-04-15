@@ -80,6 +80,55 @@ class PaymentController extends Controller
        
     }
 
+
+    public function payment_link_share($id) {
+        if(Auth::user()->level != "user" ) {
+            return redirect("frontend_dashboard");
+        }
+
+        $cek = \App\Models\PaymentDetail::where('payment_id', $id)
+            ->where('user_id', Auth::user()->id)
+            ->where('payment_status', 'PAID');
+        if($cek->count() > 0) {
+            return redirect('/payment');
+        }
+
+        $payment = Payment::findorFail($id);
+        $random = random_int(1000, 9999);
+        $invoice = "PM-".date('dmyHis').$random;
+
+
+        if($payment->payment_type == 1) {
+            $user = User::findorFail(Auth::user()->id);
+            $amount = $user->iuran_bulanan;
+        } else {
+            $amount = $payment->payment_amount;
+        }
+
+        
+        
+        $secret_key = 'Basic '.config('xendit.key_auth');
+        $external_id = $invoice;
+        $data_request = Http::withHeaders([
+            'Authorization' => $secret_key
+        ])->post('https://api.xendit.co/v2/invoices', [
+            'external_id' => $external_id,
+            'amount' => $amount,
+            'success_redirect_url' => url('/payment'),
+            'failure_redirect_url' => url('/payment'),
+            'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode,
+        ]);
+        
+        $response = $data_request->object();
+        return redirect($response->invoice_url);
+        
+        
+
+       
+    }
+
+
+
     public function kwitansi($id) {
         $view = "kwitansi";
         $data = PaymentDetail::where('payment_id', $id)

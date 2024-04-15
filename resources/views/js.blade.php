@@ -732,27 +732,7 @@
                 }
             })
             
-            // Swal.fire({
-            //     icon: 'question',
-            //     title: 'Process this Payment...?',
-            //     showCancelButton: true,
-            //     confirmButtonColor: '#3085d6',
-            //     cancelButtonColor: '#d33',
-            //     confirmButtonText: 'Yes, Process',
-            //     cancelButtonText: 'Cancel',
-            // }).then((result) => {
-            //     if (result.isConfirmed) {
-            //         var csrf_token = $('meta[name="csrf-token"]').attr('content');
-            //         $.ajax({
-            //             url: "{{ url('backdata/process_payment') }}",
-            //             type : "POST",
-            //             data: {'id':id, '_token':csrf_token},
-            //             success : function(data){
-            //                 detailData(id);
-            //             }
-            //         });
-            //     }
-            // });
+          
         }
 
 
@@ -800,5 +780,13 @@
                 }
             })
         });
+
+        function copyData(id) {
+            navigator.clipboard.writeText("{{ url('payment_link_share') }}"+"/"+id).then(function () {
+                alert('Payment link copied...');
+            }, function () {
+                alert('Failure to copy. Check permissions for clipboard')
+            });
+        }
     </script>
 @endif

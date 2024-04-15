@@ -76,7 +76,7 @@ class PembayaranController extends Controller
             })
             ->addColumn('action', function($data){
                
-                return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-dollar-sign"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-dollar-sign"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-primary mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Copy Link" aria-label="Copy Link" data-bs-original-title="Copy Link" title="Copy Link" onclick="copyData('.$data->id.')"><i class="fa fa-copy"></i></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
         })->rawColumns(['action','created_at','payment_name','due_date','payment_type','payment_amount','payment_dedication'])
         ->addIndexColumn()
         ->make(true);
@@ -154,8 +154,10 @@ class PembayaranController extends Controller
     public function show(string $id)
     {
         $payment = Payment::findorFail($id);
-        $data = PaymentDetail::where('payment_id', $id)->get();
+        $data = PaymentDetail::where('payment_id', $id)->orderby('id','desc')->get();
         $html = "";
+        $html.= '<button onclick="paymentData('.$id.')" class="btn btn-success"><i class="fa fa-plus"></i> Add Payment</button>';
+        $html .= '<div style="margin-top:20px;"></div>';
         $html .= '<div class="table-responsive">';
         $html .= '<table class="table table-bordered table-striped">';
         $html .= '<thead>';
@@ -326,6 +328,9 @@ class PembayaranController extends Controller
             $input['payment_dedication_admin'] = $payment->payment_dedication;
         }
         
+
+        
+        
         $cek = PaymentDetail::where('payment_id', $input['payment_id_admin'])
             ->where('user_id', $input['payment_dedication_admin'])
             ->where('payment_status', 'PAID');
@@ -336,6 +341,12 @@ class PembayaranController extends Controller
             ]);
         }
 
+        if($request->payment_dedication_admin < 0) {
+            return response()->json([
+                "success" => false,
+                "message" => "User Not Valid"
+            ]);
+        }
         
         $random = random_int(1000, 9999);
         $invoice = "PM-".date('dmyHis').$random;
