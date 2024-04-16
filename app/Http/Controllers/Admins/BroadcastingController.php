@@ -84,7 +84,7 @@ class BroadcastingController extends Controller
             })
             ->addColumn('action', function($data){
                
-                return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                return '<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
         })->rawColumns(['action','created_at','message','title','image','admin_id','user_id','sending_status'])
         ->addIndexColumn()
         ->make(true);
@@ -113,7 +113,7 @@ class BroadcastingController extends Controller
 
         $rules = array(
             "title" => "required",
-            "pesan" => "required",
+            "message" => "required",
             "user_id" => "required",
             "send_date" => "required"
         );
@@ -140,10 +140,16 @@ class BroadcastingController extends Controller
                 $input['image'] = Str::slug($unik, '-').'.'.$request->image->getClientOriginalExtension();
                 $request->image->move(public_path('/template/images/notif'), $input['image']);
             }
-            $input['message'] = $input['pesan'];
             $input['admin_id'] = adminAuth()->id;
             $input['sending_status'] = 0;
-            Broadcasting::create($input);
+            $br = Broadcasting::create($input);
+            $id = $br->id;
+            $sekarang = date('Y-m-d');
+            if($input['send_date'] == $sekarang) {
+                $this->notify($input['title'], $input['message'], $input['user_id'], $id);
+                $this->make_notif($input['title'], $input['message'], $input['image'], $input['user_id']);
+            }
+
             return response()->json([
                 "success" => true,
                 "message" => "New Data Successfully Added.."
@@ -169,7 +175,7 @@ class BroadcastingController extends Controller
      */
     public function edit(string $id)
     {
-        $query = User::findorFail($id);
+        $query = Broadcasting::findorFail($id);
         return $query;
     }
 
@@ -181,16 +187,13 @@ class BroadcastingController extends Controller
     {
         $input = $request->all();
 
-        $data = User::findorFail($id);
+        $data = Broadcasting::findorFail($id);
 
         $rules = array(
-            "name" => "required",
-            "username" => "required|".Rule::unique('users')->ignore($id),
-            "email" => "required|email|".Rule::unique('users')->ignore($id),
-            "jenis_kelamin" => "required",
-            "no_hp" => "required|".Rule::unique('users')->ignore($id),
-            "level" => "required",
-            "is_active" => "required",
+            "title" => "required",
+            "message" => "required",
+            "user_id" => "required",
+            "send_date" => "required"
         );
 
         $validator = Validator::make($input, $rules);
@@ -209,28 +212,27 @@ class BroadcastingController extends Controller
             ]);
         }
         try {
-            $input['image'] = $data->foto;
+            $input['image'] = $data->image;
             $unik = uniqid();
             if($request->hasFile('image')){
-                if($data->foto != null && $data->foto != '') {
-                    $path = public_path('/storage/profile/'.$data->foto);
+                if(! empty($data->image)) {
+                    $path = public_path('/template/images/notif/'.$data->image);
                     if(file_exists($path)) {
                         unlink($path);
                     }
-                    $input['image'] = Str::slug($unik, '-').'.'.$request->image->getClientOriginalExtension();
-                    $request->image->move(public_path('/storage/profile'), $input['image']);
                 }
-                
+                $input['image'] = Str::slug($unik, '-').'.'.$request->image->getClientOriginalExtension();
+                $request->image->move(public_path('/template/images/notif'), $input['image']);
+            }
+            $input['admin_id'] = adminAuth()->id;
+            $input['sending_status'] = 0;
+            $br = $data->update($input);
+            $sekarang = date('Y-m-d');
+            if($input['send_date'] == $sekarang) {
+                $this->notify($input['title'], $input['message'], $input['user_id'], $id);
+                $this->make_notif($input['title'], $input['message'], $input['image'], $input['user_id']);
             }
 
-            $input['foto'] = $input['image'];
-            if(! empty($input['password'])) {
-                $input['password'] = $input['password'];
-            } else {
-                $input['password'] = $data->password;
-            }
-
-            $data->update($input);
             return response()->json([
                 "success" => true,
                 "message" => "Data Successfully Updated.."
@@ -248,42 +250,74 @@ class BroadcastingController extends Controller
      */
     public function destroy(string $id)
     {
-       $query = User::destroy($id);
-       return $query;
+        $query = Broadcasting::destroy($id);
+        return $query;
+    }
+
+    public function check_broadcasting() {
+        $sent = 0;
+        $sekarang = date('Y-m-d');
+        $cek = Broadcasting::where('sending_status', 0)->where('send_date', $sekarang)->get();
+        if($cek->count() > 0) {
+            foreach($cek as $key) {
+                $this->notify($key->title, $key->message, $key->user_id, $key->id);
+                $sent++;
+            }
+        }
+        
+        return $sent;
     }
 
 
-    public function notify($title, $message, $regid) {
+
+    public function make_notif($title, $message, $image, $user_id) {
+        $data = new \App\Models\Notif;
+        $data->title = $title;
+        $data->slug = str_replace(" ","-", $title);
+        $data->message = $message;
+        $data->image = $image;
+        $data->admin_id = adminAuth()->id;
+        $data->user_id = $user_id;
+        $data->status = 0;
+        $data->created_at = date('Y-m-d H:i:s');
+        $data->updated_at = date('Y-m-d H:i:s');
+        $data->save();
+    }
+
+
+    public function notify($title, $message, $user_id, $id) {
         
         $SERVER_API_KEY = 'AAAAwbylMgg:APA91bF2ALenum4cb5ossrjcPIXOGJbUyjrSDu7YUS6LS8RQI2WDKsliccvbH8JHP3zYJIaZSpS-emPRjDy3EzAZjEZu4NHTfPu1L4rtknAZgeYqpc5Ck-uzbc_nA0cgPYDmTH-5EQV7';
 
-        $data = [
+        if($user_id < 0) {
+            $data = [
 
-            // "to" => '/topics/comment',
-            "to" => $regid,
-            "notification" => [
-                "title" => $title,
-                "body" => $message,
-                "sound"=> "default",
-                    // required for sound on ios
-            ],
-        ];
+                "to" => '/topics/dianistana_user',
+                // "to" => $regid,
+                "notification" => [
+                    "title" => $title,
+                    "body" => $message,
+                    "sound"=> "default",
+                        // required for sound on ios
+                ],
+            ];
+        } else {
+            $user = User::findorFail($user_id);
+            $regid = $user->token;
+            $data = [
 
-        $data = [
-
-            "to" => '/topics/dianistana_user',
-            // "to" => $regid,
-            "notification" => [
-                "title" => $title,
-                "body" => $message,
-                "sound"=> "default",
-                    // required for sound on ios
-            ],
-        ];
-    
+                // "to" => '/topics/comment',
+                "to" => $regid,
+                "notification" => [
+                    "title" => $title,
+                    "body" => $message,
+                    "sound"=> "default",
+                        // required for sound on ios
+                ],
+            ];
+        }
         
-        
-    
+       
         $dataString = json_encode($data);
     
         $headers = [
@@ -309,6 +343,10 @@ class BroadcastingController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
     
         $response = curl_exec($ch);
+
+        $br = Broadcasting::findorFail($id);
+        $br->sending_status = 1;
+        $br->save();
         
         return $response;
         

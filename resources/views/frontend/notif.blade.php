@@ -36,7 +36,8 @@
                                 $no++;
                                 $adm = \App\Models\AdminsData::where('id', $key->admin_id);
                                 if($adm->count() > 0) {
-                                    $admin = $adm->first('name');
+                                    $admin = $adm->first();
+                                    $admin = $admin->name;
                                 } else {
                                     $admin = 'Auto-Sending';
                                 }
@@ -44,7 +45,7 @@
                                 <tr>
                                     <td>{{ $no }}</td>
                                     <td style="text-align: center;">{{ date('d F Y', strtotime($key->created_at)) }}<br>{{ date('H:i:s', strtotime($key->created_at)) }}</td>
-                                    <td style="white-space: normal;"><a href="{{ url('notif_detail/'.$key->slug) }}" style="color: blue; font-weight:bold;">{{ $key->title }}</a></td>
+                                    <td style="white-space: normal;"><a href="{{ url('notif_detail/'.$key->id) }}" style="color: blue; font-weight:bold;">{{ $key->title }}</a></td>
                                     <td style="white-space: normal;"><?= substr($key->message, 0, 200) ;?></td>
                                     @if(! empty($key->image)) 
                                         <td><center><a href="{{ asset('template/images/notif/'.$key->image) }}" target="_blank"><img style="width: 100px;border-radius:10px;" class="notif-image" src="{{ asset('template/images/notif/'.$key->image) }}"></a></center></td>

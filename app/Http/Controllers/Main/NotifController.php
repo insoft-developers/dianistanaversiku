@@ -29,7 +29,7 @@ class NotifController extends Controller
 
     public function notif_detail($slug) {
         $view = "notif-detail";
-        $data = Notif::where('slug', $slug)->first();
+        $data = Notif::where('id', $slug)->first();
         $admin = \App\Models\AdminsData::findorFail($data->admin_id);
         return view('frontend.notif_detail', compact('view','data','admin'));
     }

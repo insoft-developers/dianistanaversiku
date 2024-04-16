@@ -176,6 +176,7 @@ Route::prefix("backdata")
 
    Route::get("broadcasting-list",[BroadcastingController::class,'ajax_list'])->name('broadcasting.list') ;
    Route::resource("broadcasting",BroadcastingController::class);
+   Route::get('check_broadcasting', [BroadcastingController::class, 'check_broadcasting']);
   
 
 

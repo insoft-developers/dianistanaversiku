@@ -823,7 +823,6 @@
 @if($view == "broadcasting")
         <script>
         $(document).ready(function(){
-            CKEDITOR.replace('message');
             $("#user_id").select2({
                     theme: "classic",
                     dropdownParent: $("#modal-tambah .modal-content")
@@ -874,16 +873,12 @@
             e.preventDefault();
             var id = $('#id').val();
 
-            var formdata = new FormData($('#modal-tambah form')[0]);
-            var pesan = CKEDITOR.instances.message.getData();
-            formdata.append('pesan', pesan );
-
             if(save_method == "add")  url = "{{ url('/backdata/broadcasting') }}";
             else url = "{{ url('/backdata/broadcasting') .'/'}}"+ id;
             $.ajax({
                 url : url,
                 type : "POST",
-                data : formdata,
+                data : new FormData($('#modal-tambah form')[0]),
                 contentType:false,
                 processData:false,
                 success : function(data){
@@ -908,39 +903,18 @@
             save_method = "edit";
             $('input[name=_method]').val('PATCH');
             $.ajax({
-                url: "{{ url('/backdata/user') }}" +"/"+id+"/edit",
+                url: "{{ url('/backdata/broadcasting') }}" +"/"+id+"/edit",
                 type: "GET",
                 dataType: "JSON",
                 success: function(data){
                     $('#modal-tambah').modal("show");
                     $('.modal-title').text("Edit Data");
                     $('#id').val(data.id);
-                    $("#name").val(data.name);
-                    $("#username").val(data.username);
-                    $("#email").val(data.email);
-                    $("#password").val("");
-                    $("#jenis_kelamin").val(data.jenis_kelamin);
-                    $("#no_hp").val(data.no_hp);
-                    $("#level").val(data.level);
-                    $("#is_active").val(data.is_active);
-                    $("#penyelia").val(data.penyelia);
-                    $("#blok").val(data.blok);
-                    $("#nomor_rumah").val(data.nomor_rumah);
-                    $("#daya_listrik").val(data.daya_listrik);
-                    $("#luas_tanah").val(data.luas_tanah);
-                    $("#iuran_bulanan").val(data.iuran_bulanan);
-                    $("#whatsapp_emergency").val(data.whatsapp_emergency);
-                    $("#keterangan").val(data.keterangan);
-                    $("#alamat_surat_menyurat").val(data.alamat_surat_menyurat);
-                    $("#nomor_telepon_rumah").val(data.nomor_telepon_rumah);
-                    $("#id_pelanggan_pdam").val(data.id_pelanggan_pdam);
-                    $("#nomor_meter_pln").val(data.nomor_meter_pln);
-                    $("#mulai_menempati").val(data.mulai_menempati);
-                    if(data.foto != null && data.foto != '') {
-                        $("#profile-image").attr('src', '{{ asset('storage/profile') }}/'+data.foto);
-                    } else {
-                        $("#profile-image").attr('src', '{{ asset('template/images/profil_icon.png') }}');
-                    }
+                    $("#title").val(data.title);
+                    $("#image").val(null);
+                    $("#user_id").val(data.user_id).trigger('change');
+                    $("#message").val(data.message);
+                    $("#send_date").val(data.send_date);
                    
 
                 }
@@ -961,7 +935,7 @@
                 if (result.isConfirmed) {
                     var csrf_token = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url  : "{{ url('/backdata/user') }}" + '/'+id,
+                        url  : "{{ url('/backdata/broadcasting') }}" + '/'+id,
                         type : "POST",
                         data : {'_method':'DELETE', '_token':csrf_token},
                         success : function($data){
@@ -972,48 +946,30 @@
             });
         }
         
-        function detailData(id) {
-            $.ajax({
-                url: "{{ url('backdata/user') }}"+"/"+id,
-                type: "GET",
-                success: function(data) {
-                    $("#detail-content").html(data); 
-                    $("#modal-detail").modal("show");
-                }
-            });    
-        }
-
-        $("#btn-print-detail").click(function(){
-            var id = $("#id-detail").val();
-            window.open('{{ url('backdata/print_detail') }}'+'/'+id, '_blank');
-
-        });
         
         function resetForm() {
-            $("#name").val("");
-            $("#username").val("");
-            $("#email").val("");
+            $("#title").val("");
+            $("#message").val("");
+            $("#user_id").val("").trigger('change');
             $("#password").val("");
-            $("#jenis_kelamin").val("");
-            $("#no_hp").val("");
-            $("#level").val("");
-            $("#is_active").val("");
-            $("#penyelia").val("");
-            $("#blok").val("");
-            $("#nomor_rumah").val("");
-            $("#daya_listrik").val("");
-            $("#luas_tanah").val("");
-            $("#iuran_bulanan").val("");
-            $("#whatsapp_emergency").val("");
-            $("#keterangan").val("");
-            $("#alamat_surat_menyurat").val("");
-            $("#nomor_telepon_rumah").val("");
-            $("#id_pelanggan_pdam").val("");
-            $("#nomor_meter_pln").val("");
-            $("#mulai_menempati").val("");
+            $("#send_date").val("");
             $("#image").val(null);
-            $("#profile-image").attr('src', '{{ asset('template/images/profil_icon.png') }}');
-            $("#remove-profile-image").hide();
+            
         }
+
+        function check_broadcasting() {
+            setTimeout(function () {
+                $.ajax({
+                    url: "{{ url('backdata/check_broadcasting') }}",
+                    type: "GET",
+                    dataType: 'JSON',  
+                    success: function (data) {
+                    console.log(data) 
+                    },
+                    complete: check_broadcasting
+                });
+            }, 5000);
+        }
+        check_broadcasting();
     </script>
 @endif
