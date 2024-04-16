@@ -117,4 +117,23 @@
     .agak-terang{
         color:black !important;
     }
+
+    #report-table th {
+        font-size: 12px;
+        background: #46b2c5;
+        color: white;
+    }
+    #report-table td{
+        font-size: 12px;
+       
+    }
+    .btn-report{
+        margin-top: 31px;
+    }
+    #btn-print-kas{
+        margin-left: 122px;
+    }
+    #btn-print-financing{
+
+    }
 </style>

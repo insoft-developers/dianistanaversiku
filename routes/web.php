@@ -12,6 +12,9 @@ use App\Http\Controllers\Admins\TransactionController;
 use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Admins\PembayaranController;
 use App\Http\Controllers\Admins\BroadcastingController;
+use App\Http\Controllers\Admins\ReportIuranController;
+use App\Http\Controllers\Admins\ReportUnitController;
+use App\Http\Controllers\Admins\ReportLainController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -177,7 +180,12 @@ Route::prefix("backdata")
    Route::get("broadcasting-list",[BroadcastingController::class,'ajax_list'])->name('broadcasting.list') ;
    Route::resource("broadcasting",BroadcastingController::class);
    Route::get('check_broadcasting', [BroadcastingController::class, 'check_broadcasting']);
-  
+
+
+   Route::post("report-iuran-list",[ReportIuranController::class,'ajax_list'])->name('report.iuran.list') ;
+   Route::resource("report-iuran",ReportIuranController::class);
+   Route::get('print_kas_detail/{awal}/{akhir}', [ReportIuranController::class, 'print_kas_detail']);
+   
 
 
    // unit bisnis
