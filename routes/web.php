@@ -11,6 +11,7 @@ use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Admins\TransactionController;
 use App\Http\Controllers\Admins\TicketController;
 use App\Http\Controllers\Admins\PembayaranController;
+use App\Http\Controllers\Admins\BroadcastingController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -172,6 +173,9 @@ Route::prefix("backdata")
    Route::post('process_payment', [PembayaranController::class, 'process_payment']);
    Route::get('payment_admin/{id}', [PembayaranController::class, 'payment_admin']);
    Route::get('get_iuran_bulanan/{id}', [PembayaranController::class, 'get_iuran_bulanan']);
+
+   Route::get("broadcasting-list",[BroadcastingController::class,'ajax_list'])->name('broadcasting.list') ;
+   Route::resource("broadcasting",BroadcastingController::class);
   
 
 

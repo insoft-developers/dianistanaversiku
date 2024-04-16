@@ -1,10 +1,10 @@
 @extends('layouts.master_admins')
 
-@section('title_admin', 'Data User')
+@section('title_admin', 'Broad Casting')
 
 @section('breadcrumb_admin')
-    <li class="breadcrumb-item" aria-current="page">Master Data</li>
-    <li class="breadcrumb-item active" aria-current="page">Data User</li>
+    <li class="breadcrumb-item" aria-current="page">Utility</li>
+    <li class="breadcrumb-item active" aria-current="page">Broad Casting</li>
 @endsection
 
 @section('content_admin')
@@ -12,23 +12,24 @@
     <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
         <div class="card">
             <div class="card-body">
-                <button onclick="addData()" class="btn btn-light-success mb-2 me-4 _effect--ripple waves-effect waves-light"><i class="fa fa-plus"></i> Add User Data</button>
+                <button onclick="addData()" class="btn btn-light-success mb-2 me-4 _effect--ripple waves-effect waves-light"><i class="fa fa-plus"></i> Add New BroadCast</button>
                     <div class="widget-content widget-content-area br-8 mt-10">
                         <div class="table-responsive" id="divTables">
                             <table id="listTable" class="table table-striped table-bordered table-hover table-custom"
                             style="width:100%">
                                 <thead>
+                                
                                     <tr>
                                         <th>No</th>
                                         <th>Action</th>
-                                        <th>Level</th>
+                                        <th>Date</th>
                                         <th>Status</th>
-                                        <th>Name</th>
-                                        <th>Foto</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>WA</th>
-                                        
+                                        <th>Title</th>
+                                        <th>Message</th>
+                                        <th>Image</th>
+                                        <th>Sender</th>
+                                        <th>Receiver</th>
+                                        <th>Send On</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -42,7 +43,7 @@
     </div>
 
     <div class="modal fade bd-example-modal-xl" id="modal-tambah" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog" role="document">
           <div class="modal-content">
             <form id="form-tambah" method="POST" action="{{ url('backdata/user') }}" enctype="multipart/form-data">
                 {{ csrf_field() }} {{ method_field('POST') }}
@@ -54,147 +55,45 @@
               </div>
               <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
                                 <input type="hidden" id="id" name="id">
+                               
                                 <div class="form-group mt15">
-                                    <label>Name:</label>
-                                    <input type="text" name="name" id="name" class="form-control" placeholder="enter your name">
+                                    <label>Title:</label>
+                                    <input type="text" name="title" id="title" class="form-control" placeholder="enter broadcast title">
                                 </div>
+                                
                                 <div class="form-group mt15">
-                                    <label>Username:</label>
-                                    <input type="text" name="username" id="username" class="form-control" placeholder="enter your username">
+                                    <label>Image:</label>
+                                    <input type="file" name="image" id="image" class="form-control" accept=".jpg, .jpeg, .png">
                                 </div>
+                                
                                 <div class="form-group mt15">
-                                    <label>Email:</label>
-                                    <input type="email" name="email" id="email" class="form-control" placeholder="enter your email">
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Password:</label>
-                                    <input type="password" name="password" id="password" class="form-control" placeholder="enter your password">
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Gender:</label>
-                                    <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
-                                        <option value="">- Select Gender - </option>
-                                        <option value="Laki-laki">Laki-Laki</option>
-                                        <option value="Perempuan">Perempuan</option>
+                                    <label>Broadcast To:</label>
+                                    <select style="width: 100%" name="user_id" id="user_id" class="form-control">
+                                        <option value="">- Select - </option>
+                                        <option value="-1">Send To All User</option>
+                                        @foreach($user as $u)
+                                        <option value="{{ $u->id }}">{{ $u->name }} - {{ $u->level }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group mt15">
-                                    <label>Whatsapp Number:</label>
-                                    <input type="text" name="no_hp" id="no_hp" class="form-control" placeholder="ex: +6282165174433">
+                                    <label>Message:</label>
+                                    <textarea name="message" id="message" class="form-control" placeholder="enter your message"></textarea>
                                 </div>
                                 <div class="form-group mt15">
-                                    <label>Level:</label>
-                                    <select name="level" id="level" class="form-control">
-                                        <option value="">- Select Level - </option>
-                                        <option value="user">User</option>
-                                        <option value="guest">Guest</option>
-                                    </select>
+                                    <label>Send Date:</label>
+                                    <input type="date" name="send_date" id="send_date" class="form-control" placeholder="date to send broadcast">
                                 </div>
-                                <div class="form-group mt15">
-                                    <label>Status:</label>
-                                    <select name="is_active" id="is_active" class="form-control">
-                                        <option value="">- Select Status - </option>
-                                        <option value="1">Active</option>
-                                        <option value="0">Not Active</option>
-                                    </select>
-                                </div>
+                                
                             </div>
                         </div>
         
                     </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group mt15">
-                                    <label>Penyelia:</label>
-                                    <select name="penyelia" id="penyelia" class="form-control">
-                                        <option value="">- Select Penyelia - </option>
-                                        <option value="SDP">SDP</option>
-                                        <option value="DMSI">DMSI</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mt15">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label>BLOK:</label>
-                                            <input type="text" name="blok" id="blok" class="form-control" placeholder="enter blok">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label>House No. :</label>
-                                            <input type="text" name="nomor_rumah" id="nomor_rumah" class="form-control" placeholder="enter house number">
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="form-group mt15">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label>Daya Listrik:</label>
-                                            <input type="text" name="daya_listrik" id="daya_listrik" class="form-control" placeholder="daya listrik">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label>Luas Tanah :</label>
-                                            <input type="text" name="luas_tanah" id="luas_tanah" class="form-control" placeholder="luas tanah">
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Iuran Bulanan:</label>
-                                    <input type="text" name="iuran_bulanan" id="iuran_bulanan" class="form-control" placeholder="enter iuran bulanan">
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Whatsapp Emergency:</label>
-                                    <input type="text" name="whatsapp_emergency" id="whatsapp_emergency" class="form-control" placeholder="ex: +6282165174635">
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Description:</label>
-                                    <textarea name="keterangan" id="keterangan" class="form-control" placeholder="Enter Description"></textarea>
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Alamat Surat Menyurat:</label>
-                                    <textarea name="alamat_surat_menyurat" id="alamat_surat_menyurat" class="form-control" placeholder="Enter Address"></textarea>
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Office Phone Number:</label>
-                                    <input type="text" name="nomor_telepon_rumah" id="nomor_telepon_rumah" class="form-control" placeholder="ex: +617969900">
-                                </div>
-                                <div class="form-group mt15">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label>PDAM ID:</label>
-                                            <input type="text" name="id_pelanggan_pdam" id="id_pelanggan_pdam" class="form-control" placeholder="PDAM ID">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label>PLN Meter :</label>
-                                            <input type="text" name="nomor_meter_pln" id="nomor_meter_pln" class="form-control" placeholder="PLN Meter">
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="form-group mt15">
-                                    <label>Mulai menempati:</label>
-                                    <input type="date" name="mulai_menempati" id="mulai_menempati" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <label>Profile Image</label>
-                                <center><img id="profile-image" class="profile-image" src="{{ asset('template/images/profil_icon.png') }}"></center>
-                                <div onclick="remove_foto()" style="display: none;" id="remove-profile-image"><i class="fa fa-trash"></i></div>
-                                <input style="display: none;" type="file" id="image" name="image" accept=".jpeg, .jpg, .png">
-                            </div>
-                        </div>
-                        
-                    </div>
+                   
                 </div>
                 
                 

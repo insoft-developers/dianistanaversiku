@@ -105,7 +105,7 @@
         cursor: pointer;
         color: steelblue;
     }
-    #select2-payment_dedication-container, #select2-payment_dedication_admin-container{
+    #select2-payment_dedication-container, #select2-payment_dedication_admin-container,#select2-user_id-container{
         position: absolute;
         top: 11px;
         left: 16px;
