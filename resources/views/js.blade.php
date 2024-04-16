@@ -9,6 +9,36 @@
         $("#"+id).removeAttr("disabled");
     }
 
+    function load() {
+        setTimeout(function () {
+            $.ajax({
+                url: "{{ url('check_payment_routine') }}",
+                type: "GET",
+                dataType: 'JSON',  
+                success: function (data) {
+                   console.log(data) 
+                },
+                complete: load
+            });
+        }, 60000);
+    }
+    load();
+
+    function notif_bulanan() {
+        setTimeout(function () {
+            $.ajax({
+                url: "{{ url('notifikasi_bulanan') }}",
+                type: "GET",
+                dataType: 'JSON',  
+                success: function (data) {
+                   console.log(data) 
+                },
+                complete: notif_bulanan
+            });
+        }, 10000);
+    }
+    notif_bulanan();
+
 </script>
 
 @if($view == "user-list")

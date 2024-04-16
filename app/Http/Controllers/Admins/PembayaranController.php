@@ -15,6 +15,8 @@ use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
+use DateTime;
+
 
 class PembayaranController extends Controller
 {
@@ -328,9 +330,6 @@ class PembayaranController extends Controller
             $input['payment_dedication_admin'] = $payment->payment_dedication;
         }
         
-
-        
-        
         $cek = PaymentDetail::where('payment_id', $input['payment_id_admin'])
             ->where('user_id', $input['payment_dedication_admin'])
             ->where('payment_status', 'PAID');
@@ -377,7 +376,220 @@ class PembayaranController extends Controller
 
     public function get_iuran_bulanan($id) {
         $user = User::findorFail($id);
-        return $user->iuran_bulanan;
+        $tagihan =  $user->iuran_bulanan;
+        $setting = \App\Models\Setting::findorFail(1);
+        $tgl_tempo = $setting->tanggal_jatuh_tempo_iuran_bulanan;
+        
+        $bulan_sekarang = date('m');
+        $tahun_sekarang = date('Y');
+        $due = $tahun_sekarang.'-'.$bulan_sekarang.'-'.$tgl_tempo;
+        $sekarang = date('Y-m-d');
+
+        if($sekarang > $due) {
+            $percent_denda = $setting->percent_denda;
+            $denda = $percent_denda * $tagihan /100;
+            $total = (int)$denda + $tagihan;
+            $iuran_bulanan = $total;
+        } else {
+            $iuran_bulanan = $tagihan;
+        }
+
+        return $iuran_bulanan;
+
+    }
+
+
+    public function check_payment_routine() {
+        $setting = \App\Models\Setting::findorFail(1);
+        $tgl_iuran = $setting->tgl_create_iuran_bulanan;
+        $tgl_tempo = $setting->tanggal_jatuh_tempo_iuran_bulanan;
+        $tgl_sekarang = date('d');
+        $bln_sekarang = date('m');
+        $thn_sekarang = date('Y');
+        $periode = $bln_sekarang.'-'.$thn_sekarang;
+        $due = $thn_sekarang.'-'.$bln_sekarang.'-'.$tgl_tempo;
+
+
+        if($tgl_sekarang >= $tgl_iuran) {
+            $cek = Payment::where('payment_type', 1)
+                ->where('periode', $periode)
+                ->where('payment_dedication', -1);
+            if($cek->count() > 0) {
+
+            } else {
+                $i = new Payment;
+                $i->payment_name = "Iuran Bulanan Periode ".$periode;
+                $i->payment_desc = "Iuran Bulanan Periode ".$periode;
+                $i->payment_type = 1;
+                $i->due_date = $due;
+                $i->periode = $periode;
+                $i->payment_amount = 0;
+                $i->payment_dedication = -1;
+                $i->created_at = date('Y-m-d H:i:s');
+                $i->updated_at = date('Y-m-d H:i:s');
+                $i->save();
+
+            }
+        } else {
+            return 2;
+        }
+        
+    }
+
+    public function notifikasi_bulanan() {
+       $payment = Payment::where('payment_type', 1)->get();
+       $user = User::where('no_hp', '!=', '')->where('level','user')
+                ->where('id', 3)
+                ->get();
+       
+       $sekarang = date('Y-m-d');
+
+       $belum_bayar = [];
+       foreach($payment as $p) {
+           foreach($user as $u) {   
+               $cek = PaymentDetail::where('user_id', $u->id)->where('payment_id', $p->id)->where('payment_status','PAID');
+               if($cek->count() > 0) {} 
+               else {
+                    $row['id'] = $u->id;
+                    $row['name'] = $u->name;
+                    $row['wa'] = $u->no_hp;
+                    $row['payment'] = $p->id;
+                    $row['periode'] = $p->periode;
+                    $row['reg_id'] = $u->token;
+                    $row['due'] = $p->due_date;
+                    array_push($belum_bayar, $row);
+               }
+           } 
+       }
+       
+       
+
+       foreach($belum_bayar as $b) {
+            $cek_sudah_kirim = \App\Models\NotifTagihan::where('date', $sekarang)->where('payment_id', $b['payment']);
+            if($cek_sudah_kirim->count() > 0 ) {}
+            else {
+                $tgl1 = new DateTime($b['due']);
+                $tgl2 = new DateTime($sekarang);
+                $jarak = $tgl2->diff($tgl1);
+                $selisih = $jarak->d;
+                if($b['due'] == $sekarang) {
+                    $this->send_wa($b['wa'], $b['name'], $b['periode']);
+                    $isi = new \App\Models\NotifTagihan;
+                    $isi->date = $sekarang;
+                    $isi->payment_id = $b['payment'];
+                    $isi->save();
+
+                    $this->send_notif_to($b);
+
+                } else {
+                    if($selisih == 8 || $selisih == 16) {
+                        $this->send_wa($b['wa'], $b['name'], $b['periode']);
+                        $isi = new \App\Models\NotifTagihan;
+                        $isi->date = $sekarang;
+                        $isi->payment_id = $b['payment'];
+                        $isi->save();
+                        $this->send_notif_to($b);
+                    }
+                }
+            }
+       }
+    }
+
+
+    public function send_notif_to($b) {
+        if(!empty($b['reg_id'])) {
+            $title = "Tagihan Iuran Bulanan Periode ".$b['periode'];
+            $message = '[MyDianIstana] - Bpk/Ibu '.$b['name'].' yang terhormat, Tagihan iuran bulanan anda untuk periode '.$b['periode'].' telah jatuh tempo. Mohon segera dilakukan pembayaran. Terima Kasih';
+            $regid = $b['reg_id'];
+            $n = new \App\Models\Notif;
+            $n->title = $title;
+            $n->slug = str_replace(" ", "", $title);
+            $n->message = $message;
+            $n->admin_id = -1;
+            $n->user_id = $b['id'];
+            $n->status = 0;
+            $n->created_at = date('Y-m-d H:i:s');
+            $n->updated_at = date('Y-m-d H:i:s');
+            $n->save();
+            $this->notify($title, $message, $regid);
+        }
+    }
+
+
+    public function notify($title, $message, $regid) {
+        $SERVER_API_KEY = 'AAAAwbylMgg:APA91bF2ALenum4cb5ossrjcPIXOGJbUyjrSDu7YUS6LS8RQI2WDKsliccvbH8JHP3zYJIaZSpS-emPRjDy3EzAZjEZu4NHTfPu1L4rtknAZgeYqpc5Ck-uzbc_nA0cgPYDmTH-5EQV7';
+
+        $data = [
+
+            // "to" => '/topics/comment',
+            "to" => $regid,
+            "notification" => [
+                "title" => $title,
+                "body" => $message,
+                "sound"=> "default",
+                    // required for sound on ios
+            ],
+        ];
+        
+        $dataString = json_encode($data);
+    
+        $headers = [
+    
+            'Authorization: key=' . $SERVER_API_KEY,
+    
+            'Content-Type: application/json',
+    
+        ];
+    
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+    
+        curl_setopt($ch, CURLOPT_POST, true);
+    
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+    
+        $response = curl_exec($ch);
+        
+        return $response;
+        
+    }
+
+    public function send_wa($phone, $name, $periode ) {
+        
+        $key='ce0183f4fa3f8a7ce774f4aa6e046899ebcd108f28e064a6'; //this is demo key please change with your own key
+        $url='http://116.203.191.58/api/send_message';
+        $data = array(
+          "phone_no"  => $phone,
+          "key"       => $key,
+          "message"   => '[MyDianIstana] - Bpk/Ibu '.$name.' yang terhormat, Tagihan iuran bulanan anda untuk periode '.$periode.' telah jatuh tempo. Mohon segera dilakukan pembayaran. Terima Kasih',
+          "skip_link" => True, // This optional for skip snapshot of link in message
+          "flag_retry"  => "on", // This optional for retry on failed send message
+          "pendingTime" => 3 // This optional for delay before send message
+        );
+        $data_string = json_encode($data);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          'Content-Type: application/json',
+          'Content-Length: ' . strlen($data_string))
+        );
+        echo $res=curl_exec($ch);
+        curl_close($ch);
     }
 
    

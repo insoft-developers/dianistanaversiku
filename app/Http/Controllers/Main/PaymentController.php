@@ -41,11 +41,31 @@ class PaymentController extends Controller
 
 
         if($payment->payment_type == 1) {
+            $setting= \App\Models\Setting::findorFail(1);
+            $tgl_tempo = $setting->tanggal_jatuh_tempo_iuran_bulanan;
+            $denda = $setting->percent_denda;
+            $tahun_ini = date('Y');
+            $bulan_ini = date('m');
+            $due = $tahun_ini.'-'.$bulan_ini.'-'.$tgl_tempo;
+            $sekarang = date('Y-m-d');
             $user = User::findorFail(Auth::user()->id);
-            $amount = $user->iuran_bulanan;
+            if($sekarang > $due) {
+                $tagihan = $user->iuran_bulanan;
+                $nom_denda = $denda * $tagihan /100;
+                $amount = (int)$nom_denda + $tagihan;  
+                $text_denda = "Denda Rp. ".number_format($nom_denda);
+            } else {
+                $amount = $user->iuran_bulanan;
+                $text_denda = "";   
+            }         
+
         } else {
             $amount = $payment->payment_amount;
+            $text_denda = "";
         }
+
+        
+
 
         $detail = new PaymentDetail;
         $detail->invoice = $invoice;
@@ -67,7 +87,7 @@ class PaymentController extends Controller
                 'amount' => $amount,
                 'success_redirect_url' => url('/payment'),
                 'failure_redirect_url' => url('/payment'),
-                'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode,
+                'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode. " ".$text_denda,
             ]);
             
             $response = $data_request->object();

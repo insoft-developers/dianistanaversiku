@@ -102,6 +102,9 @@ Route::middleware(['throttle:webAuthAdmin'])->group(function(){
    Route::post('/process-auth-admin',[AuthController::class, 'prosesAuth']);
 });
 
+Route::get('/check_payment_routine', [PembayaranController::class, 'check_payment_routine']);
+Route::get('/notifikasi_bulanan', [PembayaranController::class, 'notifikasi_bulanan']);
+
 Route::prefix("backdata")
 ->middleware('authAdmins')
 ->group(function() {
