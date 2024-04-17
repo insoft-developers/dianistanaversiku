@@ -4,6 +4,11 @@
 	<title>Print Laporan Keuangan</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
     <link href="{{ asset('') }}assets/template/src/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
          .img-detail{
             width: 141px;
@@ -11,6 +16,12 @@
             object-fit: cover;
             border-radius: 5px;
         }
+        table td, tfoot th, .table-title th{
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 3px;
+        }
+
 
         @media screen {
             .btn-pdf{
@@ -37,12 +48,6 @@
                 margin-left: 152px;
             }
             body {
-                margin-left: 15em;
-                margin-right: 15em;
-                margin-top: 5em;
-                margin-bottom: 5em;
-                color: #fff;
-                background-color: #000;
                 font-family: 'Courier New', Courier, monospace;
             }
             table td{
@@ -53,9 +58,12 @@
                 width: 40px;
                 height: 40px;
                 position: absolute;
-                left: 311px;
-                top: 15px;
+                left: 250px;
+                top: -15px;
             }
+            table.print-friendly tr td, table.print-friendly tr th {
+                    page-break-inside: avoid;
+                }
 
         }
 
@@ -77,18 +85,25 @@
                     width: 40px;
                     height: 40px;
                     position: absolute;
-                    left: 240px;
-                    top: 15px;
+                    left: 250px;
+                    top: -15px;
                 }
                 table.print-friendly tr td, table.print-friendly tr th {
-                    page-break-inside: avoid;
+                        page-break-inside: avoid;
+                
                 }
 
             }
     </style>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+></script>
 </head>
 <!-- <body onload="window.print();"> -->
-<body>     
+<body id="print-area">     
     <div class="row">
     <div class="col-md-12">
     <div class="card">
@@ -96,7 +111,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Keuangan</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+            <th colspan="8"><center><h4>DIAN ISTANA<br>Laporan Keuangan</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
             </tr>
             <tr>
                 <th>No</th>
@@ -158,31 +173,7 @@
     </div> 
     </div> 
     </div>
-    </div> 
-    <button id="btn-print" class="btn btn-print">Print</button>
-    <button id="btn-pdf" class="btn btn-pdf">PDF</button>
-    <button id="btn-excel" class="btn btn-excel">Excel</button>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script>
-        
-
-        $("#btn-print").click(function(){
-            window.print();
-        });
-
-        $("#btn-pdf").click(function(){
-            var awal = "{{ $awal }}";
-            var akhir = "{{ $akhir }}";
-            window.open("{{ url('backdata/print_financing_pdf') }}"+"/"+awal+"/"+akhir , "_blank");
-        })
-
-        $("#btn-excel").click(function(){
-            var awal = "{{ $awal }}";
-            var akhir = "{{ $akhir }}";
-            window.location = "{{ url('backdata/print_financing_excel') }}"+"/"+awal+"/"+akhir;
-        })
-    </script>
+    </div>
 
 </body>
 </html>

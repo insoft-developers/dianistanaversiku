@@ -18,6 +18,7 @@ use Illuminate\Validation\Rule;
 use DB;
 use PDF;
 use App\Exports\LaporanDetailKasExport;
+use App\Exports\LaporanKeuanganExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -90,7 +91,7 @@ class ReportIuranController extends Controller
                 return '<div style="text-align:right;">'.number_format($data->amount).'</div>';
             })
             ->addColumn('action', function($data){
-                return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="printData('.$data->id.')"><i class="far fa-file"></i></a>';
         })->rawColumns(['action','created_at','user_id','due_date','paid_at','amount'])
         ->addIndexColumn()
         ->make(true);
@@ -257,6 +258,47 @@ class ReportIuranController extends Controller
     public function export($awal, $akhir) 
     {
          return Excel::download(new LaporanDetailKasExport($awal, $akhir), 'laporan_detail_kas.xlsx');
+    }
+
+    public function print_financing_pdf($awal, $akhir) {
+        $ending = strtotime("+1 day", strtotime($akhir));
+        $sampai = date('Y-m-d', $ending);
+        if(empty($awal) && empty($akhir)) {
+            $bln = date('m');
+            $thn = date('Y');
+            $start = $thn.'-'.$bln.'-01';
+            $end = $thn.'-'.$bln.'-31';
+            $data = DB::table('payment_details')
+                                ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->where('payments.payment_type', 1)
+                                ->where('payment_details.payment_status', 'PAID')
+                                ->where('payment_details.paid_at', '>=', $start)
+                                ->where('payment_details.paid_at', '<=', $end)
+                                ->orderBy('payment_details.paid_at', 'asc')
+                                ->get();
+        } else {
+            $data = DB::table('payment_details')
+                                ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->where('payments.payment_type', 1)
+                                ->where('payment_details.payment_status', 'PAID')
+                                ->where('payment_details.paid_at', '>=', $awal)
+                                ->where('payment_details.paid_at', '<=', $sampai)
+                                ->orderBy('payment_details.paid_at', 'asc')
+                                ->get();
+        }
+        $setting = \App\Models\Setting::findorFail(1);
+        $pdf= PDF::loadView('admins.report.iuran.financing_pdf', compact('data','awal','akhir','setting'));
+        $pdf->setPaper('a4', 'potrait');
+        return $pdf->stream();
+        // return view('admins.report.iuran.print_pdf', compact('data','awal','akhir','setting'));
+    }
+
+
+    public function financing_export($awal, $akhir) 
+    {
+         return Excel::download(new LaporanKeuanganExport($awal, $akhir), 'laporan_keuangan.xlsx');
     }
 
    

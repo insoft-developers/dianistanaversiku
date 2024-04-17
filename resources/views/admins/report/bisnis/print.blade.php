@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Print Laporan Keuangan</title>
+	<title>Print Laporan Unit Bisnis</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
     <link href="{{ asset('') }}assets/template/src/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <style>
@@ -11,6 +11,8 @@
             object-fit: cover;
             border-radius: 5px;
         }
+
+
 
         @media screen {
             .btn-pdf{
@@ -42,7 +44,7 @@
                 margin-top: 5em;
                 margin-bottom: 5em;
                 color: #fff;
-                background-color: #000;
+                background-color: rgb(216, 216, 216);
                 font-family: 'Courier New', Courier, monospace;
             }
             table td{
@@ -61,9 +63,7 @@
 
             /* print styles */
             @media print {
-                .btn-print, .btn-excel, .btn-pdf {
-                    display: none;
-                }
+
                 body {
                     margin: 0;
                     color: #000;
@@ -87,8 +87,9 @@
             }
     </style>
 </head>
-<!-- <body onload="window.print();"> -->
-<body>     
+{{-- <body onload="window.print();"> --}}
+<body>
+    
     <div class="row">
     <div class="col-md-12">
     <div class="card">
@@ -96,16 +97,16 @@
     <table class="table table-striped">
         <thead>
             <tr>
-            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Keuangan</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
             </tr>
             <tr>
                 <th>No</th>
-                <th>Tgl Bayar</th>
-                <th>Invoice</th>
-                <th>Amount</th>
+                <th>Invoice/Time</th>
+                <th>Penyelia</th>
+                <th>User</th>
                 <th>Description</th>
-                <th>Info</th>
-                <th>Name</th>
+                <th>Amount</th>
+                <th>Date</th>
 
             </tr>
         </thead>
@@ -117,13 +118,13 @@
             @foreach($data as $key)
             @php
             $no++;
-            $total = $total + $key->amount;
+            $total = $total + $key->total_price;
             $users = \App\Models\User::where('id', $key->user_id);
             if($users->count() > 0) {
                 $user = $users->first();
                 $user_name = $user->name;
                 $penyelia = $user->penyelia;
-                $info = 'Blok : '.$user->blok.'-'.$user->nomor_rumah.',luas tanah: '.$user->luas_tanah.',daya listrik : '.$user->daya_listrik;
+                $info = $user->blok.'-'.$user->nomor_rumah;
                 
             } else {
                 $user_name = 'no-data';
@@ -133,14 +134,13 @@
             @endphp
             <tr>
             <td>{{ $no }}</td>
-            <td style="white-space:nowrap;">{{ date('d-m-Y', strtotime($key->paid_at)) }}</td>
-            <td>{{ $key->invoice }}</td>
-            <td style="text-align: right;white-space:nowrap;">IDR {{ number_format($key->amount) }}</td>
-            <td>{{ $key->payment_name }}</td>
-            <td>{{ $info }}</td>
-            <td>{{ $user_name }}</td>
+            <td>{{ $key->invoice }}<br>{{ date('H:i:s', strtotime($key->paid_at)) }}</td>
             
-           
+            <td>{{ $penyelia }}</td>
+            <td>{{ $user_name }} | {{ $info }}</td>
+            <td>{{ $key->name_unit }}<br>{{ date('d-m-Y', strtotime($key->booking_date))  }}<br>{{ $key->start_time }} - {{ $key->finish_time }}</td>
+            <td style="text-align: right;white-space:nowrap;">IDR {{ number_format($key->total_price) }}</td>
+            <td style="white-space:nowrap;">{{ date('d-m-Y', strtotime($key->paid_at)) }}</td>
             </tr>
             @endforeach
     </tbody>
@@ -159,6 +159,7 @@
     </div> 
     </div>
     </div> 
+
     <button id="btn-print" class="btn btn-print">Print</button>
     <button id="btn-pdf" class="btn btn-pdf">PDF</button>
     <button id="btn-excel" class="btn btn-excel">Excel</button>
@@ -174,13 +175,13 @@
         $("#btn-pdf").click(function(){
             var awal = "{{ $awal }}";
             var akhir = "{{ $akhir }}";
-            window.open("{{ url('backdata/print_financing_pdf') }}"+"/"+awal+"/"+akhir , "_blank");
+            window.open("{{ url('backdata/print_unit_report_pdf') }}"+"/"+awal+"/"+akhir , "_blank");
         })
 
         $("#btn-excel").click(function(){
             var awal = "{{ $awal }}";
             var akhir = "{{ $akhir }}";
-            window.location = "{{ url('backdata/print_financing_excel') }}"+"/"+awal+"/"+akhir;
+            window.location = "{{ url('backdata/print_unit_report_excel') }}"+"/"+awal+"/"+akhir;
         })
     </script>
 

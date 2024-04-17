@@ -1096,5 +1096,217 @@
             window.open("{{ url('backdata/print_kas_detail') }}"+"/"+awal+"/"+akhir, "_blank");
         }
     })
+
+
+    function printData(id) {
+        window.open('{{ url('backdata/kwitansi') }}'+'/'+id, '_blank');
+    }
+</script>
+@endif
+
+@if($view == 'report-unit')
+<script>
+    init_data_table("","");
+    function init_data_table(awal, akhir) {
+        $("#report-table").dataTable().fnDestroy();
+
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        var table = $('#report-table').DataTable({
+            processing:true,
+            serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            ajax: {type: "POST", url: "{{ route('report.unit.list') }}", data:{"awal":awal, "akhir":akhir, '_token':csrf_token}},
+            order: [[ 11, "asc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'created_at', name: 'created_at'},
+                {data:'invoice', name: 'invoice'},
+                {data:'user_id', name: 'user_id'},
+                {data:'name_unit', name: 'name_unit'},
+                {data:'booking_date', name: 'booking_date'},
+                {data:'booking_time', name: 'booking_time'},
+                {data:'total_price', name: 'total_price'},
+                {data:'payment_status', name: 'payment_status'},
+                {data:'payment_method', name: 'payment_method'},
+                {data:'paid_at', name: 'paid_at'},
+                
+               
+            ]
+        });
+    }
+    
+    $("#btn-filter").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else if(awal > akhir) {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal tidak valid...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+
+            init_data_table(awal,akhir);
+        }
+    });
+
+
+    $("#btn-print-kas").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else if(awal > akhir) {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal tidak valid...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+
+            window.open("{{ url('backdata/print_unit_report') }}"+"/"+awal+"/"+akhir, "_blank");
+        }
+    })
+
+
+    function printData(id) {
+        window.open('{{ url('backdata/kwitansi') }}'+'/'+id, '_blank');
+    }
+</script>
+@endif
+
+@if($view == 'report-lain')
+<script>
+    init_data_table("","");
+    function init_data_table(awal, akhir) {
+        $("#report-table").dataTable().fnDestroy();
+
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        var table = $('#report-table').DataTable({
+            processing:true,
+            serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            ajax: {type: "POST", url: "{{ route('report.lain.list') }}", data:{"awal":awal, "akhir":akhir, '_token':csrf_token}},
+            order: [[ 0, "asc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'created_at', name: 'created_at'},
+                {data:'invoice', name: 'invoice'},
+                {data:'user_id', name: 'user_id'},
+                {data:'payment_name', name: 'payment_name'},
+                {data:'periode', name: 'periode'},
+                {data:'due_date', name: 'due_date'},
+                {data:'amount', name: 'amount'},
+                {data:'payment_status', name: 'payment_status'},
+                {data:'payment_method', name: 'payment_method'},
+                {data:'paid_at', name: 'paid_at'},
+                
+               
+            ]
+        });
+    }
+    
+    $("#btn-filter").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else if(awal > akhir) {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal tidak valid...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+
+            init_data_table(awal,akhir);
+        }
+    });
+
+   
+
+    $("#btn-print-kas").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else if(awal > akhir) {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal tidak valid...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+
+            window.open("{{ url('backdata/print_lain_report') }}"+"/"+awal+"/"+akhir, "_blank");
+        }
+    })
+
+
+    function printData(id) {
+        window.open('{{ url('backdata/kwitansi') }}'+'/'+id, '_blank');
+    }
 </script>
 @endif

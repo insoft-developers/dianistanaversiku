@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Print Laporan Detail Kas</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
+	<title>Print Pendapatan Lain Lain</title>
     <link href="{{ asset('') }}assets/template/src/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <meta
 			name="viewport"
@@ -71,10 +70,15 @@
 
             }
     </style>
-   
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
 </head>
 {{-- <body onload="window.print();"> --}}
-<body>
+<body id="print-area">
     
     <div class="row">
     <div class="col-md-12">
@@ -83,7 +87,7 @@
     <table class="table">
         <thead>
             <tr>
-            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Detail Kas Masuk</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+            <th colspan="8"><center><h4>DIAN ISTANA<br>Laporan Kas Masuk Pendapatan Lain Lain</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
             </tr>
             <tr class="table-title">
                 <th>No</th>
@@ -145,6 +149,18 @@
     </div> 
     </div>
     </div> 
-    
+    <script>
+        const element = document.querySelector('#print-area');
+        const options = {
+            filename: 'laporan detail kas.pdf',
+            margin: 0.2,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        };
+        html2pdf().set(options).from(element).save();
+
+
+    </script>
 </body>
 </html>

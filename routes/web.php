@@ -186,8 +186,25 @@ Route::prefix("backdata")
    Route::resource("report-iuran",ReportIuranController::class);
    Route::get('print_kas_detail/{awal}/{akhir}', [ReportIuranController::class, 'print_kas_detail']);
    Route::get('print_kas_detail_pdf/{awal}/{akhir}', [ReportIuranController::class, 'print_kas_detail_pdf']);
+   Route::get('print_financing_pdf/{awal}/{akhir}', [ReportIuranController::class, 'print_financing_pdf']);
    Route::get('print_kas_detail_excel/{awal}/{akhir}', [ReportIuranController::class, 'export']);
    Route::get('print_iuran_financing/{awal}/{akhir}', [ReportIuranController::class, 'print_iuran_financing']);
+   Route::get('print_financing_excel/{awal}/{akhir}', [ReportIuranController::class, 'financing_export']);
+
+
+   Route::post("report-unit-list",[ReportUnitController::class,'ajax_list'])->name('report.unit.list') ;
+   Route::resource("report-unit",ReportUnitController::class);
+   Route::get('print_unit_report/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report']);
+   Route::get('print_unit_report_pdf/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report_pdf']);
+   Route::get('print_unit_report_excel/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report_excel']);
+
+
+   Route::post("report-lain-list",[ReportLainController::class,'ajax_list'])->name('report.lain.list') ;
+   Route::resource("report-lain",ReportLainController::class);
+   Route::get('print_lain_report/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report']);
+   Route::get('print_lain_report_pdf/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_pdf']);
+   Route::get('print_lain_report_excel/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_excel']);
+
    
    
 
