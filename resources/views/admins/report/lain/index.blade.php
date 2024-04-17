@@ -13,21 +13,21 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Tanggal Awal:</label>
                             <input type="date" id="awal" class="form-control">
                         </div>
                         
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Tanggal Akhir:</label>
                             <input type="date" id="akhir" class="form-control">
                         </div>
                         
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <button id="btn-filter" class="btn btn-success btn-report"><i class="fa fa-filter"></i> Filter</button>
                         

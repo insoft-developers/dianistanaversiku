@@ -41,7 +41,8 @@ class DashboardMainController extends Controller
 
     public function send_wa() {
     	
-		$key='c50b2c98d96b93b80307edbb3e85d4eab676044e3ecd3181'; //this is demo key please change with your own key
+		$setting = \App\Models\Setting::findorFail(1);
+        $key = $setting->api_wa;
 		$url='http://116.203.191.58/api/send_message';
 		$data = array(
 		  "phone_no"  => '+6282165174835',

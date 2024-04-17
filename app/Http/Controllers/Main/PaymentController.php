@@ -126,7 +126,9 @@ class PaymentController extends Controller
         }
 
         
-        
+        $setting = \App\Models\Setting::findorFail(1);
+        $api_pay = $setting->api_payment;
+
         $secret_key = 'Basic '.config('xendit.key_auth');
         $external_id = $invoice;
         $data_request = Http::withHeaders([

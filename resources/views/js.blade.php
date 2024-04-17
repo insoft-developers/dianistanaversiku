@@ -1310,3 +1310,15 @@
     }
 </script>
 @endif
+
+@if($view == 'setting-list')
+    <script>
+        $(document).ready(function(){
+            CKEDITOR.replace('term');
+            CKEDITOR.replace('privacy');
+        })
+
+        
+    </script>
+
+@endif

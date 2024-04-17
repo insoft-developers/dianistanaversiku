@@ -15,6 +15,7 @@ use App\Http\Controllers\Admins\BroadcastingController;
 use App\Http\Controllers\Admins\ReportIuranController;
 use App\Http\Controllers\Admins\ReportUnitController;
 use App\Http\Controllers\Admins\ReportLainController;
+use App\Http\Controllers\Admins\SettingController;
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -204,6 +205,13 @@ Route::prefix("backdata")
    Route::get('print_lain_report/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report']);
    Route::get('print_lain_report_pdf/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_pdf']);
    Route::get('print_lain_report_excel/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_excel']);
+
+   Route::resource("setting",SettingController::class);
+   
+   Route::post('setting_update', [SettingController::class, 'setting_update'])->name('backdata.setting.update');
+
+   Route::get('change_password', [SettingController::class, 'change_password']);
+   Route::post('password_admin_update', [SettingController::class, 'password_admin_update'])->name('backdata.password.update');
 
    
    

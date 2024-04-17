@@ -321,8 +321,8 @@ class AuthUsersController extends Controller
 
 
     public function send_wa($phone, $passcode) {
-        
-        $key='ce0183f4fa3f8a7ce774f4aa6e046899ebcd108f28e064a6'; //this is demo key please change with your own key
+        $setting = \App\Models\Setting::findorFail(1);
+        $key = $setting->api_wa;
         $url='http://116.203.191.58/api/send_message';
         $data = array(
           "phone_no"  => $phone,
@@ -1299,7 +1299,10 @@ class AuthUsersController extends Controller
         $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
 
 
-        $secret_key = 'Basic '.config('xendit.key_auth');
+        $setting = \App\Models\Setting::findorFail(1);
+        $api_pay = base64_encode($setting->api_payment);
+
+        $secret_key = 'Basic '.$api_pay;
         $external_id = $trans->invoice;
         $data_request = Http::withHeaders([
             'Authorization' => $secret_key
