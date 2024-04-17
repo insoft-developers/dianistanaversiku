@@ -185,6 +185,10 @@ Route::prefix("backdata")
    Route::post("report-iuran-list",[ReportIuranController::class,'ajax_list'])->name('report.iuran.list') ;
    Route::resource("report-iuran",ReportIuranController::class);
    Route::get('print_kas_detail/{awal}/{akhir}', [ReportIuranController::class, 'print_kas_detail']);
+   Route::get('print_kas_detail_pdf/{awal}/{akhir}', [ReportIuranController::class, 'print_kas_detail_pdf']);
+   Route::get('print_kas_detail_excel/{awal}/{akhir}', [ReportIuranController::class, 'export']);
+   Route::get('print_iuran_financing/{awal}/{akhir}', [ReportIuranController::class, 'print_iuran_financing']);
+   
    
 
 

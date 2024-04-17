@@ -16,6 +16,10 @@ use App\Models\Payment;
 use App\Models\PaymentDetail;
 use Illuminate\Validation\Rule;
 use DB;
+use PDF;
+use App\Exports\LaporanDetailKasExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ReportIuranController extends Controller
 {
@@ -122,8 +126,79 @@ class ReportIuranController extends Controller
                                 ->get();
         }
         $setting = \App\Models\Setting::findorFail(1);
-        return view('admins.report.iuran.print', compact('data','awal','akhir','setting'));
+        return view('admins.report.iuran.print', compact('data','awal','akhir','setting','awal','akhir'));
     }
+
+
+    public function print_kas_detail_pdf($awal, $akhir) {
+        $ending = strtotime("+1 day", strtotime($akhir));
+        $sampai = date('Y-m-d', $ending);
+        if(empty($awal) && empty($akhir)) {
+            $bln = date('m');
+            $thn = date('Y');
+            $start = $thn.'-'.$bln.'-01';
+            $end = $thn.'-'.$bln.'-31';
+            $data = DB::table('payment_details')
+                                ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->where('payments.payment_type', 1)
+                                ->where('payment_details.payment_status', 'PAID')
+                                ->where('payment_details.paid_at', '>=', $start)
+                                ->where('payment_details.paid_at', '<=', $end)
+                                ->orderBy('payment_details.paid_at', 'asc')
+                                ->get();
+        } else {
+            $data = DB::table('payment_details')
+                                ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->where('payments.payment_type', 1)
+                                ->where('payment_details.payment_status', 'PAID')
+                                ->where('payment_details.paid_at', '>=', $awal)
+                                ->where('payment_details.paid_at', '<=', $sampai)
+                                ->orderBy('payment_details.paid_at', 'asc')
+                                ->get();
+        }
+        $setting = \App\Models\Setting::findorFail(1);
+        $pdf= PDF::loadView('admins.report.iuran.print_pdf', compact('data','awal','akhir','setting'));
+        $pdf->setPaper('a4', 'potrait');
+        return $pdf->stream();
+        // return view('admins.report.iuran.print_pdf', compact('data','awal','akhir','setting'));
+    }
+
+
+    public function print_iuran_financing($awal, $akhir) {
+        $ending = strtotime("+1 day", strtotime($akhir));
+        $sampai = date('Y-m-d', $ending);
+        if(empty($awal) && empty($akhir)) {
+            $bln = date('m');
+            $thn = date('Y');
+            $start = $thn.'-'.$bln.'-01';
+            $end = $thn.'-'.$bln.'-31';
+            $data = DB::table('payment_details')
+                                ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->where('payments.payment_type', 1)
+                                ->where('payment_details.payment_status', 'PAID')
+                                ->where('payment_details.paid_at', '>=', $start)
+                                ->where('payment_details.paid_at', '<=', $end)
+                                ->orderBy('payment_details.paid_at', 'asc')
+                                ->get();
+        } else {
+            $data = DB::table('payment_details')
+                                ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->where('payments.payment_type', 1)
+                                ->where('payment_details.payment_status', 'PAID')
+                                ->where('payment_details.paid_at', '>=', $awal)
+                                ->where('payment_details.paid_at', '<=', $sampai)
+                                ->orderBy('payment_details.paid_at', 'asc')
+                                ->get();
+        }
+        $setting = \App\Models\Setting::findorFail(1);
+        return view('admins.report.iuran.financing', compact('data','awal','akhir','setting'));
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -176,6 +251,12 @@ class ReportIuranController extends Controller
     public function destroy(string $id)
     {
        
+    }
+
+
+    public function export($awal, $akhir) 
+    {
+         return Excel::download(new LaporanDetailKasExport($awal, $akhir), 'laporan_detail_kas.xlsx');
     }
 
    

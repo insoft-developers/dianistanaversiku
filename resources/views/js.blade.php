@@ -1041,6 +1041,34 @@
         }
     });
 
+    $("#btn-print-financing").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else if(awal > akhir) {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal tidak valid...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+
+            window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir, "_blank");
+        }
+    })
+
     $("#btn-print-kas").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();

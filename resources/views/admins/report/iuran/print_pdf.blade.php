@@ -4,6 +4,12 @@
 	<title>Print Laporan Detail Kas</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
     <link href="{{ asset('') }}assets/template/src/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
     <style>
          .img-detail{
             width: 141px;
@@ -11,40 +17,16 @@
             object-fit: cover;
             border-radius: 5px;
         }
-
-
+        
+        table td, tfoot th, .table-title th{
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 3px;
+        }
 
         @media screen {
-            .btn-pdf{
-                position: absolute;
-                color: white;
-                top: 19px;
-                background: red;
-                font-weight: bold;
-                margin-left: 86px;
-            }
-            .btn-print{
-                position: absolute;
-                color: white;
-                top: 19px;
-                background: orange;
-                font-weight: bold;
-            }
-            .btn-excel{
-                position: absolute;
-                color: white;
-                top: 19px;
-                background: green;
-                font-weight: bold;
-                margin-left: 152px;
-            }
+
             body {
-                margin-left: 15em;
-                margin-right: 15em;
-                margin-top: 5em;
-                margin-bottom: 5em;
-                color: #fff;
-                background-color: rgb(216, 216, 216);
                 font-family: 'Courier New', Courier, monospace;
             }
             table td{
@@ -55,9 +37,12 @@
                 width: 40px;
                 height: 40px;
                 position: absolute;
-                left: 311px;
-                top: 15px;
+                left: 250px;
+                top: -15px;
             }
+            table.print-friendly tr td, table.print-friendly tr th {
+                    page-break-inside: avoid;
+                }
 
         }
 
@@ -77,7 +62,7 @@
                     width: 40px;
                     height: 40px;
                     position: absolute;
-                    left: 240px;
+                    left: 200px;
                     top: 15px;
                 }
                 table.print-friendly tr td, table.print-friendly tr th {
@@ -86,20 +71,26 @@
 
             }
     </style>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
 </head>
 {{-- <body onload="window.print();"> --}}
-<body>
+<body id="print-area">
     
     <div class="row">
     <div class="col-md-12">
     <div class="card">
     <div class="card-body">
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
             <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Detail Kas Masuk</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
             </tr>
-            <tr>
+            <tr class="table-title">
                 <th>No</th>
                 <th>Invoice/Time</th>
                 <th>Penyelia</th>
@@ -159,31 +150,18 @@
     </div> 
     </div>
     </div> 
-
-    <button id="btn-print" class="btn btn-print">Print</button>
-    <button id="btn-pdf" class="btn btn-pdf">PDF</button>
-    <button id="btn-excel" class="btn btn-excel">Excel</button>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
-        
+        const element = document.querySelector('#print-area');
+        const options = {
+            filename: 'laporan detail kas.pdf',
+            margin: 0.2,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        };
+        html2pdf().set(options).from(element).save();
 
-        $("#btn-print").click(function(){
-            window.print();
-        });
 
-        $("#btn-pdf").click(function(){
-            var awal = "{{ $awal }}";
-            var akhir = "{{ $akhir }}";
-            window.open("{{ url('backdata/print_kas_detail_pdf') }}"+"/"+awal+"/"+akhir , "_blank");
-        })
-
-        $("#btn-excel").click(function(){
-            var awal = "{{ $awal }}";
-            var akhir = "{{ $akhir }}";
-            window.location = "{{ url('backdata/print_kas_detail_excel') }}"+"/"+awal+"/"+akhir;
-        })
     </script>
-
 </body>
 </html>
