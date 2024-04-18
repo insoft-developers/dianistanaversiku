@@ -78,7 +78,61 @@
                   </button>
               </div>
               <div class="modal-body">
-                <div id="payment-content"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <a id="new_payment_text" href="javascript:void(0);"><i class="fa fa-plus"></i> Add New Payment</a> <a style="display: none;" id="cancel_payment_text" href="javascript:void(0);"><i class="fa fa-close"></i> Cancel</a>
+                    </div>
+                    
+                    <div class="card-body" id="form-section" style="display: none;">
+                        <form id="form-payment-ticketing" method="POST">
+                        <div class="row">
+                                @csrf
+                            <input type="hidden" id="payment_dedication" name="payment_dedication">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Payment Name:</label>
+                                    <input type="text" class="form-control" id="payment_name" name="payment_name" placeholder="enter payment name">
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>Payment Description:</label>
+                                    <textarea class="form-control" id="payment_desc" name="payment_desc" placeholder="enter payment description"></textarea>
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>Payment Type:</label>
+                                    <select class="form-control" id="payment_type" name="payment_type">
+                                        <option value=""> - Select - </option>
+                                        <option value="2">Pembayaran Rutin</option>
+                                        <option value="3">Sekali Bayar</option>
+
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Due Date:</label>
+                                    <input type="date" class="form-control" id="due_date" name="due_date" placeholder="enter due date">
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>Period:</label>
+                                    <input type="text" class="form-control" id="periode" name="periode" placeholder="ex: 03-2024">
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>Payment Amount:</label>
+                                    <input type="text" class="form-control" id="payment_amount" name="payment_amount" placeholder="enter amount">
+                                </div>
+
+                            </div>
+                            
+                            
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm mt30">Save</button>
+                    </form>
+                    </div>
+                    
+                
+                </div>
+                <div id="payment-content" class="mt40"></div>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-light-dark" data-bs-dismiss="modal">Cancel</button>

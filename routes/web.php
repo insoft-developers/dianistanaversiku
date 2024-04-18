@@ -174,6 +174,7 @@ Route::prefix("backdata")
    Route::post('set_on_hold', [TicketController::class, 'set_on_hold']);
    Route::post('set_resolved', [TicketController::class, 'set_resolved']);
    Route::get('payment_ticketing_list/{id}', [TicketController::class, 'payment_ticketing_list']);
+   Route::post('add_ticketing_payment', [TicketController::class, 'add_ticketing_payment']);
 
    Route::get("pembayaran-list",[PembayaranController::class,'ajax_list'])->name('pembayaran.list') ;
    Route::resource("pembayaran",PembayaranController::class);

@@ -557,6 +557,7 @@
                     $("#modal-payment-ticketing").modal("show");
                     $("#payment-content").html(data);
                     $("#table-payment-ticketing").DataTable();
+                    $("#payment_dedication").val(id);
                 }
             })
            
@@ -569,6 +570,56 @@
                 alert('Failure to copy. Check permissions for clipboard')
             });
         }
+        
+        $("#new_payment_text").click(function(){
+            $("#form-section").slideDown();
+            $("#payment-content").slideUp();
+            $(this).hide();
+            $("#cancel_payment_text").show();
+            reset_data();
+        })
+
+        function reset_data() {
+            $("#payment_name").val("");
+            $("#payment_desc").val("");
+            $("#payment_type").val("");
+            $("#due_date").val("");
+            $("#periode").val("");
+            $("#payment_amount").val("");
+        }
+
+        $("#cancel_payment_text").click(function(){
+            $("#form-section").slideUp();
+            $("#payment-content").slideDown();
+            $(this).hide();
+            $("#new_payment_text").show();
+        })
+
+        $("#form-payment-ticketing").submit(function(e){
+            e.preventDefault();
+            $.ajax({
+                url : "{{ url('backdata/add_ticketing_payment') }}",
+                type: "POST",
+                dataType: "JSON",
+                data: $(this).serialize(),
+                success : function(data) {
+                    if(data.success) {
+                        $("#form-section").slideUp();
+                        $("#payment-content").slideDown();
+                        $("#cancel_payment_text").hide();
+                        $("#new_payment_text").show();
+                        open_payment();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.message,
+                            showConfirmButton: false,
+                            scrollbarPadding: false,
+                        });
+                    }
+                }
+            })
+        });
         
     </script>
 @endif

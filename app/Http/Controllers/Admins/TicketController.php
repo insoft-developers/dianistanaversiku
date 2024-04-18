@@ -442,5 +442,38 @@ class TicketController extends Controller
         return $h;
      }
 
-   
+     public function add_ticketing_payment(Request $request) {
+        $input = $request->all();
+        $rules = array(
+            "payment_name" => "required",
+            "payment_desc" => "required",
+            "payment_type" => "required",
+            "due_date" => "required",
+            "payment_amount" => "required",
+            "payment_dedication" =>"required"
+        );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $pesan = $validator->errors();
+            $pesanarr = explode(",", $pesan);
+            $find = array("[","]","{","}");
+            $html = '';
+            foreach($pesanarr as $p ) {
+                $html .= str_replace($find,"",$p).'<br>';
+            }
+            
+            return response()->json([
+                "success" => false,
+                "message" => $html
+            ]);
+        }
+
+        Payment::create($input);
+        return response()->json([
+            "success" => true,
+            "message" => "New Payment Successfully Added.."
+        ]);
+
+     }
 }
