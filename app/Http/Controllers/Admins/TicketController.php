@@ -15,6 +15,7 @@ use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticketing;
 use App\Models\TicketingContent;
+use App\Models\Payment;
 
 class TicketController extends Controller
 {
@@ -189,6 +190,7 @@ class TicketController extends Controller
         $html = "";
         $html .= '<div class="row">';
         $html .= '<div class="col-md-12">';
+        $html .= '<input type="hidden" id="ticket_user_id" value="'.$ticket->user_id.'">';
         $html .= '<div class="card">';
         $html .= '<div class="card-body">';
         $html .= '<h3><i class="fa fa-ticket"></i> '.$ticket->subject.'</h3>';
@@ -367,6 +369,77 @@ class TicketController extends Controller
              "success" => true,
              "message" => "Ticket Successfully Set Resolved"
         ]);
+     }
+
+
+     public function payment_ticketing_list($user_id) {
+        $payment = Payment::where('payment_dedication', $user_id)
+                    ->orWhere('payment_dedication', -1)
+                    ->orderBy('id', 'desc')
+                    ->get();
+
+        $h = '';
+        $h .= '<div class="table-responsive">';
+        $h .= '<table id="table-payment-ticketing" class="table table-striped table-bordered">';
+        $h .= '<thead>';
+        $h .= '<tr>';
+        $h .= '<th>No</th>';
+        $h .= '<th>Action</th>';
+        $h .= '<th>Date</th>';
+        $h .= '<th>Title</th>';
+        $h .= '<th>Type</th>';
+        $h .= '<th>Due Date</th>';
+        $h .= '<th>Period</th>';
+        $h .= '<th>Amount</th>';
+        $h .= '<th>Bill To</th>';
+        $h .= '</tr>';
+        $h .= '</thead>';
+        $h .= '<tbody>';
+
+        $no=0;
+        foreach($payment as $pay) {
+
+            if($pay->payment_dedication < 0 ) {
+                $bill = 'All User';
+            }else {
+                $user_query = User::where('id', $pay->payment_dedication);
+                if($user_query->count() > 0) {
+                    $user = $user_query->first();
+                    $bill = $user->name;
+                } else {
+                    $bill = 'User Not Found';
+                }
+
+            }
+
+            $no++;
+            $h .= '<tr>';
+            $h .= '<td>'.$no.'</td>';
+            $h .= '<td><center><a onclick="copy_payment_link('.$pay->id.')" href="javascript:void(0);">Copy Link</a></center></td>';
+            $h .= '<td>'.date('d-m-Y', strtotime($pay->created_at)).'</td>';
+            $h .= '<td>'.$pay->payment_name.'</td>';
+            if($pay->payment_type == 1) {
+                $h .= '<td>Iuran Bulanan</td>';
+            }
+            else if($pay->payment_type == 2) {
+                $h .= '<td>Payment Rutin</td>';
+            }   
+            else {
+                $h .= '<td>Sekali Bayar</td>';
+            }
+            
+            $h .= '<td>'.date('d-m-Y', strtotime($pay->due_date)).'</td>';
+            $h .= '<td>'.$pay->periode.'</td>';
+            $h .= '<td style="text-align:right;">'.number_format($pay->payment_amount).'</td>';
+            $h .= '<td>'.$bill.'</td>';
+            $h .= '</tr>';
+        }
+        
+
+        $h .= '</tbody>';
+        $h .= '</table>'; 
+        $h .= '</div>';
+        return $h;
      }
 
    

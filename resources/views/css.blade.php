@@ -136,4 +136,8 @@
     #btn-print-financing{
 
     }
+    .btn-payment-ticketing{
+        position: absolute;
+        right: 63px;
+    }
 </style>

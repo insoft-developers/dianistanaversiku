@@ -364,7 +364,7 @@
 @endif
 @if($view == "ticketing")
         <script>
-
+       
         $("#btn-on-hold").click(function(){
             var id = $("#ticket_id").val();
             Swal.fire({
@@ -547,7 +547,28 @@
             });    
         }
 
-        
+        function open_payment() {
+            var id = $("#ticket_user_id").val();
+            $.ajax({
+                url : "{{ url('backdata/payment_ticketing_list') }}"+"/"+id,
+                type: "GET",
+                success: function(data) {
+                    console.log(data);
+                    $("#modal-payment-ticketing").modal("show");
+                    $("#payment-content").html(data);
+                    $("#table-payment-ticketing").DataTable();
+                }
+            })
+           
+        }
+
+        function copy_payment_link(id) {
+            navigator.clipboard.writeText("{{ url('payment_link_share') }}"+"/"+id).then(function () {
+                alert('Payment link copied...');
+            }, function () {
+                alert('Failure to copy. Check permissions for clipboard')
+            });
+        }
         
     </script>
 @endif
