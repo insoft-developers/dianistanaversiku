@@ -157,6 +157,8 @@ Route::prefix("backdata")
    Route::post("user/{id}/restore",[UserController::class,'restore']) ;
    Route::resource("user",UserController::class);
    Route::get('print_detail/{id}', [UserController::class, 'print_detail']);
+   Route::post('upgrade_iuran_bulanan', [UserController::class, 'upgrade_iuran_bulanan']);
+
 
    // transaction data
    Route::get("transaction-list",[TransactionController::class,'ajax_list'])->name('transaction.list') ;
@@ -166,7 +168,7 @@ Route::prefix("backdata")
    Route::get('booking_print_ticket/{id}', [TransactionController::class, 'print_ticket']);
 
    // ticketing data
-   Route::get("ticketing-list",[TicketController::class,'ajax_list'])->name('ticketing.list') ;
+   Route::post("ticketing-list",[TicketController::class,'ajax_list'])->name('ticketing.list') ;
    Route::resource("ticketing",TicketController::class);
    Route::get('print_ticketing/{id}', [TicketController::class, 'print_ticketing']);
    Route::post('payment', [TicketController::class, 'payment']);

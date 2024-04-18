@@ -149,6 +149,24 @@
                     <td>:</td>
                     <td><span id="price"></span><input type="hidden" id="price-input"></td>
                 </tr>
+                {{-- @php
+                    $setting = \App\Models\Setting::findorFail(1);
+                @endphp
+                <tr>
+                    <td><strong>Tax ({{ $setting->pajak }}%)</strong></td>
+                    <td>:</td>
+                    <td><span id="tax"></span><input type="hidden" id="tax-percent-input" value="{{ $setting->pajak }}"><input type="hidden" id="tax-input"></td>
+                </tr>
+                <tr>
+                    <td><strong>Admin Fee</strong></td>
+                    <td>:</td>
+                    <td><span id="admin-fee">{{ 'Rp. '.number_format($setting->admin_fee) }}</span><input type="hidden" id="admin-fee-input" value="{{ $setting->admin_fee }}"></td>
+                </tr>
+                <tr>
+                    <td><strong>Final Price</strong></td>
+                    <td>:</td>
+                    <td><span id="final-price"></span><input type="hidden" id="final-price-input"></td>
+                </tr> --}}
             </table>
 
             <div class="jarak20"></div>	

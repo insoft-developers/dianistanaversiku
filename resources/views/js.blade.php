@@ -364,7 +364,51 @@
 @endif
 @if($view == "ticketing")
         <script>
-       
+        init_table("","");
+
+        function init_table(department, priority) {
+            $("#listTable").dataTable().fnDestroy();
+            var csrf_token = $('meta[name="csrf-token"]').attr('content');
+            var table = $('#listTable').DataTable({
+                processing:true,
+                serverSide:true,
+                dom: 'Blfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All'],
+                ],
+                ajax: {type: "POST", url: "{{ route('ticketing.list') }}", data:{"department":department, "priority":priority, '_token':csrf_token}},
+
+                order: [[ 0, "desc" ]],
+                columns: [
+                    {data: 'id', name: 'id', searchable: false },
+                    {data:'action', name: 'action', orderable: false, searchable: false},
+                    {data:'status', name: 'status'},
+                    {data:'created_at', name: 'created_at'},
+                    {data:'ticket_number', name: 'ticket_number'},
+                    {data:'user_id', name: 'user_id'},
+                    {data:'subject', name: 'subject'},
+                    {data:'department', name: 'department'},
+                    {data:'priority', name: 'priority'},
+                    {data:'document', name: 'document'},
+                    
+                    {data:'updated_at', name: 'updated_at'},
+                
+                ]
+            });
+        }
+
+
+        function filter_ticketing_data() {
+            var department = $("#department-filter").val();
+            var priority = $("#priority-filter").val();
+            init_table(department,priority);
+        }
+        
+
         $("#btn-on-hold").click(function(){
             var id = $("#ticket_id").val();
             Swal.fire({
@@ -479,35 +523,7 @@
         });
     
 
-        var table = $('#listTable').DataTable({
-            processing:true,
-            serverSide:true,
-            dom: 'Blfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
-            lengthMenu: [
-                [10, 25, 50, -1],
-                [10, 25, 50, 'All'],
-            ],
-            ajax: "{{ route('ticketing.list') }}",
-            order: [[ 0, "desc" ]],
-            columns: [
-                {data: 'id', name: 'id', searchable: false },
-                {data:'action', name: 'action', orderable: false, searchable: false},
-                {data:'status', name: 'status'},
-                {data:'created_at', name: 'created_at'},
-                {data:'ticket_number', name: 'ticket_number'},
-                {data:'user_id', name: 'user_id'},
-                {data:'subject', name: 'subject'},
-                {data:'department', name: 'department'},
-                {data:'priority', name: 'priority'},
-                {data:'document', name: 'document'},
-                
-                {data:'updated_at', name: 'updated_at'},
-               
-            ]
-        });
+        
         
         function deleteData(id) {
             Swal.fire({
@@ -1406,6 +1422,46 @@
             CKEDITOR.replace('term');
             CKEDITOR.replace('privacy');
         })
+
+        $("#btn-upgrade-iuran").click(function(){
+            var up = $("#upgrade-iuran").val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Upgrade iuranan bulanan user..?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Upgrade',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('backdata/upgrade_iuran_bulanan') }}",
+                        type : "POST",
+                        data : {'up':up, '_token':csrf_token},
+                        success : function(data){
+                            if(data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: data.message,
+                                    showConfirmButton: false,
+                                    scrollbarPadding: false,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: data.message,
+                                    showConfirmButton: false,
+                                    scrollbarPadding: false,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
 
         
     </script>

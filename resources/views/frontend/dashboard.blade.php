@@ -17,7 +17,7 @@
                 <div class="mb-[30px] lg:mb-[60px] text-center">
                    
                     <h3 class="font-lora jarak30 custom-title">
-                        Dashboard
+                        
                     </h3>
                     <div class="jarak20"></div>
                 </div>

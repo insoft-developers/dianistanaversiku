@@ -10,10 +10,50 @@
 @section('content_admin')
 
     <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+        
         <div class="card">
+            
             <div class="card-body">
+                <div class="card">
+                    <div class="card-header">
+                        Filtered Data By:
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Department :</label>
+                                    <select class="form-control input-filter" id="department-filter">
+                                        <option value=""> - All Department - </option>
+                                        @foreach($category as $cat)
+                                            <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Priority :</label>
+                                    <select class="form-control input-filter" id="priority-filter">
+                                        <option value=""> - All Priority - </option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Critical">Critical</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button onclick="filter_ticketing_data()" class="btn btn-info btn-filter-ticketing"><i class="fa fa-filter"></i> Filter</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
                     <div class="widget-content widget-content-area br-8 mt-10">
                         <div class="table-responsive" id="divTables">
+                            
+                            
                             <table id="listTable" class="table table-striped table-bordered table-hover table-custom"
                             style="width:100%">
                                 <thead>

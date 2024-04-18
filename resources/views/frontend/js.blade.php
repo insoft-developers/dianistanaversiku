@@ -240,6 +240,7 @@ function close_warning_box() {
                 $("#quantity-input").val("");
                 $("#price").text("");
                 $("#price-input").val("");
+                
 
             } else {
                 var selisih = selected_hour_finish - selected_hour_start;
@@ -262,6 +263,7 @@ function close_warning_box() {
                             var totalprice = +selected_price_start + +selected_price_finish;
                             $("#price").text("Rp. "+formatAngka(totalprice));
                             $("#price-input").val(totalprice);
+                            
                         }
                         else if(selisih == 3) {
 

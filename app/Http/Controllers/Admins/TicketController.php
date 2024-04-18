@@ -15,6 +15,7 @@ use Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Ticketing;
 use App\Models\TicketingContent;
+use App\Models\TicketingCategory;
 use App\Models\Payment;
 
 class TicketController extends Controller
@@ -26,13 +27,24 @@ class TicketController extends Controller
     public function index(): View
     {
         $view = "ticketing";
-        return view("admins.ticketing.index", compact('view'));
+        $category = TicketingCategory::all();
+        return view("admins.ticketing.index", compact('view','category'));
     }
 
 
-    public function ajax_list()
+    public function ajax_list(Request $request)
     {
-        $data = Ticketing::all();
+        $input = $request->all();
+        $query = Ticketing::orderBy('id', 'desc');
+        if(! empty($input['department'])) {
+            $query->where('department', $input['department']);
+        }
+        if(! empty($input['priority'])) {
+            $query->where('priority', $input['priority']);
+        }
+        
+        $data = $query->get();
+        
         return Datatables::of($data)
             ->addColumn('document', function($data){
                 if($data->document != '') {

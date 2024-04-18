@@ -140,4 +140,11 @@
         position: absolute;
         right: 63px;
     }
+    .btn-filter-ticketing{
+        margin-top: 30px;
+    }
+    .input-filter{
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
 </style>

@@ -61,6 +61,14 @@
                                     <label>Api Key Payment Gateway:</label>
                                     <input type="text" class="form-control" id="api_payment" name="api_payment" placeholder="enter api payment gateway" value="{{ $setting->api_payment }}">
                                 </div>
+                                <div class="form-group mt20">
+                                    <label>Tax(%):</label>
+                                    <input type="text" class="form-control" id="pajak" name="pajak" placeholder="enter tax percent" value="{{ $setting->pajak }}">
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>Admin Fee (Rp.):</label>
+                                    <input type="text" class="form-control" id="admin_fee" name="admin_fee" placeholder="enter api payment gateway" value="{{ $setting->admin_fee }}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -170,6 +178,15 @@
                 </div>
                 <button type="submit" class="btn btn-success">Submit</button>
                 </form>
+            </div>
+        </div>
+        <div class="card mt20">
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Upgrade Iuran User in (%)</label>
+                    <input type="text" class="form-control" id="upgrade-iuran" name="upgrade-iuran" placeholder="enter your percent upgrade">
+                </div>
+                <button id="btn-upgrade-iuran" class="btn btn-success mt20">Upgrade Now</button>
             </div>
         </div>
     </div>

@@ -300,5 +300,43 @@ class UserController extends Controller
         return view('admins.user.print', compact('user'));
     }
 
+    public function upgrade_iuran_bulanan(Request $request) {
+        $input = $request->all();
+        $rules = array("up"=> "required");
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $pesan = $validator->errors();
+            $pesanarr = explode(",", $pesan);
+            $find = array("[","]","{","}");
+            $html = '';
+            foreach($pesanarr as $p ) {
+                $html .= str_replace($find,"",$p).'<br>';
+            }
+            
+            return response()->json([
+                "success" => false,
+                "message" => $html
+            ]);
+        }
+
+        $user = User::all();
+        foreach($user as $u) {
+            $persen = $input['up'] * $u->iuran_bulanan /100;
+            $baru = (int)$persen + $u->iuran_bulanan; 
+
+
+            $usee = User::findorFail($u->id);
+            $usee->iuran_bulanan = $baru;
+            $usee->save();
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Upgrade Iuran Successfully executed.."
+        ]);
+
+        
+    }
+
    
 }

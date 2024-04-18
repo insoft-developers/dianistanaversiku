@@ -23,5 +23,6 @@ class Transaction extends Model
         "order_status",
         "package_id",
         "package_name",
+        
     ];
 }

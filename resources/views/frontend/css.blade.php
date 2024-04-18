@@ -695,4 +695,9 @@ label{
 
 }
 
+.isi-data-term ul li { 
+    list-style:initial !important;
+    margin-left: 17px;
+ }
+
 </style>
