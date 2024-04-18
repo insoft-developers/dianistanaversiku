@@ -562,8 +562,9 @@ class PembayaranController extends Controller
     }
 
     public function send_wa($phone, $name, $periode ) {
+        $setting = \App\Models\Setting::findorFail(1);
+        $key = $setting->api_wa;
         
-        $key='ce0183f4fa3f8a7ce774f4aa6e046899ebcd108f28e064a6'; //this is demo key please change with your own key
         $url='http://116.203.191.58/api/send_message';
         $data = array(
           "phone_no"  => $phone,

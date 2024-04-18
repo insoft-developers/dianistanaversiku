@@ -92,6 +92,9 @@ Route::get('/save_firebase_token/{token}', [DashboardMainController::class, 'sav
 
 Route::get('/notify', [AuthUsersController::class, 'notify']);
 Route::get('/update_notif_number', [NotifController::class, 'update_notif_number']);
+
+
+
 Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
 // Route::get('/test', function(){
 //    $data = "MK-120102013919310";
@@ -109,6 +112,7 @@ Route::middleware(['throttle:webAuthAdmin'])->group(function(){
 
 Route::get('/check_payment_routine', [PembayaranController::class, 'check_payment_routine']);
 Route::get('/notifikasi_bulanan', [PembayaranController::class, 'notifikasi_bulanan']);
+Route::get('/cek_expired_booking', [TransactionController::class, 'cek_expired_booking']);
 
 Route::prefix("backdata")
 ->middleware('authAdmins')
@@ -152,21 +156,21 @@ Route::prefix("backdata")
    Route::get("user/{id}/trash",[UserController::class,'editTrash']) ;
    Route::post("user/{id}/restore",[UserController::class,'restore']) ;
    Route::resource("user",UserController::class);
-   Route::get('/print_detail/{id}', [UserController::class, 'print_detail']);
+   Route::get('print_detail/{id}', [UserController::class, 'print_detail']);
 
    // transaction data
    Route::get("transaction-list",[TransactionController::class,'ajax_list'])->name('transaction.list') ;
    Route::resource("transaction",TransactionController::class);
-   Route::get('/print_transaction/{id}', [TransactionController::class, 'print_transaction']);
-   Route::post('/payment', [TransactionController::class, 'payment']);
-   Route::get('/print_ticket/{id}', [TransactionController::class, 'print_ticket']);
+   Route::get('print_transaction/{id}', [TransactionController::class, 'print_transaction']);
+   Route::post('booking_payment', [TransactionController::class, 'payment']);
+   Route::get('booking_print_ticket/{id}', [TransactionController::class, 'print_ticket']);
 
    // ticketing data
    Route::get("ticketing-list",[TicketController::class,'ajax_list'])->name('ticketing.list') ;
    Route::resource("ticketing",TicketController::class);
-   Route::get('/print_ticketing/{id}', [TicketController::class, 'print_ticketing']);
-   Route::post('/payment', [TicketController::class, 'payment']);
-   Route::get('/print_ticket/{id}', [TicketController::class, 'print_ticket']);
+   Route::get('print_ticketing/{id}', [TicketController::class, 'print_ticketing']);
+   Route::post('payment', [TicketController::class, 'payment']);
+   Route::get('print_ticket/{id}', [TicketController::class, 'print_ticket']);
    Route::post('set_on_hold', [TicketController::class, 'set_on_hold']);
    Route::post('set_resolved', [TicketController::class, 'set_resolved']);
 

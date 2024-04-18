@@ -20,7 +20,7 @@
                 },
                 complete: load
             });
-        }, 60000);
+        }, 120000);
     }
     load();
 
@@ -35,9 +35,26 @@
                 },
                 complete: notif_bulanan
             });
-        }, 60000);
+        }, 90000);
     }
     notif_bulanan();
+
+
+
+    function cek_expired_booking() {
+        setTimeout(function () {
+            $.ajax({
+                url: "{{ url('cek_expired_booking') }}",
+                type: "GET",
+                dataType: 'JSON',  
+                success: function (data) {
+                   console.log(data) 
+                },
+                complete: cek_expired_booking
+            });
+        }, 60000);
+    }
+    cek_expired_booking();
 
 </script>
 
@@ -324,7 +341,7 @@
                 if (result.isConfirmed) {
                     var csrf_token = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url  : "{{ url('/backdata/payment') }}",
+                        url  : "{{ url('backdata/booking_payment') }}",
                         type : "POST",
                         data : {'id':id, '_token':csrf_token},
                         success : function(data){
@@ -340,7 +357,7 @@
         
 
         function printData(id) {
-            window.location = "{{ url('/backdata/print_ticket') }}"+"/"+id;
+            window.location = "{{ url('/backdata/booking_print_ticket') }}"+"/"+id;
         }
         
     </script>

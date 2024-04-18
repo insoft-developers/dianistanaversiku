@@ -542,6 +542,8 @@ class AuthUsersController extends Controller
         $not = \App\Models\Transaction::where('booking_date', $tanggal)
             ->where('order_status', 1)
             ->where('business_unit_id', $input['product_id'])
+            ->where('payment_status', 'PAID')
+            ->orWhere('payment_status', 'PENDING')
             ->get();
         
         $jam6 = 0;
@@ -607,7 +609,8 @@ class AuthUsersController extends Controller
                 else if($key->start_time == "20") {
                     $jam20++;
                 }
-            } else {
+            } 
+            else if($key->quantity == 2) {
                 if($key->start_time == "06") {
                     $jam6++;
                     $jam7++;
@@ -659,6 +662,77 @@ class AuthUsersController extends Controller
                 else if($key->start_time == "18") {
                     $jam18++;
                     $jam19++;
+                }
+                else if($key->start_time == "19") {
+                    $jam19++;
+                    $jam20++;
+                }
+            }
+            else {
+                if($key->start_time == "06") {
+                    $jam6++;
+                    $jam7++;
+                    $jam8++;
+                }
+                else if($key->start_time == "07") {
+                    $jam7++;
+                    $jam8++;
+                    $jam9++;
+                }
+                else if($key->start_time == "08") {
+                    $jam8++;
+                    $jam9++;
+                    $jam10++;
+                }
+                else if($key->start_time == "09") {
+                    $jam9++;
+                    $jam10++;
+                    $jam11++;
+                }
+                else if($key->start_time == "10") {
+                    $jam10++;
+                    $jam11++;
+                    $jam12++;
+                }
+                else if($key->start_time == "11") {
+                    $jam11++;
+                    $jam12++;
+                    $jam13++;
+                }
+                else if($key->start_time == "12") {
+                    $jam12++;
+                    $jam13++;
+                    $jam14++;
+                }
+                else if($key->start_time == "13") {
+                    $jam13++;
+                    $jam14++;
+                    $jam15++;
+                }
+                else if($key->start_time == "14") {
+                    $jam14++;
+                    $jam15++;
+                    $jam16++;
+                }
+                else if($key->start_time == "15") {
+                    $jam15++;
+                    $jam16++;
+                    $jam17++;
+                }
+                else if($key->start_time == "16") {
+                    $jam16++;
+                    $jam17++;
+                    $jam18++;
+                }
+                else if($key->start_time == "17") {
+                    $jam17++;
+                    $jam18++;
+                    $jam19++;
+                }
+                else if($key->start_time == "18") {
+                    $jam18++;
+                    $jam19++;
+                    $jam20++;
                 }
                 else if($key->start_time == "19") {
                     $jam19++;
@@ -1300,8 +1374,7 @@ class AuthUsersController extends Controller
 
 
         $setting = \App\Models\Setting::findorFail(1);
-        $api_pay = base64_encode($setting->api_payment);
-
+        $api_pay = base64_encode($setting->api_payment. ':');
         $secret_key = 'Basic '.$api_pay;
         $external_id = $trans->invoice;
         $data_request = Http::withHeaders([
@@ -1315,6 +1388,7 @@ class AuthUsersController extends Controller
         ]);
         
         $response = $data_request->object();
+    
         return response()->json([
             "success" => true,
             "data" => $response->invoice_url

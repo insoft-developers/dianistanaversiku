@@ -21,7 +21,7 @@
                                 <i class="far fa-list-alt text-success"></i> Data Banner Iklan
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
+                        <li style="display: none;" class="nav-item" role="presentation">
                             <button class="nav-link" id="profile-tab-icon" data-bs-toggle="tab"
                                 data-bs-target="#profile-tab-icon-pane" type="button" role="tab"
                                 aria-controls="profile-tab-icon-pane" aria-selected="false">
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="profile-tab-icon-pane" role="tabpanel"
+                        <div style="display: none;" class="tab-pane fade" id="profile-tab-icon-pane" role="tabpanel"
                             aria-labelledby="profile-tab-icon" tabindex="0">
                             <div class="widget-content widget-content-area br-8 mt-1">
                                 <div class="table-responsive">

@@ -59,7 +59,7 @@ function listDataTables(idTable,urlAjax,btnRefresh,btnAdd="")
             },
             { data:'jenis_harga' },
             { data:'status_booking' },
-            { data:'name' },
+           
         ]
     })
 }

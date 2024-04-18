@@ -15,6 +15,7 @@ use DataTables;
 use Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use DateTime;
 
 class TransactionController extends Controller
 {
@@ -75,13 +76,17 @@ class TransactionController extends Controller
                     return '<span class="badge text-warning">PENDING</span>';
                 } else  if($data->payment_status == 'PAID') {
                     return '<span class="badge text-success"><i class="fa fa-check"></i> PAID</span>';
+                } else  if($data->payment_status == 'CANCELLED') {
+                    return '<span class="badge text-danger"><i class="fa fa-trash"></i> CANCELLED</span>';
                 }
             })
             ->addColumn('action', function($data){
                 if($data->payment_status == 'PAID') {
                     return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Print Receipt" aria-label="Print Receipt" data-bs-original-title="Print Receipt" title="Print Receipt" onclick="printData('.$data->id.')"><i class="fa fa-print"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                } else if($data->payment_status == 'CANCELLED') {
+                     return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Detail" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>'; 
                 } else {
-                     return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Detail" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-file-invoice-dollar"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                    return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Detail" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-file-invoice-dollar"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
                 }
 
                
@@ -231,6 +236,39 @@ class TransactionController extends Controller
     public function print_transaction($id) {
         $transaction = Transaction::findorFail($id);
         return view('admins.transaction.print', compact('transaction'));
+    }
+
+    public function cek_expired_booking() {
+        $setting = \App\Models\Setting::findorFail(1);
+        $expired_time = $setting->booking_expired;
+
+        $cek = Transaction::where('payment_status', 'PENDING')->get();
+        $expired = [];
+        foreach($cek as $key) {
+            $tanggal = date('Y-m-d H:i:s', strtotime($key->created_at));
+            $sekarang = date('Y-m-d H:i:s');
+            $tgl1 = new DateTime($tanggal);
+            $tgl2 = new DateTime($sekarang);
+            $jarak = $tgl2->diff($tgl1);
+            $row['hari'] = $jarak->d;
+            $row['jam'] = $jarak->h;
+            $row['menit'] = $jarak->i;
+            $row['id'] = $key->id;
+        
+            array_push($expired, $row);
+        } 
+
+        foreach($expired as $e) {
+            if($e['hari'] == 0 && $e['jam'] == 0 && $e['menit'] <= $expired_time ) {}  else {
+                $trans = Transaction::findorFail($e['id']);
+                $trans->payment_status = 'CANCELLED';
+                $trans->save();
+            }
+        }
+
+        return $expired;
+        
+
     }
 
    

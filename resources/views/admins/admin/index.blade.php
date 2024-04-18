@@ -18,7 +18,7 @@
                             <i class="far fa-list-alt text-success"></i> Data Pengguna
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li style="display: none;" class="nav-item" role="presentation">
                         <button class="nav-link" id="profile-tab-icon" data-bs-toggle="tab" data-bs-target="#profile-tab-icon-pane" type="button" role="tab" aria-controls="profile-tab-icon-pane" aria-selected="false">
                             <i class="fas fa-trash-alt text-danger"></i> Trash Data Pengguna
                         </button>
@@ -44,7 +44,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="profile-tab-icon-pane" role="tabpanel" aria-labelledby="profile-tab-icon" tabindex="0">
+                    <div style="display: none;" class="tab-pane fade" id="profile-tab-icon-pane" role="tabpanel" aria-labelledby="profile-tab-icon" tabindex="0">
                         <div class="widget-content widget-content-area br-8 mt-1">
                             <table id="listTableTrash" class="table table-striped table-bordered table-hover" style="width:100%">
                                 <thead>

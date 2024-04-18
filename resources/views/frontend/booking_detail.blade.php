@@ -15,6 +15,7 @@
 				<h3 class="text-primary leading-none text-[24px] font-lora underline mb-[40px] font-medium">Please complete this form.</h3>
                 <input type="hidden" id="current_month" value="{{ date('m') }}">
                 <input type="hidden" id="current_year" value="{{ date('Y') }}">
+                <input type="hidden" id="product_category" value="{{ $data->kategori }}">
                 <input type="hidden" id="product_id" value="{{ $data->id }}">
                 <input type="hidden" id="harga_4x" value="{{ $data->harga_membership_4x }}">
 				<input type="hidden" id="harga_8x" value="{{ $data->harga_membership_8x }}">

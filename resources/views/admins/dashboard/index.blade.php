@@ -84,7 +84,7 @@
             <div class="w-content">
 
                 <div class="w-info">
-                    <p class="value">{{ $booking_today }} <span>Hari Ini</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></p>
+                    <p class="value">{{ number_format($booking_today) }} <span>Hari Ini</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></p>
                 </div>
                 
             </div>
@@ -158,15 +158,22 @@
                             $user = \App\Models\User::findorFail($tr->user_id);
 
                             $unit = \App\Models\UnitBisnis::findorFail($tr->business_unit_id);
+                            if($user->foto == null || $user->foto == '') {
+                                $src = asset('template/images/profil_icon.png');
+                            }  else {
+                                $src = asset('storage/profile/'.$user->foto);
+                            }
 
                         @endphp
                         <tr>
-                            <td><div class="td-content customer-name"><img src="{{ asset('') }}assets/template/src/assets/img/profile-13.jpeg" alt="avatar"><span>{{ $user->name }}</span></div></td>
+                            <td><div class="td-content customer-name"><img src="{{ $src }}" alt="avatar"><span>{{ $user->name }}</span></div></td>
                             <td><div class="td-content product-brand text-primary">{{ $unit->name_unit }}</div></td>
                             <td><div class="td-content product-invoice">{{ $tr->invoice }}</div></td>
                             <td><div class="td-content pricing"><span class="">{{ number_format($tr->total_price) }}</span></div></td>
                             @if($tr->payment_status == 'PAID')
                             <td><div class="td-content"><span class="badge badge-success">PAID</span></div></td>
+                            @elseif($tr->payment_status == 'CANCELLED')
+                            <td><div class="td-content"><span class="badge badge-danger">CANCELLED</span></div></td>
                             @else
                             <td><div class="td-content"><span class="badge badge-warning">PENDING</span></div></td>
                             @endif
@@ -207,15 +214,23 @@
                             $user = \App\Models\User::findorFail($detail->user_id);
 
                             $payment = \App\Models\Payment::findorFail($detail->payment_id);
+                            
+                            if($user->foto == null || $user->foto == '') {
+                                $src = asset('template/images/profil_icon.png');
+                            }  else {
+                                $src = asset('storage/profile/'.$user->foto);
+                            }
 
                         @endphp
                         <tr>
-                            <td><div class="td-content product-name"><img src="{{ asset('') }}assets/template/src/assets/img/product-headphones.jpg" alt="product"><div class="align-self-center"><p class="prd-name">{{ $user->name }}</p><p class="prd-category text-primary">{{ $user->blok }}-{{ $user->nomor_rumah }}</p></div></div></td>
+                            <td><div class="td-content product-name"><img src="{{ $src }}" alt="product"><div class="align-self-center"><p class="prd-name">{{ $user->name }}</p><p class="prd-category text-primary">{{ $user->blok }}-{{ $user->nomor_rumah }}</p></div></div></td>
                             <td><div class="td-content"><span class="pricing">{{ $payment->payment_name }}</span></div></td>
                             <td><div class="td-content"><span class="discount-pricing">{{ $detail->invoice }}</span></div></td>
                             <td><div class="td-content">{{ number_format($detail->amount) }}<br></div></td>
                             @if($detail->payment_status == 'PAID')
                             <td><div class="td-content"><span class="badge badge-success">PAID</span></div></td>
+                            @elseif($detail->payment_status == 'CANCELLED')
+                            <td><div class="td-content"><span class="badge badge-danger">CANCELLED</span></div></td>
                             @else
                             <td><div class="td-content"><span class="badge badge-warning">PENDING</span></div></td>
                             @endif

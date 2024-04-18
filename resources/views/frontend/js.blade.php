@@ -143,6 +143,8 @@ function close_warning_box() {
     var selected_j=0;
     var selected_k=0;
     function select_hour(id) {
+        
+       
         if($("#hour_"+id).hasClass("active")) {
 
         } else {
@@ -162,27 +164,59 @@ function close_warning_box() {
     // onclick="select_finish_hour(2)"
 
     function disabled_option(id) {
-        var j = +id + 1;
-        var k = +id + 2;
-        selected_j = j;
-        selected_k = k;
-        for(var n=1; n<17; n++) {
-            if(n != j && n != k) {
-                $("#finish_"+n).addClass("hour-disabled");
-                $("#finish_"+n).removeAttr("onclick");
-                $("#finish_"+n).removeClass("actived");
-                
+        var kategori = $("#product_category").val();
+        if(kategori == 'Komunal Space') {
+            var j = +id + 1;
+            var k = +id + 2;
+            var l = +id + 3;
+            
+            selected_j = j;
+            selected_k = k;
+            selected_l = l;
+            for(var n=1; n<17; n++) {
+                if(n != j && n != k && n != l) {
+                    $("#finish_"+n).addClass("hour-disabled");
+                    $("#finish_"+n).removeAttr("onclick");
+                    $("#finish_"+n).removeClass("actived");
+                    
+                }
             }
+            
+            $("#finish_"+selected_j).removeClass("hour-disabled");
+            $("#finish_"+selected_j).attr("onclick", "select_finish_hour("+selected_j+")");
+            $("#finish_"+selected_k).removeClass("hour-disabled");
+            $("#finish_"+selected_k).attr("onclick", "select_finish_hour("+selected_k+")");
+            $("#finish_"+selected_l).removeClass("hour-disabled");
+            $("#finish_"+selected_l).attr("onclick", "select_finish_hour("+selected_l+")");
+        } else {
+            var j = +id + 1;
+            var k = +id + 2;
+            
+            selected_j = j;
+            selected_k = k;
+            for(var n=1; n<17; n++) {
+                if(n != j && n != k) {
+                    $("#finish_"+n).addClass("hour-disabled");
+                    $("#finish_"+n).removeAttr("onclick");
+                    $("#finish_"+n).removeClass("actived");
+                    
+                }
+            }
+            
+            $("#finish_"+selected_j).removeClass("hour-disabled");
+            $("#finish_"+selected_j).attr("onclick", "select_finish_hour("+selected_j+")");
+            $("#finish_"+selected_k).removeClass("hour-disabled");
+            $("#finish_"+selected_k).attr("onclick", "select_finish_hour("+selected_k+")");
         }
         
-        $("#finish_"+selected_j).removeClass("hour-disabled");
-        $("#finish_"+selected_j).attr("onclick", "select_finish_hour("+selected_j+")");
-        $("#finish_"+selected_k).removeClass("hour-disabled");
-        $("#finish_"+selected_k).attr("onclick", "select_finish_hour("+selected_k+")");
     }
 
     var selected_finish_hour_index = 0;
     function select_finish_hour(id) {
+        var pilihan = $("#hour_finish_"+id).val();
+       
+        
+
         if($("#finish_"+id).hasClass("actived")) {
 
         } else {
@@ -209,28 +243,70 @@ function close_warning_box() {
 
             } else {
                 var selisih = selected_hour_finish - selected_hour_start;
-                if(selisih > 2) {
-                    show_error("error", "we allow 2 hours booking duration only");
-                    selected_hour_finish = "";
-                    $("#finish_"+id).removeClass("actived");
-                    $("#finish-time").text('');
-                    $("#finish-time-input").val('');
-                    $("#quantity").text("");
-                    $("#quantity-input").val("");
-                    $("#price").text("");
-                    $("#price-input").val("");
-                } else {
-                    $("#quantity").text(selisih.toString()+" hours");
-                    $("#quantity-input").val(selisih);
-                    if(selisih == 2) {
-                        var totalprice = +selected_price_start + +selected_price_finish;
-                        $("#price").text("Rp. "+formatAngka(totalprice));
-                        $("#price-input").val(totalprice);
+                var kategori = $("#product_category").val();
+                if(kategori == 'Komunal Space') {
+                    if(selisih > 3) {
+                        show_error("error", "we allow 2 hours booking duration only");
+                        selected_hour_finish = "";
+                        $("#finish_"+id).removeClass("actived");
+                        $("#finish-time").text('');
+                        $("#finish-time-input").val('');
+                        $("#quantity").text("");
+                        $("#quantity-input").val("");
+                        $("#price").text("");
+                        $("#price-input").val("");
                     } else {
-                        $("#price").text("Rp. "+formatAngka(selected_price_start));
-                        $("#price-input").val(selected_price_start);
+                        $("#quantity").text(selisih.toString()+" hours");
+                        $("#quantity-input").val(selisih);
+                        if(selisih == 2) {
+                            var totalprice = +selected_price_start + +selected_price_finish;
+                            $("#price").text("Rp. "+formatAngka(totalprice));
+                            $("#price-input").val(totalprice);
+                        }
+                        else if(selisih == 3) {
+
+                            if(pilihan == 18) {
+                                var totalprice = +selected_price_start + +selected_price_finish;
+                                $("#price").text("Rp. "+formatAngka(totalprice));
+                                $("#price-input").val(totalprice);
+                            } else {
+                                var totalprice = +selected_price_start + +selected_price_finish + +selected_price_finish;
+                                $("#price").text("Rp. "+formatAngka(totalprice));
+                                $("#price-input").val(totalprice);
+                            }
+                           
+                        } 
+                        
+                        else {
+                            $("#price").text("Rp. "+formatAngka(selected_price_start));
+                            $("#price-input").val(selected_price_start);
+                        }
+                    }
+                } else {
+                    if(selisih > 2) {
+                        show_error("error", "we allow 2 hours booking duration only");
+                        selected_hour_finish = "";
+                        $("#finish_"+id).removeClass("actived");
+                        $("#finish-time").text('');
+                        $("#finish-time-input").val('');
+                        $("#quantity").text("");
+                        $("#quantity-input").val("");
+                        $("#price").text("");
+                        $("#price-input").val("");
+                    } else {
+                        $("#quantity").text(selisih.toString()+" hours");
+                        $("#quantity-input").val(selisih);
+                        if(selisih == 2) {
+                            var totalprice = +selected_price_start + +selected_price_finish;
+                            $("#price").text("Rp. "+formatAngka(totalprice));
+                            $("#price-input").val(totalprice);
+                        } else {
+                            $("#price").text("Rp. "+formatAngka(selected_price_start));
+                            $("#price-input").val(selected_price_start);
+                        }
                     }
                 }
+                
             }
             selected_finish_hour_index = id;
         }

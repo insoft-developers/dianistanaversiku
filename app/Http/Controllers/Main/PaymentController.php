@@ -78,7 +78,9 @@ class PaymentController extends Controller
         $detail->save();
 
         if($detail) {
-            $secret_key = 'Basic '.config('xendit.key_auth');
+            $setting = \App\Models\Setting::findorFail(1);
+            $api_pay = base64_encode($setting->api_payment. ':');
+            $secret_key = 'Basic '.$api_pay;
             $external_id = $invoice;
             $data_request = Http::withHeaders([
                 'Authorization' => $secret_key
@@ -91,6 +93,7 @@ class PaymentController extends Controller
             ]);
             
             $response = $data_request->object();
+            
             return response()->json([
                 "success" => true,
                 "data" => $response->invoice_url
@@ -126,10 +129,10 @@ class PaymentController extends Controller
         }
 
         
+        
         $setting = \App\Models\Setting::findorFail(1);
-        $api_pay = $setting->api_payment;
-
-        $secret_key = 'Basic '.config('xendit.key_auth');
+        $api_pay = base64_encode($setting->api_payment. ':');
+        $secret_key = 'Basic '.$api_pay;
         $external_id = $invoice;
         $data_request = Http::withHeaders([
             'Authorization' => $secret_key
@@ -140,6 +143,8 @@ class PaymentController extends Controller
             'failure_redirect_url' => url('/payment'),
             'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode,
         ]);
+
+        
         
         $response = $data_request->object();
         return redirect($response->invoice_url);
