@@ -31,7 +31,8 @@ class ReportLainController extends Controller
     public function index(): View
     {
         $view = "report-lain";
-        return view("admins.report.lain.index", compact('view'));
+        $method = PaymentDetail::where('payment_method', '!=', null)->groupBy('payment_method')->get();
+        return view("admins.report.lain.index", compact('view','method'));
     }
 
 
@@ -47,24 +48,34 @@ class ReportLainController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
-                                ->where('payments.payment_type', '!=', 1)
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
+                                ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
-                                ->where('payment_details.paid_at', '<=', $end)
-                                ->get();
+                                ->where('payment_details.paid_at', '<=', $end);
+                                
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
-                                ->where('payments.payment_type', '!=', 1)
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
+                                ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
-                                ->where('payment_details.paid_at', '<=', $sampai)
-                                ->get();
+                                ->where('payment_details.paid_at', '<=', $sampai);
+                                
         }
+        
+        if(! empty($input['payment'])) {
+            $query->where('payment_details.payment_method', $input['payment']);
+        }
+        if(! empty($input['penyelia'])) {
+            $query->where('users.penyelia', $input['penyelia']);
+        }
+        $data = $query->get();
         
 
 

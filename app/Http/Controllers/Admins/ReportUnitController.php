@@ -21,6 +21,7 @@ use App\Exports\LaporanDetailKasExport;
 use App\Exports\LaporanKeuanganExport;
 use App\Exports\LaporanUnitExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Transaction;
 
 
 class ReportUnitController extends Controller
@@ -32,7 +33,8 @@ class ReportUnitController extends Controller
     public function index(): View
     {
         $view = "report-unit";
-        return view("admins.report.bisnis.index", compact('view'));
+        $method = Transaction::where('payment_method', '!=', null)->groupBy('payment_method')->get();
+        return view("admins.report.bisnis.index", compact('view','method'));
     }
 
 
@@ -48,23 +50,28 @@ class ReportUnitController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $start)
-                                ->where('transactions.paid_at', '<=', $end)
-                                ->get();
+                                ->where('transactions.paid_at', '<=', $end);
+                                
         } else {
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $awal)
-                                ->where('transactions.paid_at', '<=', $sampai)
-                                ->get();
+                                ->where('transactions.paid_at', '<=', $sampai);
+                                
         }
-        
+
+        if(! empty($input['payment'])) {
+            $query->where('payment_method', $input['payment']);
+        }
+
+        $data = $query->get();
 
 
         return Datatables::of($data)

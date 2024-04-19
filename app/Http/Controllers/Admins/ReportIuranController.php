@@ -31,7 +31,9 @@ class ReportIuranController extends Controller
     public function index(): View
     {
         $view = "report-iuran";
-        return view("admins.report.iuran.index", compact('view'));
+        
+        $method = PaymentDetail::where('payment_method', '!=', null)->groupBy('payment_method')->get();
+        return view("admins.report.iuran.index", compact('view','method'));
     }
 
 
@@ -47,26 +49,34 @@ class ReportIuranController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
-                                ->where('payment_details.paid_at', '<=', $end)
-                                ->get();
+                                ->where('payment_details.paid_at', '<=', $end);
+                                
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
-                                ->where('payment_details.paid_at', '<=', $sampai)
-                                ->get();
+                                ->where('payment_details.paid_at', '<=', $sampai);
+                                
         }
         
-
+        if(! empty($input['payment'])) {
+            $query->where('payment_details.payment_method', $input['payment']);
+        }
+        if(! empty($input['penyelia'])) {
+            $query->where('users.penyelia', $input['penyelia']);
+        }
+        $data = $query->get();
 
         return Datatables::of($data)
             ->addColumn('created_at', function($data){
@@ -98,7 +108,7 @@ class ReportIuranController extends Controller
     }
 
     
-    public function print_kas_detail($awal, $akhir) {
+    public function print_kas_detail($awal, $akhir, $payment, $penyelia) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -106,32 +116,44 @@ class ReportIuranController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         }
+
+        if(! empty($payment)) {
+            $payment = str_replace("%", " ", $payment);
+            $query->where('payment_details.payment_method', $payment);
+        }
+        if(! empty($penyelia)) {
+            $query->where('users.penyelia', $penyelia);
+        }
+
+        $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
-        return view('admins.report.iuran.print', compact('data','awal','akhir','setting','awal','akhir'));
+        return view('admins.report.iuran.print', compact('data','awal','akhir','setting','awal','akhir','payment','penyelia'));
     }
 
 
-    public function print_kas_detail_pdf($awal, $akhir) {
+    public function print_kas_detail_pdf($awal, $akhir, $payment, $penyelia) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -139,26 +161,38 @@ class ReportIuranController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         }
+
+        if(! empty($payment)) {
+            $payment = str_replace("%", " ", $payment);
+            $query->where('payment_details.payment_method', $payment);
+        }
+        if(! empty($penyelia)) {
+            $query->where('users.penyelia', $penyelia);
+        }
+
+        $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
         $pdf= PDF::loadView('admins.report.iuran.print_pdf', compact('data','awal','akhir','setting'));
         $pdf->setPaper('a4', 'potrait');
@@ -167,7 +201,7 @@ class ReportIuranController extends Controller
     }
 
 
-    public function print_iuran_financing($awal, $akhir) {
+    public function print_iuran_financing($awal, $akhir,$payment, $penyelia) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -175,28 +209,40 @@ class ReportIuranController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         }
+
+        if(! empty($payment)) {
+            $payment = str_replace("%", " ", $payment);
+            $query->where('payment_details.payment_method', $payment);
+        }
+        if(! empty($penyelia)) {
+            $query->where('users.penyelia', $penyelia);
+        }
+
+        $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
-        return view('admins.report.iuran.financing', compact('data','awal','akhir','setting'));
+        return view('admins.report.iuran.financing', compact('data','awal','akhir','setting','payment','penyelia'));
     }
 
 
@@ -260,7 +306,7 @@ class ReportIuranController extends Controller
          return Excel::download(new LaporanDetailKasExport($awal, $akhir), 'laporan_detail_kas.xlsx');
     }
 
-    public function print_financing_pdf($awal, $akhir) {
+    public function print_financing_pdf($awal, $akhir, $payment, $penyelia) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -268,26 +314,38 @@ class ReportIuranController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id')
                                 ->where('payments.payment_type', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         }
+
+        if(! empty($payment)) {
+            $payment = str_replace("%", " ", $payment);
+            $query->where('payment_details.payment_method', $payment);
+        }
+        if(! empty($penyelia)) {
+            $query->where('users.penyelia', $penyelia);
+        }
+
+        $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
         $pdf= PDF::loadView('admins.report.iuran.financing_pdf', compact('data','awal','akhir','setting'));
         $pdf->setPaper('a4', 'potrait');

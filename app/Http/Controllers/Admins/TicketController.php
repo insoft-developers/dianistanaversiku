@@ -54,16 +54,16 @@ class TicketController extends Controller
             })
             ->addColumn('status', function($data){
                 if($data->status == 0) {
-                    return '<div style="white-space:normal;" class="text-danger">Waiting Admin Response</div>';
+                    return '<div onclick="detailData('.$data->id.')" style="white-space:normal;" class="text-danger">Waiting Admin Response</div>';
                 }
                 else if($data->status == 1) {
-                    return '<div style="white-space:normal;" class="text-warning">Waiting User Response</div>';
+                    return '<div onclick="detailData('.$data->id.')" style="white-space:normal;" class="text-warning">Waiting User Response</div>';
                 }
                 else if($data->status == 3) {
-                    return '<div style="white-space:normal;" class="text-info"><i class="fa fa-check"></i> Ticket Resolved</div>';
+                    return '<div onclick="detailData('.$data->id.')" style="white-space:normal;" class="text-info"><i class="fa fa-check"></i> Ticket Resolved</div>';
                 }
                 else if($data->status == 2) {
-                    return '<div style="white-space:normal;" class="text-success"><i class="fa fa-exclamation"></i> On Hold</div>';
+                    return '<div onclick="detailData('.$data->id.')" style="white-space:normal;" class="text-success"><i class="fa fa-exclamation"></i> On Hold</div>';
                 }
             })
             ->addColumn('created_at', function($data){
@@ -93,12 +93,15 @@ class TicketController extends Controller
             ->addColumn('subject', function($data){
                 return '<div style="white-space:normal;">'.$data->subject.'</div>';
             })
+            ->addColumn('ticket_number', function($data){
+                return '<div onclick="detailData('.$data->id.')">'.$data->ticket_number.'</div>';
+            })
           
             ->addColumn('action', function($data){
                
 
                 return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Detail" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
-        })->rawColumns(['action','created_at','user_id','subject','department','updated_at','status','document'])
+        })->rawColumns(['action','created_at','user_id','subject','department','updated_at','status','document','ticket_number'])
         ->addIndexColumn()
         ->make(true);
     }

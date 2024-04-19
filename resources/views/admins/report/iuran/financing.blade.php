@@ -174,7 +174,9 @@
         $("#btn-pdf").click(function(){
             var awal = "{{ $awal }}";
             var akhir = "{{ $akhir }}";
-            window.open("{{ url('backdata/print_financing_pdf') }}"+"/"+awal+"/"+akhir , "_blank");
+            var payment = "{{ $payment }}";
+            var penyelia = "{{ $penyelia }}";
+            window.open("{{ url('backdata/print_financing_pdf') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia , "_blank");
         })
 
         $("#btn-excel").click(function(){

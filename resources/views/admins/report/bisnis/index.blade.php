@@ -16,14 +16,27 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Tanggal Awal:</label>
-                            <input type="date" id="awal" class="form-control">
+                            <input type="date" id="awal" class="form-control" value="{{ date('Y-m-01') }}">
                         </div>
                         
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Tanggal Akhir:</label>
-                            <input type="date" id="akhir" class="form-control">
+                            <input type="date" id="akhir" class="form-control" value="{{ date('Y-m-t') }}">
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Paid By:</label>
+                            <select class="form-control" id="payment">
+                                <option value="">- All Payment - </option>
+                                @foreach($method as $m)
+                                <option value="{{ $m->payment_method }}">{{ $m->payment_method }}</option>
+                                @endforeach
+                            </select>
+
                         </div>
                         
                     </div>

@@ -132,9 +132,13 @@
     }
     #btn-print-kas{
         margin-left: 122px;
+        position: absolute;
+        right: 235px;
     }
     #btn-print-financing{
-
+        position: absolute;
+        right: 22px;
+        top: 103px;
     }
     .btn-payment-ticketing{
         position: absolute;

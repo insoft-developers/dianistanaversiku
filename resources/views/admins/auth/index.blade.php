@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SignIn | DianIstana</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('') }}assets/template/src/assets/img/favicon.ico"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/template/main/img/dianlogo.png') }}">
     <link href="{{ asset('') }}assets/template/layouts/modern-light-menu/css/light/loader.css" rel="stylesheet" type="text/css" />
     <link href="{{ asset('') }}assets/template/layouts/modern-light-menu/css/dark/loader.css" rel="stylesheet" type="text/css" />
     <!-- BEGIN GLOBAL MANDATORY STYLES -->

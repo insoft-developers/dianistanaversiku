@@ -1081,8 +1081,8 @@
 
 @if($view == 'report-iuran')
 <script>
-    init_data_table("","");
-    function init_data_table(awal, akhir) {
+    init_data_table("","","","");
+    function init_data_table(awal, akhir, payment, penyelia) {
         $("#report-table").dataTable().fnDestroy();
 
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -1097,7 +1097,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, 'All'],
             ],
-            ajax: {type: "POST", url: "{{ route('report.iuran.list') }}", data:{"awal":awal, "akhir":akhir, '_token':csrf_token}},
+            ajax: {type: "POST", url: "{{ route('report.iuran.list') }}", data:{"awal":awal, "akhir":akhir, 'payment':payment, 'penyelia':penyelia, '_token':csrf_token}},
             order: [[ 0, "asc" ]],
             columns: [
                 {data: 'id', name: 'id', searchable: false },
@@ -1121,6 +1121,8 @@
     $("#btn-filter").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1142,13 +1144,23 @@
 
         else {
 
-            init_data_table(awal,akhir);
+            init_data_table(awal,akhir,payment,penyelia);
         }
     });
 
     $("#btn-print-financing").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
+
+        
+        if(payment == '') {
+            payment = '0';
+        }
+        if(penyelia == '' ) {
+            penyelia = '0';
+        }
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1159,24 +1171,25 @@
             });
         }
 
-        else if(awal > akhir) {
-            Swal.fire({
-                icon: 'error',
-                title: "Tanggal tidak valid...!",
-                showConfirmButton: false,
-                scrollbarPadding: false,
-            });
-        }
-
         else {
 
-            window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir, "_blank");
+            window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
         }
     })
 
     $("#btn-print-kas").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
+
+        
+        if(payment == '') {
+            payment = '0';
+        }
+        if(penyelia == '' ) {
+            penyelia = '0';
+        }
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1196,9 +1209,10 @@
             });
         }
 
+
         else {
 
-            window.open("{{ url('backdata/print_kas_detail') }}"+"/"+awal+"/"+akhir, "_blank");
+            window.open("{{ url('backdata/print_kas_detail') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
         }
     })
 
@@ -1211,8 +1225,8 @@
 
 @if($view == 'report-unit')
 <script>
-    init_data_table("","");
-    function init_data_table(awal, akhir) {
+    init_data_table("","","");
+    function init_data_table(awal, akhir, payment) {
         $("#report-table").dataTable().fnDestroy();
 
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -1227,7 +1241,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, 'All'],
             ],
-            ajax: {type: "POST", url: "{{ route('report.unit.list') }}", data:{"awal":awal, "akhir":akhir, '_token':csrf_token}},
+            ajax: {type: "POST", url: "{{ route('report.unit.list') }}", data:{"awal":awal, "akhir":akhir, "payment":payment, '_token':csrf_token}},
             order: [[ 11, "asc" ]],
             columns: [
                 {data: 'id', name: 'id', searchable: false },
@@ -1251,6 +1265,7 @@
     $("#btn-filter").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1272,7 +1287,7 @@
 
         else {
 
-            init_data_table(awal,akhir);
+            init_data_table(awal,akhir, payment);
         }
     });
 
@@ -1314,8 +1329,8 @@
 
 @if($view == 'report-lain')
 <script>
-    init_data_table("","");
-    function init_data_table(awal, akhir) {
+    init_data_table("","","","");
+    function init_data_table(awal, akhir, payment, penyelia) {
         $("#report-table").dataTable().fnDestroy();
 
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -1330,7 +1345,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, 'All'],
             ],
-            ajax: {type: "POST", url: "{{ route('report.lain.list') }}", data:{"awal":awal, "akhir":akhir, '_token':csrf_token}},
+            ajax: {type: "POST", url: "{{ route('report.lain.list') }}", data:{"awal":awal, "akhir":akhir,"payment":payment, "penyelia":penyelia, '_token':csrf_token}},
             order: [[ 0, "asc" ]],
             columns: [
                 {data: 'id', name: 'id', searchable: false },
@@ -1354,6 +1369,8 @@
     $("#btn-filter").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1375,7 +1392,7 @@
 
         else {
 
-            init_data_table(awal,akhir);
+            init_data_table(awal,akhir, payment, penyelia);
         }
     });
 

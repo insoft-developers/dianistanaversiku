@@ -16,24 +16,50 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Tanggal Awal:</label>
-                            <input type="date" id="awal" class="form-control">
+                            <input type="date" id="awal" class="form-control" value="{{ date('Y-m-01') }}">
                         </div>
                         
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Tanggal Akhir:</label>
-                            <input type="date" id="akhir" class="form-control">
+                            <input type="date" id="akhir" class="form-control" value="{{ date('Y-m-t') }}">
                         </div>
                         
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Paid By:</label>
+                            <select class="form-control" id="payment">
+                                <option value="">- All Payment - </option>
+                                @foreach($method as $m)
+                                <option value="{{ $m->payment_method }}">{{ $m->payment_method }}</option>
+                                @endforeach
+                            </select>
+
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Penyelia:</label>
+                            <select class="form-control" id="penyelia">
+                                <option value="">- All Penyelia - </option>
+                                <option value="SDP">SDP</option>
+                                <option value="DMSI">DMSI</option>
+                            </select>
+
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="col-md-8">
                         <div class="form-group">
                             <button id="btn-filter" class="btn btn-success btn-report"><i class="fa fa-filter"></i> Filter</button>
                         
                             <button id="btn-print-kas" class="btn btn-warning btn-report"><i class="fa fa-file"></i> Print Detail Kas Masuk</button>
                         
-                            
+                            <button id="btn-print-financing" class="btn btn-info btn-report"><i class="fa fa-file"></i> Print Financing Report</button>
                         </div>
                         
                     </div>
