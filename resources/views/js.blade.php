@@ -1484,3 +1484,184 @@
     </script>
 
 @endif
+
+@if($view == 'booking-setting')
+    <script>
+        $("#type").change(function(){
+            var tipe = $(this).val();
+            if(tipe == 1) {
+                $("#day-container").hide();
+                $("#date-container").show();
+            } else if(tipe == 2) {
+                $("#day-container").show();
+                $("#date-container").hide();
+            }
+        });
+
+        var table = $('#listTable').DataTable({
+            processing:true,
+            serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            ajax: "{{ route('booking.setting.list') }}",
+            order: [[ 0, "desc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'type', name: 'type'},
+                {data:'unit_id', name: 'unit_id'},
+                {data:'booking_day', name: 'booking_day'},
+                {data:'date', name: 'date'},
+                {data:'booking_time', name: 'booking_time'},
+                {data:'is_active', name: 'is_active'},
+                
+            ]
+        });
+
+        function addData() {
+            resetForm();
+            
+            save_method = "add";
+            $('input[name=_method]').val('POST');
+            $(".modal-title").text("Add Booking Setting");
+            $("#modal-tambah").modal("show");
+        }
+
+        $("#form-tambah").submit(function(e){
+            loading("btn-save-data");
+            e.preventDefault();
+            var id = $('#id').val();
+            if(save_method == "add")  url = "{{ url('/backdata/booking_setting') }}";
+            else url = "{{ url('/backdata/booking_setting') .'/'}}"+ id;
+            $.ajax({
+                url : url,
+                type : "POST",
+                data : new FormData($('#modal-tambah form')[0]),
+                contentType:false,
+                processData:false,
+                success : function(data){
+                    unloading("btn-save-data", "Save");
+                    if(data.success){
+                        $('#modal-tambah').modal('hide');
+                        table.ajax.reload(null, false);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.message,
+                            showConfirmButton: false,
+                            scrollbarPadding: false,
+                        });
+                    }
+                }
+
+            });
+        });
+
+        function editData(id) {
+            save_method = "edit";
+            $('input[name=_method]').val('PATCH');
+            $.ajax({
+                url: "{{ url('/backdata/booking_setting') }}" +"/"+id+"/edit",
+                type: "GET",
+                dataType: "JSON",
+                success: function(data){
+                    $('#modal-tambah').modal("show");
+                    $('.modal-title').text("Edit Data");
+                    $('#id').val(data.id);
+                    $("#type").val(data.type);
+                    $("#unit_id").val(data.unit_id);
+                    $("#date").val(data.date);
+                    $("#booking_day").val(data.booking_day);
+                    $("#start_time").val(data.start_time);
+                    $("#finish_time").val(data.finish_time);
+                    $("#is_active").val(data.is_active);
+
+                    if(data.type == 1) {
+                        $("#date-container").show();
+                        $("#day-container").hide();
+                    }
+                    else if(data.type == 2) {
+                        $("#date-container").hide();
+                        $("#day-container").show();
+                    }
+
+                }
+            })
+        }
+
+        function deleteData(id) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Delete this data?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('/backdata/booking_setting') }}" + '/'+id,
+                        type : "POST",
+                        data : {'_method':'DELETE', '_token':csrf_token},
+                        success : function($data){
+                            table.ajax.reload(null, false);
+                        }
+                    });
+                }
+            });
+        }
+        
+        function detailData(id) {
+            $.ajax({
+                url: "{{ url('backdata/user') }}"+"/"+id,
+                type: "GET",
+                success: function(data) {
+                    $("#detail-content").html(data); 
+                    $("#modal-detail").modal("show");
+                }
+            });    
+        }
+
+        $("#btn-print-detail").click(function(){
+            var id = $("#id-detail").val();
+            window.open('{{ url('backdata/print_detail') }}'+'/'+id, '_blank');
+
+        });
+        
+        function resetForm() {
+            $("#name").val("");
+            $("#username").val("");
+            $("#email").val("");
+            $("#password").val("");
+            $("#jenis_kelamin").val("");
+            $("#no_hp").val("");
+            $("#level").val("");
+            $("#is_active").val("");
+            $("#penyelia").val("");
+            $("#blok").val("");
+            $("#nomor_rumah").val("");
+            $("#daya_listrik").val("");
+            $("#luas_tanah").val("");
+            $("#iuran_bulanan").val("");
+            $("#whatsapp_emergency").val("");
+            $("#keterangan").val("");
+            $("#alamat_surat_menyurat").val("");
+            $("#nomor_telepon_rumah").val("");
+            $("#id_pelanggan_pdam").val("");
+            $("#nomor_meter_pln").val("");
+            $("#mulai_menempati").val("");
+            $("#image").val(null);
+            $("#profile-image").attr('src', '{{ asset('template/images/profil_icon.png') }}');
+            $("#remove-profile-image").hide();
+        }
+    </script>
+@endif

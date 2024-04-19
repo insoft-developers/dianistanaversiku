@@ -21,7 +21,7 @@
                     <div class="py-[20px] px-[20px] text-left">
                         <h3><a href="{{ url('booking_detail') }}/{{ $u->slug }}" class="font-lora leading-tight text-[22px] xl:text-[26px] text-primary hover:text-secondary transition-all font-medium">{{ $u->name_unit }}</a></h3>
                         <h4><a href="{{ url('booking_detail') }}/{{ $u->slug }}" class="font-light text-[14px] leading-[1.75] underline">{{ $u->kategori }}</a></h4>
-                        <span class="font-light text-sm">Added: {{ date('d-M-Y', strtotime($u->created_at)) }}</span>
+                        
                         
                         @if(Auth::user()->level == "user")
                         <ul class="daftar-harga">

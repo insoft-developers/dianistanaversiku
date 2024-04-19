@@ -69,6 +69,10 @@
                                     <label>Admin Fee (Rp.):</label>
                                     <input type="text" class="form-control" id="admin_fee" name="admin_fee" placeholder="enter api payment gateway" value="{{ $setting->admin_fee }}">
                                 </div>
+                                <div class="form-group mt20">
+                                    <label>Booking Pending Expired In (minute):</label>
+                                    <input type="text" class="form-control" id="booking_expired" name="booking_expired" placeholder="enter api payment gateway" value="{{ $setting->booking_expired }}">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,7 +180,7 @@
                     </div>
                     
                 </div>
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn btn-success mt30">Submit</button>
                 </form>
             </div>
         </div>

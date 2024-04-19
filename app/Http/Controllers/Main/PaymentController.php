@@ -79,6 +79,24 @@ class PaymentController extends Controller
 
         if($detail) {
             $setting = \App\Models\Setting::findorFail(1);
+            $pajak = $setting->pajak;
+            $adminfee = $setting->admin_fee;
+
+            if(! empty($pajak)) {
+                $percent = $amount * $pajak /100;
+                $nominal = (int)$percent;
+                $vat = $amount + $nominal;
+            } else {
+                $nominal = 0;
+                $vat = $amount;
+            }
+
+            if(! empty($adminfee)) {
+                $final = $vat + $adminfee;
+            } else {
+                $final = $vat;
+            }
+
             $api_pay = base64_encode($setting->api_payment. ':');
             $secret_key = 'Basic '.$api_pay;
             $external_id = $invoice;
@@ -86,10 +104,10 @@ class PaymentController extends Controller
                 'Authorization' => $secret_key
             ])->post('https://api.xendit.co/v2/invoices', [
                 'external_id' => $external_id,
-                'amount' => $amount,
+                'amount' => $final,
                 'success_redirect_url' => url('/payment'),
                 'failure_redirect_url' => url('/payment'),
-                'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode. " ".$text_denda,
+                'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode. " ".$text_denda."<br> Tax : ".number_format($nominal)."<br>admin fee :".number_format($adminfee),
             ]);
             
             $response = $data_request->object();
@@ -128,9 +146,27 @@ class PaymentController extends Controller
             $amount = $payment->payment_amount;
         }
 
-        
-        
+
         $setting = \App\Models\Setting::findorFail(1);
+        $pajak = $setting->pajak;
+        $adminfee = $setting->admin_fee;
+
+        if(! empty($pajak)) {
+            $percent = $amount * $pajak /100;
+            $nominal = (int)$percent;
+            $vat = $amount + $nominal;
+        } else {
+            $nominal = 0;
+            $vat = $amount;
+        }
+
+        if(! empty($adminfee)) {
+            $final = $vat + $adminfee;
+        } else {
+            $final = $vat;
+        }
+        
+        
         $api_pay = base64_encode($setting->api_payment. ':');
         $secret_key = 'Basic '.$api_pay;
         $external_id = $invoice;
@@ -138,10 +174,10 @@ class PaymentController extends Controller
             'Authorization' => $secret_key
         ])->post('https://api.xendit.co/v2/invoices', [
             'external_id' => $external_id,
-            'amount' => $amount,
+            'amount' => $final,
             'success_redirect_url' => url('/payment'),
             'failure_redirect_url' => url('/payment'),
-            'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode,
+            'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode ."<br> Tax : ".number_format($nominal)."<br>".number_format($adminfee),
         ]);
 
         

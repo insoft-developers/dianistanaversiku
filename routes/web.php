@@ -16,6 +16,8 @@ use App\Http\Controllers\Admins\ReportIuranController;
 use App\Http\Controllers\Admins\ReportUnitController;
 use App\Http\Controllers\Admins\ReportLainController;
 use App\Http\Controllers\Admins\SettingController;
+use App\Http\Controllers\Admins\BookingSettingController;
+
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
@@ -220,6 +222,9 @@ Route::prefix("backdata")
 
    Route::get('change_password', [SettingController::class, 'change_password']);
    Route::post('password_admin_update', [SettingController::class, 'password_admin_update'])->name('backdata.password.update');
+
+   Route::resource('booking_setting', BookingSettingController::class);
+   Route::get("booking-setting-list",[BookingSettingController::class,'ajax_list'])->name('booking.setting.list') ;
 
    
    
