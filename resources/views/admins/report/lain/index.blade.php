@@ -59,7 +59,6 @@
                         
                             <button id="btn-print-kas" class="btn btn-warning btn-report"><i class="fa fa-file"></i> Print Detail Kas Masuk</button>
                         
-                            <button id="btn-print-financing" class="btn btn-info btn-report"><i class="fa fa-file"></i> Print Financing Report</button>
                         </div>
                         
                     </div>

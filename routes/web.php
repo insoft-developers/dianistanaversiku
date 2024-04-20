@@ -107,6 +107,7 @@ Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
 // for admins
 
 Route::get('/login-admins', [AuthController::class, 'index'])->name("login_admin");
+Route::get('backdata/save_firebase_token/{token}', [AuthController::class, 'save_firebase_token']);
 
 Route::middleware(['throttle:webAuthAdmin'])->group(function(){
    Route::post('/process-auth-admin',[AuthController::class, 'prosesAuth']);
@@ -122,6 +123,7 @@ Route::prefix("backdata")
    Route::get('/',[DashboardController::class, 'index'])->name("home_admin");
 
    Route::get('/logout',[AuthController::class, 'logout'])->name("logout_admin");
+   
 
    // admin crud register
    Route::post("admins-list",[AdminsController::class,'ajax_list']) ;
@@ -129,6 +131,7 @@ Route::prefix("backdata")
    Route::get("admins/{id}/trash",[AdminsController::class,'editTrash']) ;
    Route::post("admins/{id}/restore",[AdminsController::class,'restore']) ;
    Route::resource("admins",AdminsController::class);
+   
 
    // kategori penyelia crud data
    Route::post("penyelia-kategori-list",[PenyeliaKategoriController::class,'ajax_list']) ;
@@ -205,15 +208,15 @@ Route::prefix("backdata")
 
    Route::post("report-unit-list",[ReportUnitController::class,'ajax_list'])->name('report.unit.list') ;
    Route::resource("report-unit",ReportUnitController::class);
-   Route::get('print_unit_report/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report']);
-   Route::get('print_unit_report_pdf/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report_pdf']);
+   Route::get('print_unit_report/{awal}/{akhir}/{payment}', [ReportUnitController::class, 'print_unit_report']);
+   Route::get('print_unit_report_pdf/{awal}/{akhir}/{payment}', [ReportUnitController::class, 'print_unit_report_pdf']);
    Route::get('print_unit_report_excel/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report_excel']);
 
 
    Route::post("report-lain-list",[ReportLainController::class,'ajax_list'])->name('report.lain.list') ;
    Route::resource("report-lain",ReportLainController::class);
-   Route::get('print_lain_report/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report']);
-   Route::get('print_lain_report_pdf/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_pdf']);
+   Route::get('print_lain_report/{awal}/{akhir}/{payment}/{penyelia}', [ReportLainController::class, 'print_lain_report']);
+   Route::get('print_lain_report_pdf/{awal}/{akhir}/{payment}/{penyelia}', [ReportLainController::class, 'print_lain_report_pdf']);
    Route::get('print_lain_report_excel/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_excel']);
 
    Route::resource("setting",SettingController::class);

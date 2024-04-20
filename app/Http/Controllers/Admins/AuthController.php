@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Session;
 use Validator;
+use App\Models\AdminsData;
 
 class AuthController extends Controller
 {
@@ -42,7 +43,14 @@ class AuthController extends Controller
         return Resp::json();
     }
 
-    
+    public function save_firebase_token($token) {
+        $admin = \App\Models\AdminsData::findorFail(adminAuth()->id);
+        $admin->remember_token = $token;
+        $admin->save();
+
+        return $admin;
+
+    }
 
 
     public function logout() 

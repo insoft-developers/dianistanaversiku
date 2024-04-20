@@ -20,7 +20,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Department :</label>
                                     <select class="form-control input-filter" id="department-filter">
@@ -31,7 +31,19 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Status :</label>
+                                    <select class="form-control input-filter" id="status-filter">
+                                        <option value=""> - All Status - </option>
+                                        <option value="0">Waiting for Admin Response</option>
+                                        <option value="1">Waiting For User Response</option>
+                                        <option value="2">On Hold</option>
+                                        <option value="3">Ticket Resolved</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Priority :</label>
                                     <select class="form-control input-filter" id="priority-filter">
@@ -43,7 +55,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <button onclick="filter_ticketing_data()" class="btn btn-info btn-filter-ticketing"><i class="fa fa-filter"></i> Filter</button>
                             </div>
                         </div>

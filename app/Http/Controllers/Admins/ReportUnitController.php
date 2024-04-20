@@ -109,7 +109,7 @@ class ReportUnitController extends Controller
     }
 
     
-    public function print_unit_report($awal, $akhir) {
+    public function print_unit_report($awal, $akhir, $payment) {
         
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
@@ -118,28 +118,32 @@ class ReportUnitController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $start)
-                                ->where('transactions.paid_at', '<=', $end)
-                                ->get();
+                                ->where('transactions.paid_at', '<=', $end);
         } else {
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $awal)
-                                ->where('transactions.paid_at', '<=', $sampai)
-                                ->get();
+                                ->where('transactions.paid_at', '<=', $sampai);
         }
+
+        if($payment != 0) {
+            $query->where('transactions.payment_method', $payment);
+        }
+
+        $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
-        return view('admins.report.bisnis.print', compact('data','awal','akhir','setting','awal','akhir'));
+        return view('admins.report.bisnis.print', compact('data','awal','akhir','setting','awal','akhir','payment'));
     }
 
 
-    public function print_unit_report_pdf($awal, $akhir) {
+    public function print_unit_report_pdf($awal, $akhir, $payment) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -147,24 +151,28 @@ class ReportUnitController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $start)
                                 ->where('transactions.paid_at', '<=', $end)
-                                ->orderBy('transactions.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('transactions.paid_at', 'asc');
         } else {
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $awal)
                                 ->where('transactions.paid_at', '<=', $sampai)
-                                ->orderBy('transactions.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('transactions.paid_at', 'asc');
         }
+
+        if($payment != 0) {
+            $query->where('transactions.payment_method', $payment);
+        }
+
+        $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
         $pdf= PDF::loadView('admins.report.bisnis.print_pdf', compact('data','awal','akhir','setting'));
         $pdf->setPaper('a4', 'potrait');

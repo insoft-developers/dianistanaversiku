@@ -550,7 +550,6 @@ class AuthUsersController extends Controller
             }
         }
 
-
         if($cr->count() >0 || $dr->count() > 0) {
             foreach($jam_tutup as $jt) {
                 $pertama = (int)$jt['awal'];

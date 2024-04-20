@@ -1,4 +1,6 @@
 <script>
+   
+
     function loading(id) {
         $("#"+id).text("Processing.....");
         $("#"+id).attr("disabled", true);
@@ -364,9 +366,9 @@
 @endif
 @if($view == "ticketing")
         <script>
-        init_table("","");
+        init_table("","","");
 
-        function init_table(department, priority) {
+        function init_table(department, priority, status) {
             $("#listTable").dataTable().fnDestroy();
             var csrf_token = $('meta[name="csrf-token"]').attr('content');
             var table = $('#listTable').DataTable({
@@ -380,7 +382,7 @@
                     [10, 25, 50, -1],
                     [10, 25, 50, 'All'],
                 ],
-                ajax: {type: "POST", url: "{{ route('ticketing.list') }}", data:{"department":department, "priority":priority, '_token':csrf_token}},
+                ajax: {type: "POST", url: "{{ route('ticketing.list') }}", data:{"department":department, "priority":priority, "status":status, '_token':csrf_token}},
 
                 order: [[ 0, "desc" ]],
                 columns: [
@@ -405,7 +407,8 @@
         function filter_ticketing_data() {
             var department = $("#department-filter").val();
             var priority = $("#priority-filter").val();
-            init_table(department,priority);
+            var status = $("#status-filter").val();
+            init_table(department,priority,status);
         }
         
 
@@ -429,7 +432,7 @@
                         data : {'id':id, '_token':csrf_token},
                         success : function(data){
                             if(data.success) {
-                                table.ajax.reload(null, false);
+                                init_table("","","");
                                 Swal.fire({
                                     icon: 'success',
                                     title: data.message,
@@ -466,7 +469,7 @@
                         data : {'id':id, '_token':csrf_token},
                         success : function(data){
                             if(data.success) {
-                                table.ajax.reload(null, false);
+                                init_table("","","");
                                 Swal.fire({
                                     icon: 'success',
                                     title: data.message,
@@ -500,7 +503,7 @@
                         unloading("btn-post-reply", "Post");
                         if(data.success){
                             $('#modal-detail').modal('hide');
-                            table.ajax.reload(null, false);
+                            init_table("","","");
                             Swal.fire({
                                 icon: 'success',
                                 title: data.message,
@@ -543,7 +546,7 @@
                         type : "POST",
                         data : {'_method':'DELETE', '_token':csrf_token},
                         success : function($data){
-                            table.ajax.reload(null, false);
+                            init_table("","","");
                         }
                     });
                 }
@@ -1295,6 +1298,11 @@
     $("#btn-print-kas").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+
+        if(payment == '') {
+            payment = '0';
+        }
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1316,7 +1324,7 @@
 
         else {
 
-            window.open("{{ url('backdata/print_unit_report') }}"+"/"+awal+"/"+akhir, "_blank");
+            window.open("{{ url('backdata/print_unit_report') }}"+"/"+awal+"/"+akhir+"/"+payment, "_blank");
         }
     })
 
@@ -1401,6 +1409,16 @@
     $("#btn-print-kas").click(function(){
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
+
+        if(payment == '') {
+            payment = 0;
+        } 
+
+        if(penyelia == '') {
+            penyelia = 0;
+        }
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1422,7 +1440,7 @@
 
         else {
 
-            window.open("{{ url('backdata/print_lain_report') }}"+"/"+awal+"/"+akhir, "_blank");
+            window.open("{{ url('backdata/print_lain_report') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
         }
     })
 

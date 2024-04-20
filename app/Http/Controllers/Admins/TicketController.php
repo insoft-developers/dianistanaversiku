@@ -42,6 +42,9 @@ class TicketController extends Controller
         if(! empty($input['priority'])) {
             $query->where('priority', $input['priority']);
         }
+        if($input['status'] != '') {
+            $query->where('status', $input['status']);
+        }
         
         $data = $query->get();
         

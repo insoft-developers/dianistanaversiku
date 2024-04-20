@@ -356,7 +356,8 @@
         <!--  END CONTENT AREA  -->
     </div>
     <!-- END MAIN CONTAINER -->
-    
+    <audio id="notification" src="{{ asset('sound/sound_notif.mp3') }}" muted></audio>
+
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
     <script src="{{ asset('') }}assets/template/src/plugins/src/global/vendors.min.js"></script>
     <script>
@@ -395,6 +396,69 @@
     
     @yield("script_admin")
 
+    <script>
+        function play_notif() {
+            document.getElementById('notification').muted = false;
+            document.getElementById('notification').play();
+        }
+    </script>
+
+   <!-- The core Firebase JS SDK is always required and must be listed first -->
+   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>        
+   <script type="module">
+         const firebaseConfig = {
+           apiKey: "AIzaSyD4_3G9UpqpWg-Xk7On-PwzaY9bU-wiMl8",
+           authDomain: "my-dian-istana.firebaseapp.com",
+           projectId: "my-dian-istana",
+           storageBucket: "my-dian-istana.appspot.com",
+           messagingSenderId: "832093630984",
+           appId: "1:832093630984:web:a0d969f7afe0a1a212d7bd"
+       };
+     
+
+    // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const messaging = firebase.messaging();
+
+        function initFirebaseMessagingRegistration() {
+            
+            messaging.requestPermission().then(function () {
+                return messaging.getToken()
+            }).then(function(token) {
+                $.ajax({
+                    url:"{{ url('backdata/save_firebase_token') }}"+"/"+token,
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function(data) {
+                        console.log(token);
+                    }
+                }) 
+                
+            }).catch(function (err) {
+                console.log(`Token Error :: ${err}`);
+            });
+        }
+
+        initFirebaseMessagingRegistration();
+
+        messaging.onMessage(function(data){
+            
+            new Notification(data.notification.title, {data});
+            play_notif();
+            // $.ajax({
+            //     url: "{{ url('update_notif_number') }}",
+            //     type: "GET",
+            //     success: function(data) {
+            //         $("#notif-number").html(data);
+            //     }
+            // })
+        });
+   </script>
+
     @include('js')
+
+    
 </body>
 </html>

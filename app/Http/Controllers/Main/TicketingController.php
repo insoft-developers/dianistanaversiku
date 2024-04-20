@@ -68,8 +68,67 @@ class TicketingController extends Controller
         $input['status'] = 0;
         $input['ticket_number'] = "DIT-".random_int(10000000, 99999999);
         Ticketing::create($input);
+        $this->prepare_send($input['priority'].' - New Ticket Has Arrived : ', $input['subject']);
+
+
         Session::flash('success', "");
         return redirect('/ticketing');
+        
+    }
+
+    public function prepare_send($title, $message) {
+        $admins = \App\Models\AdminsData::where('remember_token', '!=', '')->get();
+        foreach($admins as $admin) {
+            $this->notify($title, $message, $admin->remember_token);
+        }
+    }
+
+
+    public function notify($title, $message, $regid) {
+        $SERVER_API_KEY = 'AAAAwbylMgg:APA91bF2ALenum4cb5ossrjcPIXOGJbUyjrSDu7YUS6LS8RQI2WDKsliccvbH8JHP3zYJIaZSpS-emPRjDy3EzAZjEZu4NHTfPu1L4rtknAZgeYqpc5Ck-uzbc_nA0cgPYDmTH-5EQV7';
+
+        $data = [
+
+            // "to" => '/topics/comment',
+            "to" => $regid,
+            "notification" => [
+                "title" => $title,
+                "body" => $message,
+                "sound"=> "default",
+                    // required for sound on ios
+            ],
+        ];
+    
+        
+        
+    
+        $dataString = json_encode($data);
+    
+        $headers = [
+    
+            'Authorization: key=' . $SERVER_API_KEY,
+    
+            'Content-Type: application/json',
+    
+        ];
+    
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+    
+        curl_setopt($ch, CURLOPT_POST, true);
+    
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+    
+        $response = curl_exec($ch);
+        
+        return $response;
         
     }
 

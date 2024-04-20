@@ -140,7 +140,6 @@ class ReportIuranController extends Controller
         }
 
         if(! empty($payment)) {
-            $payment = str_replace("%", " ", $payment);
             $query->where('payment_details.payment_method', $payment);
         }
         if(! empty($penyelia)) {

@@ -83,7 +83,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+                <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}<br>Paid By : {{ Request::segment(5) == 0 ? "ALL METHOD ": Request::segment(5) }}</center></th>
                 </tr>
                 <tr>
                     <th>No</th>

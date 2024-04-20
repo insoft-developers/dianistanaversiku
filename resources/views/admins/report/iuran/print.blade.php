@@ -97,7 +97,9 @@
     <table class="table table-striped">
         <thead>
             <tr>
-            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Detail Kas Masuk</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Detail Kas Masuk</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}
+                <br> Paid By : {{ Request::segment(5) == 0 ? "ALL METHOD ": Request::segment(5) }} - Penyelia : {{ Request::segment(6) == 0 ? "ALL": Request::segment(6) }}
+            </center></th>
             </tr>
             <tr>
                 <th>No</th>
@@ -123,7 +125,7 @@
             if($users->count() > 0) {
                 $user = $users->first();
                 $user_name = $user->name;
-                $penyelia = $user->penyelia;
+                $penyelias = $user->penyelia;
                 $info = $user->blok.'-'.$user->nomor_rumah;
                 
             } else {
@@ -136,7 +138,7 @@
             <td>{{ $no }}</td>
             <td>{{ $key->invoice }}<br>{{ date('H:i:s', strtotime($key->paid_at)) }}</td>
             
-            <td>{{ $penyelia }}</td>
+            <td>{{ $penyelias }}</td>
             <td>{{ $user_name }} | {{ $info }}</td>
             <td>{{ $key->payment_name }}</td>
             <td style="text-align: right;white-space:nowrap;">IDR {{ number_format($key->amount) }}</td>

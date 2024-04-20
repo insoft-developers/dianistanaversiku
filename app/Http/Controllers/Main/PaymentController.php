@@ -127,9 +127,21 @@ class PaymentController extends Controller
             return redirect("frontend_dashboard");
         }
 
+        $auth = \App\Models\Payment::findorFail($id);
+        if($auth->payment_dedication != Auth::user()->id) {
+            return  '<script>
+                        alert("Payment Bill To Not Match");
+                        window.location = "'.url('frontend_dashboard').'";
+                    </script>';
+        }
+
+
+
         $cek = \App\Models\PaymentDetail::where('payment_id', $id)
             ->where('user_id', Auth::user()->id)
             ->where('payment_status', 'PAID');
+
+        
         if($cek->count() > 0) {
             return redirect('/payment');
         }

@@ -109,7 +109,7 @@ class ReportLainController extends Controller
     }
 
     
-    public function print_lain_report($awal, $akhir) {
+    public function print_lain_report($awal, $akhir, $payment, $penyelia) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -117,32 +117,44 @@ class ReportLainController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
-                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id', 'left')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id', 'left')
                                 ->where('payments.payment_type', '!=', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
-                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id', 'left')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id', 'left')
                                 ->where('payments.payment_type', '!=', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
         }
+
+        if($payment != 0) {
+            $query->where('payment_details.payment_method', $payment);
+        }
+
+        if($penyelia != 0) {
+            $query->where('users.penyelia', $penyelia);
+        }
+
+
+        $data = $query->get();
+
         $setting = \App\Models\Setting::findorFail(1);
-        return view('admins.report.lain.print', compact('data','awal','akhir','setting','awal','akhir'));
+        return view('admins.report.lain.print', compact('data','awal','akhir','setting','awal','akhir','payment','penyelia'));
     }
 
 
-    public function print_lain_report_pdf($awal, $akhir) {
+    public function print_lain_report_pdf($awal, $akhir, $payment, $penyelia) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -150,26 +162,38 @@ class ReportLainController extends Controller
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
-                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id', 'left')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id', 'left')
                                 ->where('payments.payment_type','!=', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
         } else {
-            $data = DB::table('payment_details')
+            $query = DB::table('payment_details')
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
-                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
+                                ->join('payments', 'payments.id', '=', 'payment_details.payment_id', 'left')
+                                ->join('users', 'users.id', '=', 'payment_details.user_id', 'left')
                                 ->where('payments.payment_type','!=', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai)
-                                ->orderBy('payment_details.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('payment_details.paid_at', 'asc');
+                                
         }
+
+        if(! empty($payment)) {
+            $query->where('payment_details.payment_method', $payment);
+        }
+
+        if(! empty($penyelia)) {
+            $query->where('users.penyelia', $penyelia);
+        }
+        
+        $data = $query->get();
+
         $setting = \App\Models\Setting::findorFail(1);
         $pdf= PDF::loadView('admins.report.lain.print_pdf', compact('data','awal','akhir','setting'));
         $pdf->setPaper('a4', 'potrait');

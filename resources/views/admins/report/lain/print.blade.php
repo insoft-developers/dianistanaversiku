@@ -97,7 +97,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Pendapatan Lain Lain</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Pendapatan Lain Lain</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}<br> Paid By : {{ Request::segment(5) == 0 ? "ALL METHOD ": Request::segment(5) }} - Penyelia : {{ Request::segment(6) == 0 ? "ALL": Request::segment(6) }}</center></th>
             </tr>
             <tr>
                 <th>No</th>
@@ -175,7 +175,9 @@
         $("#btn-pdf").click(function(){
             var awal = "{{ $awal }}";
             var akhir = "{{ $akhir }}";
-            window.open("{{ url('backdata/print_lain_report_pdf') }}"+"/"+awal+"/"+akhir , "_blank");
+            var payment = "{{ $payment }}";
+            var penyelia = "{{ $penyelia }}";
+            window.open("{{ url('backdata/print_lain_report_pdf') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia , "_blank");
         })
 
         $("#btn-excel").click(function(){
