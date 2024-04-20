@@ -48,6 +48,7 @@ function listDataTables(idTable,urlAjax,btnRefresh,btnAdd="")
             { data:'name' },
             { data:'username' },
             { data:'level' },
+            { data:'role' },
             { data:'email' },
             { data:'no_telp' },
             {
@@ -101,6 +102,7 @@ function editData(id) {
             $("#level").val(resp.data.level);
             $("#username").val(resp.data.username);
             $("#username").attr('readonly',true);
+            $("#role").val(resp.data.role);
         } else {
             setTimeout(function() {
                 $("#modalForm").modal("hide");

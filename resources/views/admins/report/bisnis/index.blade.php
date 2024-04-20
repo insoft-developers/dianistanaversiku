@@ -66,7 +66,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Action</th>
-                                        <th>Date</th>
+                                        
+                                        <th>Paid At</th>
                                         <th>Invoice</th>
                                         <th>User</th>
                                         <th>Transaction Name</th>
@@ -75,7 +76,7 @@
                                         <th>Amount</th>
                                         <th>Status</th>
                                         <th>Payment</th>
-                                        <th>Paid At</th>
+                                        <th>Date</th>
                                         
                                     </tr>
                                 </thead>

@@ -1109,7 +1109,7 @@
             columns: [
                 {data: 'id', name: 'id', searchable: false },
                 {data:'action', name: 'action', orderable: false, searchable: false},
-                {data:'created_at', name: 'created_at'},
+                {data:'paid_at', name: 'paid_at'},
                 {data:'invoice', name: 'invoice'},
                 {data:'user_id', name: 'user_id'},
                 {data:'payment_name', name: 'payment_name'},
@@ -1118,7 +1118,7 @@
                 {data:'amount', name: 'amount'},
                 {data:'payment_status', name: 'payment_status'},
                 {data:'payment_method', name: 'payment_method'},
-                {data:'paid_at', name: 'paid_at'},
+                {data:'created_at', name: 'created_at'},
                 
                
             ]
@@ -1253,7 +1253,7 @@
             columns: [
                 {data: 'id', name: 'id', searchable: false },
                 {data:'action', name: 'action', orderable: false, searchable: false},
-                {data:'created_at', name: 'created_at'},
+                {data:'paid_at', name: 'paid_at'},
                 {data:'invoice', name: 'invoice'},
                 {data:'user_id', name: 'user_id'},
                 {data:'name_unit', name: 'name_unit'},
@@ -1262,7 +1262,8 @@
                 {data:'total_price', name: 'total_price'},
                 {data:'payment_status', name: 'payment_status'},
                 {data:'payment_method', name: 'payment_method'},
-                {data:'paid_at', name: 'paid_at'},
+                
+                {data:'created_at', name: 'created_at'},
                 
                
             ]
@@ -1362,7 +1363,7 @@
             columns: [
                 {data: 'id', name: 'id', searchable: false },
                 {data:'action', name: 'action', orderable: false, searchable: false},
-                {data:'created_at', name: 'created_at'},
+                {data:'paid_at', name: 'paid_at'},
                 {data:'invoice', name: 'invoice'},
                 {data:'user_id', name: 'user_id'},
                 {data:'payment_name', name: 'payment_name'},
@@ -1371,7 +1372,8 @@
                 {data:'amount', name: 'amount'},
                 {data:'payment_status', name: 'payment_status'},
                 {data:'payment_method', name: 'payment_method'},
-                {data:'paid_at', name: 'paid_at'},
+                
+                {data:'created_at', name: 'created_at'},
                 
                
             ]

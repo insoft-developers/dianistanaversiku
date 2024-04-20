@@ -24,8 +24,11 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $request->session()->forget('session_number_admin');
+
+        
         $view = "ticketing";
         $category = TicketingCategory::all();
         return view("admins.ticketing.index", compact('view','category'));

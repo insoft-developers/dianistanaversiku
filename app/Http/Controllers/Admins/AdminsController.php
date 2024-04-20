@@ -35,6 +35,12 @@ class AdminsController extends Controller
         $dataResult = self::dataTablesGet();
         foreach ($dataResult as $item) {
 
+            if($item->role == 1) {
+                $item->role = "Super Admin";
+            } else {
+                $item->role = "Admin";
+            }
+
             $btnAction = "";
 
             if ($trash) {
@@ -77,6 +83,7 @@ class AdminsController extends Controller
             'email'  =>  'required|email|unique:admins',
             'no_telp'  =>  'required',
             'level'  =>  'required',
+            'role'  =>  'required',
             'username'  =>  'required|unique:admins',
             'password'  =>  'required|min:6',
             'confirm_password'  =>  'required|same:password|min:6',
@@ -91,6 +98,7 @@ class AdminsController extends Controller
                 'email'  =>  $request->email,
                 'no_telp'  =>  $request->no_telp,
                 'level'  =>  $request->level,
+                'role'  =>  $request->role,
                 'username'  =>  $request->username,
                 'password'  =>  Hash::make($request->password),
             ];
@@ -118,7 +126,7 @@ class AdminsController extends Controller
      */
     public function edit(string $id)
     {
-        $select = ["name","username","email","no_telp","level"];
+        $select = ["name","username","email","no_telp","level","role"];
         $getData = AdminsData::getFirstQuery(select: $select, where: ["id" => $id]);
         // $getData = AdminsData::getFirst(["id" => $id]);
         if ($getData) {
@@ -152,6 +160,7 @@ class AdminsController extends Controller
                 'email'  =>  'required|email',
                 'no_telp'  =>  'required',
                 'level'  =>  'required',
+                'role' => 'required'
             ];
 
             $password = $request->password;
@@ -169,6 +178,7 @@ class AdminsController extends Controller
                     'email'  =>  $request->email,
                     'no_telp'  =>  $request->no_telp,
                     'level'  =>  $request->level,
+                    'role' => $request->role,
                 ];
 
                 $password = $request->password;

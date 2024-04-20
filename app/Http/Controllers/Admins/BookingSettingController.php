@@ -18,6 +18,9 @@ class BookingSettingController extends Controller
     {
         $data = BookingSetting::all();
         return Datatables::of($data)
+            ->addColumn('booking_time', function($data){
+                return '<div>'.$data->start_time.' - '.$data->finish_time.'</div>';
+            })
             ->addColumn('is_active', function($data){
                 if($data->is_active == 1) {
                     return '<center><i title="active" class="fa fa-check-circle text-success"></i></center>';
@@ -25,9 +28,7 @@ class BookingSettingController extends Controller
                     return '<center><i title="not active" class="fa fa-exclamation-circle text-danger"></i></center>';
                 }
             })
-            ->addColumn('booking_time', function($data){
-                return '';
-            })
+           
             ->addColumn('action', function($data){
                 return '<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
         })->rawColumns(['action','is_active','booking_time'])

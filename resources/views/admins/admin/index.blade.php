@@ -35,6 +35,7 @@
                                         <th>Nama</th>
                                         <th>Username</th>
                                         <th>Level</th>
+                                        <th>Role</th>
                                         <th>Email</th>
                                         <th>No Telp</th>
                                         <th>Opsi</th>
@@ -53,6 +54,7 @@
                                         <th class="text-danger">Nama</th>
                                         <th class="text-danger">Username</th>
                                         <th class="text-danger">Level</th>
+                                        <th class="text-danger">Role</th>
                                         <th class="text-danger">Email</th>
                                         <th class="text-danger">No Telp</th>
                                         <th class="text-secondary">Opsi</th>
@@ -104,6 +106,7 @@
                                     <option value="manager">manager</option>
                                 </select>
                             </div>
+                            
                         </div>
                         <div class="col-xl-6">
                             <div class="form-group mb-3">
@@ -117,6 +120,14 @@
                             <div class="form-group mb-3">
                                 <label>Confirm Password :</label>
                                 <input id="confirm_password" name="confirm_password" class="form-control form-control-sm" type="password" placeholder="Confirm Password">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Role :</label>
+                                <select id="role" name="role" class="form-control form-control-sm">
+                                    <option value="">--Pilih--</option>
+                                    <option value="1">Super Admin</option>
+                                    <option value="2">Admin</option>
+                                </select>
                             </div>
                         </div>
                     </div>
