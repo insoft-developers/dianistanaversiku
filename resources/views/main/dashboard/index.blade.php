@@ -225,7 +225,7 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 					</div>
 					<ul class="lp-navmenu-items">
 						@if( request()->session()->missing('session_id'))
-						<li><a href="{{ url('/login') }}" >LOGIN OR REGISTER</a>
+						<li><a href="{{ url('/login') }}" >LOGIN</a>
 						</li>
 						
 
@@ -668,7 +668,7 @@ svg { width: 1em; height: 1em; fill: currentColor; display: inline-block; vertic
 							<li class="elementor-icon-list-item">
 											<span class="elementor-icon-list-icon">
 							<i aria-hidden="true" class="fas fa-angle-right"></i>						</span>
-										<span class="elementor-icon-list-text">Login or Register</span>
+										<span class="elementor-icon-list-text">Login</span>
 									</li>
 									
 								<li class="elementor-icon-list-item">

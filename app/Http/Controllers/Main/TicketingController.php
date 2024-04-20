@@ -170,7 +170,25 @@ class TicketingController extends Controller
             $data->status = 0;
             $data->updated_at = date('Y-m-d H:i:s');
             $data->save();
+
+            $this->sent_to_single($input['ticket_number'], $input['message']);
         }
         return Redirect::back()->with('success', "Reply Successfully Added");
+    }
+
+    public function sent_to_single($ticket_number, $message) {
+        $t = TicketingContent::where('ticket_number', $ticket_number)
+            ->where('is_reply', 1);
+        $data = Ticketing::where('ticket_number', $ticket_number)->first();
+
+        if($t->count() > 0) {
+            $send = $t->first();
+            $admin = \App\Models\AdminsData::findorFail($send->user_id);
+            $regid = $admin->remember_token;
+            $this->notify("Reply From ".Auth::user()->name." For".$data->subject, $message, $regid);
+        } else {
+            $this->prepare_send($data->priority.' - New Ticket Has Arrived : ', $data->subject);
+        }
+        
     }
 }

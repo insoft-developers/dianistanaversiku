@@ -583,8 +583,12 @@
         }
 
         function copy_payment_link(id) {
+
             navigator.clipboard.writeText("{{ url('payment_link_share') }}"+"/"+id).then(function () {
                 alert('Payment link copied...');
+                var ckeditor = CKEDITOR.instances.message.getData();
+
+                CKEDITOR.instances.message.setData(ckeditor+'<br><a class="payment-links" href="{{ url('payment_link_share') }}/'+id+'">Please Click this Payment Link to Pay</a>');
             }, function () {
                 alert('Failure to copy. Check permissions for clipboard')
             });

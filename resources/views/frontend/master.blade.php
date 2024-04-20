@@ -81,7 +81,7 @@
                                     @if( request()->session()->missing('session_id'))    
                                     <li class="mr-7 xl:mr-[40px] relative group py-[20px]">
 
-                                        <a href="{{ url('/login') }}" class="transition-all hover:text-secondary">LOGIN OR REGISTER</a>
+                                        <a href="{{ url('/login') }}" class="transition-all hover:text-secondary">LOGIN</a>
                                         <ul class="list-none z-[99] bg-white drop-shadow-[0px_6px_10px_rgba(0,0,0,0.2)] rounded-[12px] flex flex-wrap flex-col w-[220px] absolute top-[120%] left-1/2 -translate-x-1/2 transition-all
                 group-hover:top-[100%] invisible group-hover:visible opacity-0 group-hover:opacity-100
                 
@@ -209,7 +209,7 @@
                     <ul>
                         @if( request()->session()->missing('session_id'))   
                         <li class="relative block border-b-primary border-b first:border-t first:border-t-primary">
-                            <a href="{{ url('login') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Login or Register</a>
+                            <a href="{{ url('login') }}" class="block capitalize font-normal text-black hover:text-secondary my-2 py-1 px-5">Login</a>
                             
                         </li>
                         <li class="relative block border-b-primary border-b">
@@ -306,7 +306,7 @@
                             More Information<span class="text-secondary">.</span></h3>
                         <ul class="text-[16px] leading-none mb-[-20px]">
                             @if( request()->session()->missing('session_id'))  
-                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="{{ url('login') }}">Login Or Register</a></li>
+                            <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="{{ url('login') }}">Login</a></li>
                             @endif
                             <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Download App For Android</a></li>
                             <li class="mb-[20px]"><a class="inline-block transition-all hover:text-secondary" href="#">Download App For IPhone</a></li>

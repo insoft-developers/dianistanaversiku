@@ -47,7 +47,7 @@ Route::get('/privacy', [DashboardMainController::class,'privacy']);
 Route::get('/contact', [DashboardMainController::class, 'contact']);
 Route::get('/sendwa', [DashboardMainController::class, 'send_wa']);
 Route::get('/frontend_register', [AuthUsersController::class, 'register']);
-Route::post('/register_now', [AuthUsersController::class, 'register_now'])->name('register_now');
+// Route::post('/register_now', [AuthUsersController::class, 'register_now'])->name('register_now');
 Route::get('/otp', [AuthUsersController::class, 'otp']);
 Route::post('/send_otp', [AuthUsersController::class, 'send_otp'])->name('send.otp');
 Route::get('/login', [AuthUsersController::class, 'login'])->name('login_user');
@@ -97,6 +97,7 @@ Route::get('/update_notif_number', [NotifController::class, 'update_notif_number
 
 
 
+
 Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
 // Route::get('/test', function(){
 //    $data = "MK-120102013919310";
@@ -108,6 +109,7 @@ Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
 
 Route::get('/login-admins', [AuthController::class, 'index'])->name("login_admin");
 Route::get('backdata/save_firebase_token/{token}', [AuthController::class, 'save_firebase_token']);
+Route::get('backdata/update_notif_number', [TicketController::class, 'update_notif_number']);
 
 Route::middleware(['throttle:webAuthAdmin'])->group(function(){
    Route::post('/process-auth-admin',[AuthController::class, 'prosesAuth']);
@@ -116,6 +118,7 @@ Route::middleware(['throttle:webAuthAdmin'])->group(function(){
 Route::get('/check_payment_routine', [PembayaranController::class, 'check_payment_routine']);
 Route::get('/notifikasi_bulanan', [PembayaranController::class, 'notifikasi_bulanan']);
 Route::get('/cek_expired_booking', [TransactionController::class, 'cek_expired_booking']);
+
 
 Route::prefix("backdata")
 ->middleware('authAdmins')

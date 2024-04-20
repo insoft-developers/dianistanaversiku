@@ -700,4 +700,8 @@ label{
     margin-left: 17px;
  }
 
+ .payment-links{
+    
+ }
+
 </style>

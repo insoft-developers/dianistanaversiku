@@ -1606,23 +1606,23 @@ class AuthUsersController extends Controller
         $trans = \App\Models\Transaction::findorFail($input['id']);
         $setting = \App\Models\Setting::findorFail(1);
         $amount = $trans->total_price;
-        $pajak = $setting->pajak;
-        $adminfee = $setting->admin_fee;
+        // $pajak = $setting->pajak;
+        // $adminfee = $setting->admin_fee;
 
-        if(! empty($pajak)) {
-            $percent = $amount * $pajak /100;
-            $nominal = (int)$percent;
-            $vat = $amount + $nominal;
-        } else {
-            $vat = $amount;
-            $nominal = 0;
-        }
+        // if(! empty($pajak)) {
+        //     $percent = $amount * $pajak /100;
+        //     $nominal = (int)$percent;
+        //     $vat = $amount + $nominal;
+        // } else {
+        //     $vat = $amount;
+        //     $nominal = 0;
+        // }
 
-        if(! empty($adminfee)) {
-            $final = $vat + $adminfee;
-        } else {
-            $final = $vat;
-        }
+        // if(! empty($adminfee)) {
+        //     $final = $vat + $adminfee;
+        // } else {
+        //     $final = $vat;
+        // }
         
         $user = \App\Models\User::findorFail($trans->user_id);
         $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
@@ -1636,10 +1636,10 @@ class AuthUsersController extends Controller
             'Authorization' => $secret_key
         ])->post('https://api.xendit.co/v2/invoices', [
             'external_id' => $external_id,
-            'amount' => $final,
+            'amount' => $amount,
             'success_redirect_url' => url('/print_ticket/'.$input['id']),
             'failure_redirect_url' => url('/riwayat'),
-            'description' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB - Tax :".number_format($nominal)." admin fee: ".number_format($adminfee),
+            'description' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB",
         ]);
         
         $response = $data_request->object();

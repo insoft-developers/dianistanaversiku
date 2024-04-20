@@ -151,4 +151,14 @@
         padding-top: 7px;
         padding-bottom: 7px;
     }
+    .notif-badge-number{
+        width: 20px !important;
+        height: 20px !important;
+        position: absolute !important;
+        top: -7px !important;
+        right: -6px !important;
+        padding-top: 3px !important;
+        font-size: 10px !important;
+        font-weight: bold !important;
+    }
 </style>

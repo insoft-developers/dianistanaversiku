@@ -54,7 +54,7 @@
                                     <div class="flex flex-wrap items-center">
                                         <button type="submit" class="before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:-z-[1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[40px] py-[15px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:-z-[2] after:bg-primary after:rounded-md after:transition-all">Login</button>
 
-                                        <a href="{{ url('frontend_register') }}" class="font-medium text-primary hover:text-secondary ml-[40px]">Register</a>
+                                        {{-- <a href="{{ url('frontend_register') }}" class="font-medium text-primary hover:text-secondary ml-[40px]">Register</a> --}}
                                     </div>
                                 </div>
                             

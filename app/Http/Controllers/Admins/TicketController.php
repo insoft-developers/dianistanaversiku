@@ -494,4 +494,14 @@ class TicketController extends Controller
         ]);
 
      }
+
+     public function update_notif_number() {
+        $jumlah = session('session_number_admin') == null ? 0 : (int)session('session_number_admin');
+        $update = $jumlah + 1;
+        session(['session_number_admin'=> $update]);
+
+        
+        
+        return response()->json($update);
+    }
 }

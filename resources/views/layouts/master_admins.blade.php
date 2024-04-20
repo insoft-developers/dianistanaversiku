@@ -82,12 +82,19 @@
                 </li>
 
                
-
+                <li class="nav-item dropdown notification-dropdown">
+                    <a href="javascript:void(0);" class="nav-link dropdown-toggle show" id="notificationDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span id="admin-notif-number" class="badge badge-danger notif-badge-number">
+                            {{ session('session_number_admin') == null ? 0 : session('session_number_admin')}}
+                        </span>
+                    </a>                    
+                </li>
                 <li class="nav-item dropdown user-profile-dropdown  order-lg-0 order-1">
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="avatar-container">
                             <div class="avatar avatar-sm avatar-indicators avatar-online">
                                 <img alt="avatar" src="{{ adminAuth()->avatar_src }}" class="rounded-circle">
+                                
                             </div>
                         </div>
                     </a>
@@ -395,7 +402,7 @@
     <!-- END PAGE LEVEL SCRIPTS -->
     
     @yield("script_admin")
-
+    play_notif();
     <script>
         function play_notif() {
             document.getElementById('notification').muted = false;
@@ -447,13 +454,13 @@
             
             new Notification(data.notification.title, {data});
             play_notif();
-            // $.ajax({
-            //     url: "{{ url('update_notif_number') }}",
-            //     type: "GET",
-            //     success: function(data) {
-            //         $("#notif-number").html(data);
-            //     }
-            // })
+            $.ajax({
+                url: "{{ url('backdata/update_notif_number') }}",
+                type: "GET",
+                success: function(data) {
+                    $("#admin-notif-number").text(data);
+                }
+            })
         });
    </script>
 
