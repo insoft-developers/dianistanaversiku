@@ -17,5 +17,6 @@ class Broadcasting extends Model
         "user_id",
         "send_date",
         "sending_status",
+        "is_blok"
     ] ;
 }

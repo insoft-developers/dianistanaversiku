@@ -26,7 +26,8 @@ class BroadcastingController extends Controller
     {
         $view = "broadcasting";
         $user = User::all();
-        return view("admins.broadcasting.index", compact('view','user'));
+        $bloks = \App\Models\Blok::all();
+        return view("admins.broadcasting.index", compact('view','user','bloks'));
     }
 
 
@@ -68,19 +69,31 @@ class BroadcastingController extends Controller
 
             })
             ->addColumn('user_id', function($data){
-                if($data->user_id < 0) {
-                    return 'All User';
-                } else {
-                    $users = \App\Models\User::where('id', $data->user_id);
-                    if($users->count() > 0) {
-                        $user = $users->first();
-                        return $user->name.'<br>( '.$user->level.' )';
+                if($data->is_blok == 1) {
+                    $bloks = \App\Models\Blok::where('id', $data->user_id);
+                    if($bloks->count() > 0) {
+                        $blok = $bloks->first();
+                        return 'BLOK - '.$blok->blok_name;
                     } else {
-                        return '';
+                        return '-';
                     }
+                } else {
+                    if($data->user_id == -1) {
+                        return 'All User';
+                    } 
+                    else {
+                        $users = \App\Models\User::where('id', $data->user_id);
+                        if($users->count() > 0) {
+                            $user = $users->first();
+                            return $user->name.'<br>( '.$user->level.' )';
+                        } else {
+                            return '';
+                        }
+                    }
+                    
+
                 }
                 
-
             })
             ->addColumn('action', function($data){
                
@@ -110,13 +123,20 @@ class BroadcastingController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-
+        
+        
         $rules = array(
             "title" => "required",
             "message" => "required",
             "user_id" => "required",
             "send_date" => "required"
         );
+
+        if($input['user_id'] == -2) {
+            $rules['blok'] = "required";
+        }
+
+
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -142,12 +162,34 @@ class BroadcastingController extends Controller
             }
             $input['admin_id'] = adminAuth()->id;
             $input['sending_status'] = 0;
+            $input['is_blok'] = 0;
+            if($input['user_id'] == -2) {
+                $input['user_id'] = $input['blok'];
+                $input['is_blok'] = 1;
+            }
+
             $br = Broadcasting::create($input);
             $id = $br->id;
             $sekarang = date('Y-m-d');
             if($input['send_date'] == $sekarang) {
-                $this->notify($input['title'], $input['message'], $input['user_id'], $id);
-                $this->make_notif($input['title'], $input['message'], $input['image'], $input['user_id']);
+
+                if($input['is_blok'] == 1) {
+                    $blok = \App\Models\Blok::findorFail($input['blok']);
+                    $users = \App\Models\User::where('blok', $blok->blok_name)->get();
+                    if($users->count() > 0) {
+                        foreach($users as $user) {
+                            if($user->token != null) {
+                                $this->notify($input['title'], $input['message'], $user->id, $id);
+                            }
+                            $this->make_notif($input['title'], $input['message'], $input['image'], $user->id);
+                        }
+                    }
+                } else {
+                    $this->notify($input['title'], $input['message'], $input['user_id'], $id);
+                    $this->make_notif($input['title'], $input['message'], $input['image'], $input['user_id']);
+                }
+
+                
             }
 
             return response()->json([
@@ -195,6 +237,9 @@ class BroadcastingController extends Controller
             "user_id" => "required",
             "send_date" => "required"
         );
+        if($input['user_id'] == -2) {
+            $rules['blok'] = "required";
+        }
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -226,11 +271,29 @@ class BroadcastingController extends Controller
             }
             $input['admin_id'] = adminAuth()->id;
             $input['sending_status'] = 0;
+            $input['is_blok'] = 0;
+            if($input['user_id'] == -2) {
+                $input['user_id'] = $input['blok'];
+                $input['is_blok'] = 1;
+            }
             $br = $data->update($input);
             $sekarang = date('Y-m-d');
             if($input['send_date'] == $sekarang) {
-                $this->notify($input['title'], $input['message'], $input['user_id'], $id);
-                $this->make_notif($input['title'], $input['message'], $input['image'], $input['user_id']);
+                if($input['is_blok'] == 1) {
+                    $blok = \App\Models\Blok::findorFail($input['blok']);
+                    $users = \App\Models\User::where('blok', $blok->blok_name)->get();
+                    if($users->count() > 0) {
+                        foreach($users as $user) {
+                            if($user->token != null) {
+                                $this->notify($input['title'], $input['message'], $user->id, $id);
+                            }
+                            $this->make_notif($input['title'], $input['message'], $input['image'], $user->id);
+                        }
+                    }
+                } else {
+                    $this->notify($input['title'], $input['message'], $input['user_id'], $id);
+                    $this->make_notif($input['title'], $input['message'], $input['image'], $input['user_id']);
+                }
             }
 
             return response()->json([
@@ -260,7 +323,19 @@ class BroadcastingController extends Controller
         $cek = Broadcasting::where('sending_status', 0)->where('send_date', $sekarang)->get();
         if($cek->count() > 0) {
             foreach($cek as $key) {
-                $this->notify($key->title, $key->message, $key->user_id, $key->id);
+                if($key->is_blok == 1) {
+                    $blok = \App\Models\Blok::findorFail($key->user_id);
+                    $users = \App\Models\User::where('blok', $blok->blok_name)->get();
+                    if($users->count() > 0) {
+                        foreach($users as $user) {
+                            if($user->token != null) {
+                                $this->notify($key->title, $key->message, $user->id, $key->id);
+                            }
+                        }
+                    }
+                } else {
+                    $this->notify($key->title, $key->message, $key->user_id, $key->id);
+                }
                 $sent++;
             }
         }
@@ -289,7 +364,7 @@ class BroadcastingController extends Controller
         
         $SERVER_API_KEY = 'AAAAwbylMgg:APA91bF2ALenum4cb5ossrjcPIXOGJbUyjrSDu7YUS6LS8RQI2WDKsliccvbH8JHP3zYJIaZSpS-emPRjDy3EzAZjEZu4NHTfPu1L4rtknAZgeYqpc5Ck-uzbc_nA0cgPYDmTH-5EQV7';
 
-        if($user_id < 0) {
+        if($user_id == -1) {
             $data = [
 
                 "to" => '/topics/dianistana_user',

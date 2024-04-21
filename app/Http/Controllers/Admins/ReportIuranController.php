@@ -19,6 +19,7 @@ use DB;
 use PDF;
 use App\Exports\LaporanDetailKasExport;
 use App\Exports\LaporanKeuanganExport;
+use App\Exports\AccountingExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -356,6 +357,12 @@ class ReportIuranController extends Controller
     public function financing_export($awal, $akhir) 
     {
          return Excel::download(new LaporanKeuanganExport($awal, $akhir), 'laporan_keuangan.xlsx');
+    }
+
+
+    public function print_export_accounting($awal, $akhir, $payment, $penyelia) 
+    {
+         return Excel::download(new AccountingExport($awal, $akhir, $payment, $penyelia), 'dianistana_export_to_accounting.csv');
     }
 
    

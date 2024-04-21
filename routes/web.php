@@ -166,6 +166,7 @@ Route::prefix("backdata")
    Route::resource("user",UserController::class);
    Route::get('print_detail/{id}', [UserController::class, 'print_detail']);
    Route::post('upgrade_iuran_bulanan', [UserController::class, 'upgrade_iuran_bulanan']);
+   Route::get('print_form_permohonan/{id}', [UserController::class, 'print_form_permohonan']);
 
 
    // transaction data
@@ -207,6 +208,7 @@ Route::prefix("backdata")
    Route::get('print_kas_detail_excel/{awal}/{akhir}', [ReportIuranController::class, 'export']);
    Route::get('print_iuran_financing/{awal}/{akhir}/{payment}/{penyelia}', [ReportIuranController::class, 'print_iuran_financing']);
    Route::get('print_financing_excel/{awal}/{akhir}', [ReportIuranController::class, 'financing_export']);
+   Route::get('print_export_accounting/{awal}/{akhir}/{payment}/{penyelia}', [ReportIuranController::class, 'print_export_accounting']);
 
 
    Route::post("report-unit-list",[ReportUnitController::class,'ajax_list'])->name('report.unit.list') ;
@@ -243,10 +245,6 @@ Route::prefix("backdata")
    Route::post("unit-bisnis/{id}/restore",[UnitBisnisController::class,'restore']) ;
    Route::resource("unit-bisnis",UnitBisnisController::class);
 
-   Route::get('testing', function(){
-      $data = Storage::url('/');
-      dd($data);
-   });
 
 });
 

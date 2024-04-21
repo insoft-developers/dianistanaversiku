@@ -62,6 +62,12 @@
 
 @if($view == "user-list")
         <script>
+        
+        function pdfData(id) {
+            window.open('{{ url('backdata/print_form_permohonan') }}'+'/'+id, '_blank');
+        }
+
+
         $('.profile-image').click(function(){ $('#image').trigger('click'); });
      
         $("#image").change(function() {
@@ -1024,9 +1030,18 @@
                     $('#id').val(data.id);
                     $("#title").val(data.title);
                     $("#image").val(null);
-                    $("#user_id").val(data.user_id).trigger('change');
+                    
                     $("#message").val(data.message);
                     $("#send_date").val(data.send_date);
+                    if(data.is_blok == 1) {
+                        $("#user_id").val(-2).trigger('change');
+                        $("#blok").val(data.user_id);
+                    } else {
+                        $("#user_id").val(data.user_id).trigger('change');
+                        
+                    }
+                    
+                    
                    
 
                 }
@@ -1064,10 +1079,22 @@
             $("#message").val("");
             $("#user_id").val("").trigger('change');
             $("#password").val("");
+            $("#blok").val("");
             $("#send_date").val("");
             $("#image").val(null);
             
         }
+
+        $("#user_id").change(function(){
+            var userid = $(this).val();
+            if(userid == -2) {
+                $("#blok-container").slideDown();
+                $("#blok").val("");
+            }else {
+                $("#blok-container").slideUp();
+                $("#blok").val("");
+            }
+        });
 
         function check_broadcasting() {
             setTimeout(function () {
@@ -1183,6 +1210,39 @@
             window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
         }
     })
+
+
+
+    $("#btn-export-accounting").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
+
+        
+        if(payment == '') {
+            payment = '0';
+        }
+        if(penyelia == '' ) {
+            penyelia = '0';
+        }
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+            window.location = "{{ url('backdata/print_export_accounting') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia;
+            // window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
+        }
+    })
+
+
 
     $("#btn-print-kas").click(function(){
         var awal = $("#awal").val();

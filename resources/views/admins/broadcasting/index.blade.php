@@ -74,9 +74,19 @@
                                     <label>Broadcast To:</label>
                                     <select style="width: 100%" name="user_id" id="user_id" class="form-control">
                                         <option value="">- Select - </option>
-                                        <option value="-1">Send To All User</option>
+                                        <option value="-1">Send To ALL USERS</option>
+                                        <option value="-2">Send To BLOK</option>
                                         @foreach($user as $u)
                                         <option value="{{ $u->id }}">{{ $u->name }} - {{ $u->level }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mt15" id="blok-container" style="display: none;">
+                                    <label>Blok:</label>
+                                    <select name="blok" id="blok" class="form-control">
+                                        <option value="">- Select - </option>
+                                        @foreach($bloks as $blok)
+                                        <option value="{{ $blok->id }}">{{ $blok->blok_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
