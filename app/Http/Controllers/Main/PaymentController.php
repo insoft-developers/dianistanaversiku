@@ -69,7 +69,7 @@ class PaymentController extends Controller
 
             } else {
                 $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id)
-                            ->where('amount', '>', 0);
+                            ->where('amount', '!=', 0);
                 if($tunggakan->count() > 0) {
                     $jumlah_tunggakan = $tunggakan->sum('amount');
                     $nom_denda = $denda * $jumlah_tunggakan /100;

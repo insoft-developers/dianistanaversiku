@@ -16,6 +16,15 @@ class AdminsController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        return redirect('backdata/penyelia');
+    }
+
+
+
+
+
     public function index(): View
     {
         $view = "admin";

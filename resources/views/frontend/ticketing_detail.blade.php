@@ -86,6 +86,9 @@
                     
                     <div class="mobile-yes col-span-4 md:col-span-4 lg:col-span-4 mb-[30px]">
                         <div class="card-box">
+                            <div class="warning-ticket">
+                                Ticketing services will only respond during working hours: From 09:00 AM to 03:00 PM. We strive to provide the best service and thank you for your understanding.
+                            </div>
                             <div class="text-judul">Detail Ticket</div>
                             <div class="jarak20"></div>
                             <label>Number</label>

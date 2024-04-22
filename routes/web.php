@@ -134,7 +134,7 @@ Route::prefix("backdata")
    Route::post("admins-list-trash",[AdminsController::class,'ajax_list_trash']) ;
    Route::get("admins/{id}/trash",[AdminsController::class,'editTrash']) ;
    Route::post("admins/{id}/restore",[AdminsController::class,'restore']) ;
-   Route::resource("admins",AdminsController::class);
+   Route::resource("admins",AdminsController::class)->middleware('reguler');
    
 
    // kategori penyelia crud data
@@ -160,6 +160,7 @@ Route::prefix("backdata")
 
    Route::get("outstanding-list", [OutstandingController::class, 'ajax_list'])->name('outstanding.list');
    Route::resource("outstanding", OutstandingController::class);
+   Route::post('save_adjustment', [OutstandingController::class, 'save_adjustment']);
 
 
    // user data
@@ -231,7 +232,7 @@ Route::prefix("backdata")
    Route::get('print_lain_report_pdf/{awal}/{akhir}/{payment}/{penyelia}', [ReportLainController::class, 'print_lain_report_pdf']);
    Route::get('print_lain_report_excel/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_excel']);
 
-   Route::resource("setting",SettingController::class);
+   Route::resource("setting",SettingController::class)->middleware('appsetting');
    
    Route::post('setting_update', [SettingController::class, 'setting_update'])->name('backdata.setting.update');
 

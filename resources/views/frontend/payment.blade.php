@@ -40,14 +40,24 @@
                         if($key->payment_type == 1 ) {
                             $setting = \App\Models\Setting::findorFail(1);
                             $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id);
+                           
                             if($tunggakan->count() > 0) {
-                                $user = \App\Models\User::findorFail(Auth::user()->id);
-                                $iuran = $user->iuran_bulanan;
-                                $jumlah = $tunggakan->sum('amount');
-                                $percent  = $setting->percent_denda;
-                                $nom = $percent * $jumlah / 100;
-                                $total_tunggakan = $jumlah + (int)$nom;
-                                $amount = $total_tunggakan + $iuran;
+                                $detail = \App\Models\PaymentDetail::where('payment_id', $key->id)
+                                    ->where('user_id', Auth::user()->id)
+                                    ->where('payment_status','PAID');
+                                if($detail->count() > 0 ) {
+                                    $detail_data = $detail->first();
+                                    $amount = $detail_data->amount;
+                                } else {
+                                    $user = \App\Models\User::findorFail(Auth::user()->id);
+                                    $iuran = $user->iuran_bulanan;
+                                    $jumlah = $tunggakan->sum('amount');
+                                    $percent  = $setting->percent_denda;
+                                    $nom = $percent * $jumlah / 100;
+                                    $total_tunggakan = $jumlah + (int)$nom;
+                                    $amount = $total_tunggakan + $iuran;
+                                }
+                                
 
                             } else {
                                 $user = \App\Models\User::findorFail(Auth::user()->id);
@@ -79,7 +89,7 @@
 
                             <a href="{{ url('print_kwitansi') }}/{{ $key->id }}"><button id="btn_print_{{ $key->id }}" type="button" class="bggreen block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[10px] py-[8px] capitalize font-small text-white text-[13px] xl:text-[13px] relative after:block after:absolute after:inset-0 after:z-[-2]  after:rounded-md after:transition-all"><i class="fa fa-print"></i> print</button></a>
                             @else
-                            <button id="btn_payment_{{ $key->id }}" onclick="payment_process({{$key->id}})" type="button" class="bgorange block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[10px] py-[8px] capitalize font-small text-white text-[13px] xl:text-[13px] relative after:block after:absolute after:inset-0 after:z-[-2] after:rounded-md after:transition-all"><i class="fa fa-dollar"></i> payment</button>
+                            <button id="btn_payment_{{ $key->id }}" onclick="payment_process({{$key->id}})" type="button" class="bgorange block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[10px] py-[8px] capitalize font-small text-white text-[13px] xl:text-[13px] relative after:block after:absolute after:inset-0 after:z-[-2] after:rounded-md after:transition-all"><i class="fa fa-dollar"></i> pay now</button>
                             @endif
                         
                             </td>

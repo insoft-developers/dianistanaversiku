@@ -382,6 +382,26 @@ class AuthUsersController extends Controller
 
 
     public function booking() {
+        $sekarang = date('Y-m-d');
+        $hitung = strtotime("-30 day", strtotime($sekarang));
+        $awal = date('Y-m-d', $hitung);
+        
+        $cek = \App\Models\Transaction::where('user_id', Auth::user()->id)->where('payment_status', 'PAID')
+            ->where('booking_date', '>=', $awal)
+            ->where('booking_date', '<=', $sekarang)
+            ->get();
+        if($cek->count() > 3) {
+            return Redirect::to('frontend_dashboard')->with('error', "You have booked more than 3 times within 30 days");
+        }
+
+        $cek2 = \App\Models\Tunggakan::where('user_id', Auth::user()->id)
+            ->where('amount', '>', 0)
+            ->get();
+       
+        if($cek2->count() > 0) {    
+            return Redirect::to('frontend_dashboard')->with('error', "You can not use booking feature for your outstanding payments. Please Pay The Bills First");
+        }    
+
         $view = "booking";
         $unit = \App\Models\UnitBisnis::where('status_booking', 'Aktif')->get();
         return view('frontend.booking', compact('view','unit'));
@@ -1670,6 +1690,8 @@ class AuthUsersController extends Controller
             if($payment->payment_type == 1 && $input['status'] == 'PAID') {
 
                 \App\Models\Tunggakan::where('user_id', $trans->user_id)->update(["amount" => 0]);
+                \App\Models\Tunggakan::where('user_id', $trans->user_id)
+                    ->where('payment_id', -1)->delete();
 
             }
 

@@ -14,8 +14,14 @@
     <div class="container">
         <div class="grid grid-cols-12">
             <div class="col-span-12">
+                @if($message = Session::get('error'))
+                <div class="alert alert-danger" role="alert">
+                    <span onclick="tutup_alert()" class="btn-colse">x</span>
+                    <?= $message ;?>
+                </div>
+                @endif
                 <div class="mb-[30px] lg:mb-[60px] text-center">
-                   
+                    
                     <h3 class="font-lora jarak30 custom-title">
                         
                     </h3>

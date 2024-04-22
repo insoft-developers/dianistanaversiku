@@ -703,5 +703,18 @@ label{
  .payment-links{
     
  }
+ .warning-ticket{
+    background: yellow;
+    font-weight: bold;
+    padding: 16px;
+    margin-bottom: 11px;
+    border-radius: 13px;
+    border: 3px dotted orange;
+ }
+
+ .booking-term-text{
+    font-size: 14px;
+    font-weight: 500;
+ }
 
 </style>

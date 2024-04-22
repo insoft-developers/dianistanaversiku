@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\PaymentDetail;
 use DataTables;
 use App\Models\Setting;
+use Validator;
 
 class OutstandingController extends Controller
 {
@@ -25,21 +26,21 @@ class OutstandingController extends Controller
         
          return Datatables::of($data)
              ->addColumn('denda', function($data) use ($setting){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '>', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
                 $denda = $setting->percent_denda;
                 $nominal = $tunggakan * $denda / 100;
 
                 return '<div style="text-align:right;">'.number_format($nominal).'</div>';
              })
              ->addColumn('total_outstanding', function($data) use($setting){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '>', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
                 $denda = $setting->percent_denda;
                 $nominal = $tunggakan * $denda / 100;
                 $total = $nominal + $tunggakan;
                 return '<div style="text-align:right;">'.number_format($total).'</div>';
              })
              ->addColumn('next_bill', function($data) use ($setting){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '>', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
                 $denda = $setting->percent_denda;
                 $nominal = $tunggakan * $denda / 100;
                 $total = $nominal + $tunggakan;
@@ -47,7 +48,7 @@ class OutstandingController extends Controller
                 return '<div style="text-align:right;">'.number_format($next).'</div>';
              })
              ->addColumn('amount', function($data){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '>', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
                 return '<div style="text-align:right;">'.number_format($tunggakan).'</div>';
              })
              ->addColumn('action', function($data){
@@ -87,10 +88,12 @@ class OutstandingController extends Controller
     public function show(string $id)
     {
         $data = Tunggakan::where('user_id', $id)
-            ->where('amount','>',0)
+            ->where('amount','!=',0)
             ->get();
         
         $html = "";
+        $html .= '<button onclick="add_adjustment('.$id.')" class="btn btn-success"><i class="fa fa-plus"></i> Add Adjustment</button>';
+        $html .= '<div style="margin-top:20px;"></div>';
         $html .= '<table class="table table-bordered table-striped">';
         $html .= '<thead>';
         $html .= '<tr>';
@@ -148,5 +151,42 @@ class OutstandingController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function save_adjustment(Request $request) {
+        $input = $request->all();
+        
+        $rules = array(
+            "description" => "required",
+            "type" => "required",
+            "amount" => "required"
+        );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $pesan = $validator->errors();
+            $pesanarr = explode(",", $pesan);
+            $find = array("[","]","{","}");
+            $html = '';
+            foreach($pesanarr as $p ) {
+                $html .= str_replace($find,"",$p).'<br>';
+            }
+            
+            return response()->json([
+                "success" => false,
+                "message" => $html
+            ]);
+        }
+
+        $data = new Tunggakan;
+        $data->user_id = $input['user_id'];
+        $data->payment_id = -1;
+        $data->amount = $input['type'] == 1 ? $input['amount'] : $input['amount'] * -1;
+        $data->description = $input['description'];
+        $data->save();
+        return response()->json([
+            "success" => true,
+            "message" => 'successfully added'
+        ]);
     }
 }

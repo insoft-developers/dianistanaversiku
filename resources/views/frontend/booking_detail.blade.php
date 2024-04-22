@@ -169,7 +169,9 @@
                 </tr> --}}
             </table>
 
-            <div class="jarak20"></div>	
+                <div class="jarak20"></div>
+                <span class="booking-term-text">By Clicking BOOKING NOW you agree with our <a href="{{ url('term') }}" target="_blank"><strong>terms & conditions</strong></a></span>	
+                <div class="jarak10"></div>
                 <button id="btn_send_transaction" onclick="send_order()" type="button" class="block z-[1] before:rounded-md before:block before:absolute before:left-auto before:right-0 before:inset-y-0 before:z-[-1] before:bg-secondary before:w-0 hover:before:w-full hover:before:left-0 hover:before:right-auto before:transition-all leading-none px-[30px] py-[12px] capitalize font-medium text-white text-[14px] xl:text-[16px] relative after:block after:absolute after:inset-0 after:z-[-2] after:bg-primary after:rounded-md after:transition-all">BOOKING NOW</button>
 		</div>
 		
