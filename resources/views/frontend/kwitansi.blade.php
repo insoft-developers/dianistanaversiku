@@ -242,7 +242,7 @@ footer {
           <tr>
             <td class="grand total">Terbilang : {{ ucwords(terbilang($data->amount)) }} Rupiah</td>
             <td class="grand total" colspan="2">GRAND TOTAL</td>
-            <td class="grand total" style="font-size: 16px;"><strong>Rp. {{ number_format($data->amount) }}</strong></td>
+            <td class="grand total" style="font-size: 16px;white-space:nowrap;"><strong>Rp. {{ number_format($data->amount) }}</strong></td>
           </tr>
         </tbody>
       </table>

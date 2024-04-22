@@ -17,6 +17,7 @@ use App\Http\Controllers\Admins\ReportUnitController;
 use App\Http\Controllers\Admins\ReportLainController;
 use App\Http\Controllers\Admins\SettingController;
 use App\Http\Controllers\Admins\BookingSettingController;
+use App\Http\Controllers\Admins\OutstandingController;
 
 use App\Http\Controllers\Main\AuthUsersController;
 use App\Http\Controllers\Main\DashboardMainController;
@@ -81,7 +82,7 @@ Route::group(['middleware' => 'auth'], function () {
    Route::patch('/fcm_token', [AuthUsersController::class, 'fcm_token'])->name('fcm.token');
    Route::get('/notify', [AuthUsersController::class, 'notify']);
    Route::get('/notif_list', [NotifController::class, 'index']);
-   Route::get('/notif_detail/{slug}', [NotifController::class, 'notif_detail']);
+   Route::get('/notif_detail/{id}', [NotifController::class, 'notif_detail']);
    
    Route::get('/payment', [PaymentController::class, 'index']);
    Route::post('/payment_post', [PaymentController::class, 'payment_post'])->name('payment.post');
@@ -157,6 +158,9 @@ Route::prefix("backdata")
    Route::post("banner-iklan/{id}/restore",[BannerIklanController::class,'restore']) ;
    Route::resource("banner-iklan",BannerIklanController::class);
 
+   Route::get("outstanding-list", [OutstandingController::class, 'ajax_list'])->name('outstanding.list');
+   Route::resource("outstanding", OutstandingController::class);
+
 
    // user data
    Route::get("user-list",[UserController::class,'ajax_list'])->name('user.list') ;
@@ -194,6 +198,9 @@ Route::prefix("backdata")
    Route::post('process_payment', [PembayaranController::class, 'process_payment']);
    Route::get('payment_admin/{id}', [PembayaranController::class, 'payment_admin']);
    Route::get('get_iuran_bulanan/{id}', [PembayaranController::class, 'get_iuran_bulanan']);
+   Route::get('check_due_bills', [PembayaranController::class, 'check_due_bills']);
+
+
 
    Route::get("broadcasting-list",[BroadcastingController::class,'ajax_list'])->name('broadcasting.list') ;
    Route::resource("broadcasting",BroadcastingController::class);

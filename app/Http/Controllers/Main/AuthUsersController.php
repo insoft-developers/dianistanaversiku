@@ -1665,6 +1665,14 @@ class AuthUsersController extends Controller
             $trans->paid_at = date('Y-m-d H:i:s');
             $trans->save();    
 
+            $payment_id = $trans->payment_id;
+            $payment = \App\Models\Payment::findorFail($payment_id);
+            if($payment->payment_type == 1 && $input['status'] == 'PAID') {
+
+                \App\Models\Tunggakan::where('user_id', $trans->user_id)->update(["amount" => 0]);
+
+            }
+
 
             return response()->json([
                 "success" => true,

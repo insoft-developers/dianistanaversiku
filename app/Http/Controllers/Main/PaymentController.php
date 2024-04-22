@@ -33,7 +33,12 @@ class PaymentController extends Controller
             return redirect("frontend_dashboard");
         }
 
+       
+
         $input = $request->all();
+
+
+
         
         $payment = Payment::findorFail($input['id']);
         $random = random_int(1000, 9999);
@@ -42,21 +47,40 @@ class PaymentController extends Controller
 
         if($payment->payment_type == 1) {
             $setting= \App\Models\Setting::findorFail(1);
-            $tgl_tempo = $setting->tanggal_jatuh_tempo_iuran_bulanan;
+            // $tgl_tempo = $setting->tanggal_jatuh_tempo_iuran_bulanan;
             $denda = $setting->percent_denda;
-            $tahun_ini = date('Y');
-            $bulan_ini = date('m');
-            $due = $tahun_ini.'-'.$bulan_ini.'-'.$tgl_tempo;
+            // $tahun_ini = date('Y');
+            // $bulan_ini = date('m');
+            // $due = $tahun_ini.'-'.$bulan_ini.'-'.$tgl_tempo;
             $sekarang = date('Y-m-d');
             $user = User::findorFail(Auth::user()->id);
+            $due = $payment->due_date;
+            $iuran = $user->iuran_bulanan;
             if($sekarang > $due) {
-                $tagihan = $user->iuran_bulanan;
-                $nom_denda = $denda * $tagihan /100;
-                $amount = (int)$nom_denda + $tagihan;  
-                $text_denda = "Denda Rp. ".number_format($nom_denda);
+                return response()->json([
+                    "success" => false,
+                    "message" => "Tagihan anda telah lewat jatuh tempo dan akan dikenakan denda serta diakumulasikan pada tagihan berikutnya."
+                ]);
+                // $tagihan = $user->iuran_bulanan;
+                // $nom_denda = $denda * $tagihan /100;
+                // $amount = (int)$nom_denda + $tagihan;  
+                // $text_denda = "Denda Rp. ".number_format($nom_denda);
+                
+
             } else {
-                $amount = $user->iuran_bulanan;
-                $text_denda = "";   
+                $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id)
+                            ->where('amount', '>', 0);
+                if($tunggakan->count() > 0) {
+                    $jumlah_tunggakan = $tunggakan->sum('amount');
+                    $nom_denda = $denda * $jumlah_tunggakan /100;
+                    $total_tunggakan = (int)$nom_denda + $jumlah_tunggakan;
+                    $amount = $iuran + $total_tunggakan;
+                    $text_denda = "Iuran Bulan ini :".number_format($iuran).'<br>Tunggakan : '.number_format($jumlah_tunggakan).'<br>Denda Tunggakan : '.number_format($nom_denda).'<br> Total Tunggakan : '.number_format($total_tunggakan);
+                } else {
+                    $amount = $iuran;
+                    $text_denda = "";
+                }
+                
             }         
 
         } else {

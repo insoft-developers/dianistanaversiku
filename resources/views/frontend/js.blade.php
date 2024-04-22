@@ -529,6 +529,8 @@ function close_warning_box() {
                 if(data.success) {
                     window.location=data.data;
 
+                } else {
+                    show_error("error", data.message);
                 }
 
             }

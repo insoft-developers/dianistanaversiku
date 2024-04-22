@@ -468,29 +468,31 @@ class PembayaranController extends Controller
             $cek_sudah_kirim = \App\Models\NotifTagihan::where('date', $sekarang)->where('payment_id', $b['payment']);
             if($cek_sudah_kirim->count() > 0 ) {}
             else {
-                $tgl1 = new DateTime($b['due']);
-                $tgl2 = new DateTime($sekarang);
-                $jarak = $tgl2->diff($tgl1);
-                $selisih = $jarak->d;
-                if($b['due'] == $sekarang) {
+                // $tgl1 = new DateTime($b['due']);
+                // $tgl2 = new DateTime($sekarang);
+                // $jarak = $tgl2->diff($tgl1);
+                // $selisih = $jarak->d;
+                $sekarang = date('d');
+                if($sekarang == '01' || $sekarang == '10' || $sekarang == '15' || $sekarang == '18' || $sekarang == '19' || $sekarang == '22') {
                     $this->send_wa($b['wa'], $b['name'], $b['periode']);
                     $isi = new \App\Models\NotifTagihan;
-                    $isi->date = $sekarang;
+                    $isi->date = date('Y-m-d');
                     $isi->payment_id = $b['payment'];
                     $isi->save();
 
                     $this->send_notif_to($b);
 
-                } else {
-                    if($selisih == 8 || $selisih == 16) {
-                        $this->send_wa($b['wa'], $b['name'], $b['periode']);
-                        $isi = new \App\Models\NotifTagihan;
-                        $isi->date = $sekarang;
-                        $isi->payment_id = $b['payment'];
-                        $isi->save();
-                        $this->send_notif_to($b);
-                    }
-                }
+                } 
+                // else {
+                //     if($selisih == 8 || $selisih == 16) {
+                //         $this->send_wa($b['wa'], $b['name'], $b['periode']);
+                //         $isi = new \App\Models\NotifTagihan;
+                //         $isi->date = $sekarang;
+                //         $isi->payment_id = $b['payment'];
+                //         $isi->save();
+                //         $this->send_notif_to($b);
+                //     }
+                // }
             }
        }
     }
@@ -593,5 +595,37 @@ class PembayaranController extends Controller
         curl_close($ch);
     }
 
+
+    public function check_due_bills() {
+        $sekarang = date('Y-m-d');
+        $payments = Payment::where('payment_type', 1)
+                ->where('due_date', '<', $sekarang)
+                ->get();
+        $users = User::where('level', 'user')->where('id',3)->get();
+        $belum_bayar = [];
+        foreach($payments as $p) {
+            foreach($users as $u) {   
+                $cek = PaymentDetail::where('user_id', $u->id)->where('payment_id', $p->id)->where('payment_status','PAID');
+                if($cek->count() > 0) {} 
+                else {
+                     $cek_tunggakan = \App\Models\Tunggakan::where('payment_id', $p->id)
+                            ->where('user_id', $u->id);
+                     if($cek_tunggakan->count() > 0) {
+
+                     } else {
+                        $tunggakan = new \App\Models\Tunggakan;
+                        $tunggakan->user_id = $u->id;
+                        $tunggakan->payment_id = $p->id;
+                        $tunggakan->amount = $u->iuran_bulanan;
+                        $tunggakan->description = $p->payment_name;
+                        $tunggakan->save();
+                     }
+                     
+                }
+            } 
+        }
+
+        return response()->json($belum_bayar);
+    }
    
 }

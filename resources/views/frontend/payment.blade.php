@@ -38,8 +38,23 @@
                         @php
                         $nomor++;
                         if($key->payment_type == 1 ) {
-                            $user = \App\Models\User::findorFail(Auth::user()->id);
-                            $amount = $user->iuran_bulanan;
+                            $setting = \App\Models\Setting::findorFail(1);
+                            $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id);
+                            if($tunggakan->count() > 0) {
+                                $user = \App\Models\User::findorFail(Auth::user()->id);
+                                $iuran = $user->iuran_bulanan;
+                                $jumlah = $tunggakan->sum('amount');
+                                $percent  = $setting->percent_denda;
+                                $nom = $percent * $jumlah / 100;
+                                $total_tunggakan = $jumlah + (int)$nom;
+                                $amount = $total_tunggakan + $iuran;
+
+                            } else {
+                                $user = \App\Models\User::findorFail(Auth::user()->id);
+                                $amount = $user->iuran_bulanan;
+                            }
+
+                            
                         } else {
                             $amount = $key->payment_amount;
                         }
