@@ -24,6 +24,7 @@ use App\Http\Controllers\Main\DashboardMainController;
 use App\Http\Controllers\Main\TicketingController;
 use App\Http\Controllers\Main\NotifController;
 use App\Http\Controllers\Main\PaymentController;
+use App\Http\Controllers\Main\DuitkuCallback;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 
@@ -99,12 +100,7 @@ Route::get('/update_notif_number', [NotifController::class, 'update_notif_number
 
 
 
-Route::post('/xendit_callback', [AuthUsersController::class, 'callback']);
-// Route::get('/test', function(){
-//    $data = "MK-120102013919310";
-//    $left  = substr($data, 0,2);
-//    dd($left);
-// });
+Route::post('/xendit_callback', [DuitkuCallback::class, 'callback']);
 
 // for admins
 

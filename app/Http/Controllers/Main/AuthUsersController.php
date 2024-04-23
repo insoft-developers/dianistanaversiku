@@ -1626,49 +1626,126 @@ class AuthUsersController extends Controller
         $trans = \App\Models\Transaction::findorFail($input['id']);
         $setting = \App\Models\Setting::findorFail(1);
         $amount = $trans->total_price;
-        // $pajak = $setting->pajak;
-        // $adminfee = $setting->admin_fee;
-
-        // if(! empty($pajak)) {
-        //     $percent = $amount * $pajak /100;
-        //     $nominal = (int)$percent;
-        //     $vat = $amount + $nominal;
-        // } else {
-        //     $vat = $amount;
-        //     $nominal = 0;
-        // }
-
-        // if(! empty($adminfee)) {
-        //     $final = $vat + $adminfee;
-        // } else {
-        //     $final = $vat;
-        // }
+      
         
         $user = \App\Models\User::findorFail($trans->user_id);
         $product = \App\Models\UnitBisnis::findorFail($trans->business_unit_id);
 
 
         
-        $api_pay = base64_encode($setting->api_payment. ':');
-        $secret_key = 'Basic '.$api_pay;
-        $external_id = $trans->invoice;
-        $data_request = Http::withHeaders([
-            'Authorization' => $secret_key
-        ])->post('https://api.xendit.co/v2/invoices', [
-            'external_id' => $external_id,
-            'amount' => $amount,
-            'success_redirect_url' => url('/print_ticket/'.$input['id']),
-            'failure_redirect_url' => url('/riwayat'),
-            'description' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB",
-        ]);
+        // $api_pay = base64_encode($setting->api_payment. ':');
+        // $secret_key = 'Basic '.$api_pay;
+        // $external_id = $trans->invoice;
+        // $data_request = Http::withHeaders([
+        //     'Authorization' => $secret_key
+        // ])->post('https://api.xendit.co/v2/invoices', [
+        //     'external_id' => $external_id,
+        //     'amount' => $amount,
+        //     'success_redirect_url' => url('/print_ticket/'.$input['id']),
+        //     'failure_redirect_url' => url('/riwayat'),
+        //     'description' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB",
+        // ]);
         
-        $response = $data_request->object();
+        // $response = $data_request->object();
     
+        // return response()->json([
+        //     "success" => true,
+        //     "data" => $response->invoice_url
+        // ]);
+
+        $merchantCode = $setting->merchant_code; // dari duitku
+        $merchantKey = $setting->api_payment; // dari duitku
+
+        $timestamp = round(microtime(true) * 1000); //in milisecond
+        $paymentAmount = $amount;
+        $merchantOrderId = $trans->invoice; // dari merchant, unique
+        $productDetails = "Order atas nama : ".$user->name. " \nuntuk fasilitas : ".$product->name_unit." \nuntuk tanggal : ".$trans->booking_date." \njam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB";
+        $email = $user->email; // email pelanggan merchant
+        $phoneNumber = $user->no_hp; // nomor tlp pelanggan merchant (opsional)
+        $additionalParam = ''; // opsional
+        $merchantUserInfo = ''; // opsional
+        $customerVaName = $user->name; // menampilkan nama pelanggan pada tampilan konfirmasi bank
+        $callbackUrl = $setting->callback_payment; // url untuk callback
+        $returnUrl = url('/print_ticket/'.$input['id']);
+        $expiryPeriod = 10; // untuk menentukan waktu kedaluarsa dalam menit
+        $signature = hash('sha256', $merchantCode.$timestamp.$merchantKey);
+        //$paymentMethod = 'VC'; //digunakan untuk direksional pembayaran
+
+       
+        $customerDetail = array(
+            'firstName' => $user->name,
+            'lastName' => "",
+            'email' => $user->email,
+            'phoneNumber' => str_replace("+62","",$user->no_hp),
+        );
+
+
+        $item1 = array(
+            'name' => "Order atas nama : ".$user->name. " <br>untuk fasilitas : ".$product->name_unit." <br>untuk tanggal : ".$trans->booking_date." <br>jam : ".$trans->start_time.":00 WIB - ".$trans->finish_time.":00 WIB",
+            'price' => $amount,
+            'quantity' => 1);
+
+      
+        $itemDetails = array(
+            $item1
+        );
+
+       
+        $params = array(
+            'paymentAmount' => $paymentAmount,
+            'merchantOrderId' => $merchantOrderId,
+            'productDetails' => $productDetails,
+            'additionalParam' => $additionalParam,
+            'merchantUserInfo' => $merchantUserInfo,
+            'customerVaName' => $customerVaName,
+            'email' => $email,
+            'phoneNumber' => $phoneNumber,
+            // 'itemDetails' => $itemDetails,
+            'customerDetail' => $customerDetail,
+            //'creditCardDetail' => $creditCardDetail,
+            'callbackUrl' => $callbackUrl,
+            'returnUrl' => $returnUrl,
+            'expiryPeriod' => $expiryPeriod
+            //'paymentMethod' => $paymentMethod
+        );
+
+        $params_string = json_encode($params);
+        
+        $url = $setting->duitku_link.'/api/merchant/createinvoice'; // Sandbox
+        // $url = 'https://api-prod.duitku.com/api/merchant/createinvoice'; // Production
+
+        $ch = curl_init();
+
+
+        curl_setopt($ch, CURLOPT_URL, $url); 
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($params_string),
+            'x-duitku-signature:' . $signature ,
+            'x-duitku-timestamp:' . $timestamp ,
+            'x-duitku-merchantcode:' . $merchantCode    
+            )                                                                       
+        );   
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+      
+        $request = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+       
+        $response = json_decode($request);
+        
+        
         return response()->json([
             "success" => true,
-            "data" => $response->invoice_url
+            "data" => $response
         ]);
     }
+
+
 
     public function callback(Request $request) {
         $input = $request->all();

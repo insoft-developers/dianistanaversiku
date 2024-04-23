@@ -44,7 +44,7 @@ class PaymentController extends Controller
         $random = random_int(1000, 9999);
         $invoice = "PM-".date('dmyHis').$random;
 
-
+        $user = User::findorFail(Auth::user()->id);
         if($payment->payment_type == 1) {
             $setting= \App\Models\Setting::findorFail(1);
             // $tgl_tempo = $setting->tanggal_jatuh_tempo_iuran_bulanan;
@@ -53,7 +53,7 @@ class PaymentController extends Controller
             // $bulan_ini = date('m');
             // $due = $tahun_ini.'-'.$bulan_ini.'-'.$tgl_tempo;
             $sekarang = date('Y-m-d');
-            $user = User::findorFail(Auth::user()->id);
+            
             $due = $payment->due_date;
             $iuran = $user->iuran_bulanan;
             if($sekarang > $due) {
@@ -103,42 +103,98 @@ class PaymentController extends Controller
 
         if($detail) {
             $setting = \App\Models\Setting::findorFail(1);
-            // $pajak = $setting->pajak;
-            // $adminfee = $setting->admin_fee;
-
-            // if(! empty($pajak)) {
-            //     $percent = $amount * $pajak /100;
-            //     $nominal = (int)$percent;
-            //     $vat = $amount + $nominal;
-            // } else {
-            //     $nominal = 0;
-            //     $vat = $amount;
-            // }
-
-            // if(! empty($adminfee)) {
-            //     $final = $vat + $adminfee;
-            // } else {
-            //     $final = $vat;
-            // }
-
-            $api_pay = base64_encode($setting->api_payment. ':');
-            $secret_key = 'Basic '.$api_pay;
-            $external_id = $invoice;
-            $data_request = Http::withHeaders([
-                'Authorization' => $secret_key
-            ])->post('https://api.xendit.co/v2/invoices', [
-                'external_id' => $external_id,
-                'amount' => $amount,
-                'success_redirect_url' => url('/payment'),
-                'failure_redirect_url' => url('/payment'),
-                'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode. " ".$text_denda,
-            ]);
             
-            $response = $data_request->object();
+            
+           
+            $merchantCode = $setting->merchant_code; // dari duitku
+            $merchantKey = $setting->api_payment; // dari duitku
+
+            $timestamp = round(microtime(true) * 1000); //in milisecond
+            $paymentAmount = $amount;
+            $merchantOrderId = $invoice; // dari merchant, unique
+            $productDetails = $payment->payment_name;
+            $email = $user->email; // email pelanggan merchant
+            $phoneNumber = $user->no_hp; // nomor tlp pelanggan merchant (opsional)
+            $additionalParam = ''; // opsional
+            $merchantUserInfo = ''; // opsional
+            $customerVaName = $user->name; // menampilkan nama pelanggan pada tampilan konfirmasi bank
+            $callbackUrl = $setting->callback_payment; // url untuk callback
+            $returnUrl = url('/payment');//'http://example.com/return'; // url untuk redirect
+            $expiryPeriod = 10; // untuk menentukan waktu kedaluarsa dalam menit
+            $signature = hash('sha256', $merchantCode.$timestamp.$merchantKey);
+            //$paymentMethod = 'VC'; //digunakan untuk direksional pembayaran
+
+           
+            $customerDetail = array(
+                'firstName' => $user->name,
+                'lastName' => "",
+                'email' => $user->email,
+                'phoneNumber' => str_replace("+62","",$user->no_hp),
+            );
+
+
+            $item1 = array(
+                'name' => $payment->payment_name,
+                'price' => $amount,
+                'quantity' => 1);
+
+          
+            $itemDetails = array(
+                $item1
+            );
+
+           
+            $params = array(
+                'paymentAmount' => $paymentAmount,
+                'merchantOrderId' => $merchantOrderId,
+                'productDetails' => $productDetails,
+                'additionalParam' => $additionalParam,
+                'merchantUserInfo' => $merchantUserInfo,
+                'customerVaName' => $customerVaName,
+                'email' => $email,
+                'phoneNumber' => $phoneNumber,
+                // 'itemDetails' => $itemDetails,
+                'customerDetail' => $customerDetail,
+                //'creditCardDetail' => $creditCardDetail,
+                'callbackUrl' => $callbackUrl,
+                'returnUrl' => $returnUrl,
+                'expiryPeriod' => $expiryPeriod
+                //'paymentMethod' => $paymentMethod
+            );
+
+            $params_string = json_encode($params);
+            
+            $url = $setting->duitku_link.'/api/merchant/createinvoice'; // Sandbox
+            // $url = 'https://api-prod.duitku.com/api/merchant/createinvoice'; // Production
+
+            $ch = curl_init();
+
+
+            curl_setopt($ch, CURLOPT_URL, $url); 
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);                                                                  
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+                'Content-Type: application/json',                                                                                
+                'Content-Length: ' . strlen($params_string),
+                'x-duitku-signature:' . $signature ,
+                'x-duitku-timestamp:' . $timestamp ,
+                'x-duitku-merchantcode:' . $merchantCode    
+                )                                                                       
+            );   
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+          
+            $request = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+           
+            $response = json_decode($request);
+            
             
             return response()->json([
                 "success" => true,
-                "data" => $response->invoice_url
+                "data" => $response
             ]);
         }
 
@@ -150,7 +206,7 @@ class PaymentController extends Controller
         if(Auth::user()->level != "user" ) {
             return redirect("frontend_dashboard");
         }
-
+        $user = User::findorFail(Auth::user()->id);
         $auth = \App\Models\Payment::findorFail($id);
         if($auth->payment_dedication != Auth::user()->id) {
             return  '<script>
@@ -176,7 +232,7 @@ class PaymentController extends Controller
 
 
         if($payment->payment_type == 1) {
-            $user = User::findorFail(Auth::user()->id);
+            
             $amount = $user->iuran_bulanan;
         } else {
             $amount = $payment->payment_amount;
@@ -184,46 +240,122 @@ class PaymentController extends Controller
 
 
         $setting = \App\Models\Setting::findorFail(1);
-        // $pajak = $setting->pajak;
-        // $adminfee = $setting->admin_fee;
+        
+        
+        // $api_pay = base64_encode($setting->api_payment. ':');
+        // $secret_key = 'Basic '.$api_pay;
+        // $external_id = $invoice;
+        // $data_request = Http::withHeaders([
+        //     'Authorization' => $secret_key
+        // ])->post('https://api.xendit.co/v2/invoices', [
+        //     'external_id' => $external_id,
+        //     'amount' => $amount,
+        //     'success_redirect_url' => url('/payment'),
+        //     'failure_redirect_url' => url('/payment'),
+        //     'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode,
+        // ]);
+        
+        // $response = $data_request->object();
+        // return redirect($response->invoice_url);
 
-        // if(! empty($pajak)) {
-        //     $percent = $amount * $pajak /100;
-        //     $nominal = (int)$percent;
-        //     $vat = $amount + $nominal;
-        // } else {
-        //     $nominal = 0;
-        //     $vat = $amount;
-        // }
+        $detail = new PaymentDetail;
+        $detail->invoice = $invoice;
+        $detail->payment_id = $id;
+        $detail->user_id = Auth::user()->id;
+        $detail->amount = $amount;
+        $detail->payment_status = "PENDING";
+        $detail->created_at = date('Y-m-d H:i:s');
+        $detail->updated_at = date('Y-m-d H:i:s');
+        $detail->save();
 
-        // if(! empty($adminfee)) {
-        //     $final = $vat + $adminfee;
-        // } else {
-        //     $final = $vat;
-        // }
-        
-        
-        $api_pay = base64_encode($setting->api_payment. ':');
-        $secret_key = 'Basic '.$api_pay;
-        $external_id = $invoice;
-        $data_request = Http::withHeaders([
-            'Authorization' => $secret_key
-        ])->post('https://api.xendit.co/v2/invoices', [
-            'external_id' => $external_id,
-            'amount' => $amount,
-            'success_redirect_url' => url('/payment'),
-            'failure_redirect_url' => url('/payment'),
-            'description' => "Pembayaran : ".$payment->payment_name. " <br>Note : ".$payment->payment_desc." <br>Periode : ".$payment->periode,
-        ]);
+        $merchantCode = $setting->merchant_code; // dari duitku
+        $merchantKey = $setting->api_payment; // dari duitku
+
+        $timestamp = round(microtime(true) * 1000); //in milisecond
+        $paymentAmount = $amount;
+        $merchantOrderId = $invoice; // dari merchant, unique
+        $productDetails = "Pembayaran : ".$payment->payment_name. " \nNote : ".$payment->payment_desc." \nPeriode : ".$payment->periode;
+        $email = $user->email; // email pelanggan merchant
+        $phoneNumber = $user->no_hp; // nomor tlp pelanggan merchant (opsional)
+        $additionalParam = ''; // opsional
+        $merchantUserInfo = ''; // opsional
+        $customerVaName = $user->name; // menampilkan nama pelanggan pada tampilan konfirmasi bank
+        $callbackUrl = $setting->callback_payment; // url untuk callback
+        $returnUrl = url('/payment');//'http://example.com/return'; // url untuk redirect
+        $expiryPeriod = 10; // untuk menentukan waktu kedaluarsa dalam menit
+        $signature = hash('sha256', $merchantCode.$timestamp.$merchantKey);
+        //$paymentMethod = 'VC'; //digunakan untuk direksional pembayaran
 
         
-        
-        $response = $data_request->object();
-        return redirect($response->invoice_url);
-        
-        
+        $customerDetail = array(
+            'firstName' => $user->name,
+            'lastName' => "",
+            'email' => $user->email,
+            'phoneNumber' => str_replace("+62","",$user->no_hp),
+        );
 
-       
+
+        // $item1 = array(
+        //     'name' => $payment->payment_name,
+        //     'price' => $amount,
+        //     'quantity' => 1);
+
+        
+        // $itemDetails = array(
+        //     $item1
+        // );
+
+        
+        $params = array(
+            'paymentAmount' => $paymentAmount,
+            'merchantOrderId' => $merchantOrderId,
+            'productDetails' => $productDetails,
+            'additionalParam' => $additionalParam,
+            'merchantUserInfo' => $merchantUserInfo,
+            'customerVaName' => $customerVaName,
+            'email' => $email,
+            'phoneNumber' => $phoneNumber,
+            // 'itemDetails' => $itemDetails,
+            'customerDetail' => $customerDetail,
+            //'creditCardDetail' => $creditCardDetail,
+            'callbackUrl' => $callbackUrl,
+            'returnUrl' => $returnUrl,
+            'expiryPeriod' => $expiryPeriod
+            //'paymentMethod' => $paymentMethod
+        );
+
+        $params_string = json_encode($params);
+        
+        $url = $setting->duitku_link.'/api/merchant/createinvoice'; // Sandbox
+        // $url = 'https://api-prod.duitku.com/api/merchant/createinvoice'; // Production
+
+        $ch = curl_init();
+
+
+        curl_setopt($ch, CURLOPT_URL, $url); 
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($params_string),
+            'x-duitku-signature:' . $signature ,
+            'x-duitku-timestamp:' . $timestamp ,
+            'x-duitku-merchantcode:' . $merchantCode    
+            )                                                                       
+        );   
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+        
+        $request = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        
+        $response = json_decode($request);
+        
+        
+        return redirect($response->paymentUrl);
+
     }
 
 

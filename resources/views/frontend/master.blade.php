@@ -30,14 +30,14 @@
 
     <link rel="stylesheet" href="{{ asset('template/frontend') }}/assets/css/plugins/magnific-popup.css" />
 
+    
+    {{-- <script src="https://app-sandbox.duitku.com/lib/js/duitku.js"></script>  --}}
 
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('template/frontend') }}/assets/css/style.css" />
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href=" https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css"/>
-
-
 
 
 

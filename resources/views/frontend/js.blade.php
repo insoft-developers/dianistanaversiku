@@ -432,7 +432,7 @@ function close_warning_box() {
                 $("#btn_payment_"+id).html('<i class="fa fa-dollar"></i> Payment');
                 $("#btn_payment_"+id).removeAttr("disabled");
                 if(data.success) {
-                    window.location=data.data;
+                    window.location=data.data.paymentUrl;
 
                 }
                 
@@ -527,7 +527,36 @@ function close_warning_box() {
                 $("#btn_payment_"+id).html('<i class="fa fa-dollar"></i> Payment');
                 $("#btn_payment_"+id).removeAttr("disabled");
                 if(data.success) {
-                    window.location=data.data;
+                    console.log(data);
+                    window.location=data.data.paymentUrl;
+                    
+                //     checkout.process(data.data.reference, {
+                //     defaultLanguage: "id", //opsional pengaturan bahasa
+                //     successEvent: function(result){
+                //     // tambahkan fungsi sesuai kebutuhan anda
+                //         console.log('success');
+                //         console.log(result);
+                //         alert('Payment Success');
+                //     },
+                //     pendingEvent: function(result){
+                //     // tambahkan fungsi sesuai kebutuhan anda
+                //         console.log('pending');
+                //         console.log(result);
+                //         alert('Payment Pending');
+                //     },
+                //     errorEvent: function(result){
+                //     // tambahkan fungsi sesuai kebutuhan anda
+                //         console.log('error');
+                //         console.log(result);
+                //         alert('Payment Error');
+                //     },
+                //     closeEvent: function(result){
+                //     // tambahkan fungsi sesuai kebutuhan anda
+                //         console.log('customer closed the popup without finishing the payment');
+                //         console.log(result);
+                //         alert('customer closed the popup without finishing the payment');
+                //     }
+                // }); 
 
                 } else {
                     show_error("error", data.message);

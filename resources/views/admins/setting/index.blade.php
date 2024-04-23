@@ -61,11 +61,25 @@
                                     <label>Api Key Payment Gateway:</label>
                                     <input type="text" class="form-control" id="api_payment" name="api_payment" placeholder="enter api payment gateway" value="{{ $setting->api_payment }}">
                                 </div>
+                                
                                 <div class="form-group mt20">
+                                    <label>Merchant Code:</label>
+                                    <input type="text" class="form-control" id="merchant_code" name="merchant_code" placeholder="enter duitku merchant code" value="{{ $setting->merchant_code }}">
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>Duitku Url:</label>
+                                    <input type="text" class="form-control" id="duitku_link" name="duitku_link" placeholder="enter url duitku" value="{{ $setting->duitku_link }}">
+                                </div>
+                                <div class="form-group mt20">
+                                    <label>CallBack Url:</label>
+                                    <input type="text" class="form-control" id="callback_payment" name="callback_payment" placeholder="enter callback url" value="{{ $setting->callback_payment }}">
+                                </div>
+
+                                <div class="form-group mt20" style="display: none;">
                                     <label>Tax(%):</label>
                                     <input type="text" class="form-control" id="pajak" name="pajak" placeholder="enter tax percent" value="{{ $setting->pajak }}">
                                 </div>
-                                <div class="form-group mt20">
+                                <div class="form-group mt20" style="display: none;">
                                     <label>Admin Fee (Rp.):</label>
                                     <input type="text" class="form-control" id="admin_fee" name="admin_fee" placeholder="enter api payment gateway" value="{{ $setting->admin_fee }}">
                                 </div>
