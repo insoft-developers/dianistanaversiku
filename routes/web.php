@@ -40,10 +40,11 @@ use Illuminate\Support\Facades\Hash;
 */
 
 
-Route::get('/',[DashboardMainController::class, 'index'])->name("home_public");
+// Route::get('/',[DashboardMainController::class, 'index'])->name("home_public");
+Route::get('/',[AuthUsersController::class, 'login'])->name("home_public");
 // Route::get('register-user',[AuthUsersController::class, 'index_register'])->name("register_user");
 // Route::get('auth-user',[AuthUsersController::class, 'index_login'])->name('login_user');
-Route::get('/dashboard', [DashboardMainController::class, 'dashboard']);
+// Route::get('/dashboard', [DashboardMainController::class, 'dashboard']);
 Route::get('/term', [DashboardMainController::class, 'term']);
 Route::get('/privacy', [DashboardMainController::class,'privacy']);
 Route::get('/contact', [DashboardMainController::class, 'contact']);
@@ -234,6 +235,10 @@ Route::prefix("backdata")
 
    Route::get('change_password', [SettingController::class, 'change_password']);
    Route::post('password_admin_update', [SettingController::class, 'password_admin_update'])->name('backdata.password.update');
+   Route::get('blok_setting_list', [SettingController::class, 'blok_setting_list'])->name('blok.list');
+   Route::post('add_blok', [SettingController::class, 'add_blok']);
+   Route::get('blok_edit/{id}', [SettingController::class, 'blok_edit']);
+   Route::post('blok_delete', [SettingController::class, 'blok_delete']);
 
    Route::resource('booking_setting', BookingSettingController::class);
    Route::get("booking-setting-list",[BookingSettingController::class,'ajax_list'])->name('booking.setting.list') ;

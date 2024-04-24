@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Session;
 use Redirect;
+use App\Models\Blok;
 
 class SettingController extends Controller
 {
@@ -25,6 +26,27 @@ class SettingController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function blok_setting_list() {
+        $data = Blok::all();
+        return Datatables::of($data)
+            
+            ->addColumn('action', function($data){
+                
+                $button = "";
+                $button .= '<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;';
+
+                if(adminAuth()->level == 'admin') {
+
+                } else {
+                    $button .= '<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                }
+
+                return $button;
+        })->rawColumns(['action'])
+        ->addIndexColumn()
+        ->make(true);
+    }
     public function index(): View
     {
         $view = "setting-list";
@@ -168,6 +190,34 @@ class SettingController extends Controller
         return view('admins.setting.change_password', compact('view'));
     }
 
+    public function add_blok(Request $request) {
+        $input = $request->all();
+        if($input['method'] == 'add') {
+            $blok = new Blok;
+            $blok->blok_name = $input['blok'];
+            $blok->save();
+        } else {
+            $blok = Blok::findorFail($input['id']);
+            $blok->blok_name = $input['blok'];
+            $blok->save();
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "success"
+        ]);
+    }
+
+    public function blok_edit($id) {
+        $data = Blok::findorFail($id);
+        return $data;
+    }
+
+    public function blok_delete(Request $request) {
+        $input = $request->all();
+        $query = Blok::destroy($input['id']);
+        return $query;
+    }
 
    
 }

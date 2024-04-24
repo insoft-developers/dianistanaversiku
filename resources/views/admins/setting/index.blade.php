@@ -224,6 +224,38 @@
                 <button id="btn-upgrade-iuran" class="btn btn-success mt20">Upgrade Now</button>
             </div>
         </div>
+        <div class="card mt20">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tambah Blok Perumahan</label>
+                            <input type="hidden" id="blok_id">
+                            <input type="hidden" id="_method" value="add">
+                            <input type="text" class="form-control" id="blok-tambah" name="blok-tambah" placeholder="enter new BLOK">
+                            <button id="btn-add-blok" class="btn btn-success mt20">Submit</button>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-md-6">
+                        <table id="table-blok-setting" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                <th>#</th>
+                                <th>Action</th>
+                                <th>Blok Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
     </div>
 
    @endsection

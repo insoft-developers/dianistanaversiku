@@ -49,8 +49,8 @@ class DuitkuCallback extends Controller
                         $trans->payment_status = 'PENDING';
                     }
                     // $trans->payment_status = 'PAID';
-                    $trans->payment_method = $paymentCode;
-                    $trans->payment_channel = $paymentCode;
+                    $trans->payment_method = 'DUITKU GATEWAY';
+                    $trans->payment_channel = 'DUITKU GATEWAY';
                     $trans->paid_at = date('Y-m-d H:i:s');
                     $trans->save();    
 
@@ -80,8 +80,8 @@ class DuitkuCallback extends Controller
                         $trans->payment_status = 'PENDING';
                     }
                     // $trans->payment_status = 'PAIDs';
-                    $trans->payment_method = $paymentCode;
-                    $trans->payment_channel = $paymentCode;
+                    $trans->payment_method = 'DUITKU GATEWAY';
+                    $trans->payment_channel = 'DUITKU GATEWAY';
                     $trans->paid_at = date('Y-m-d H:i:s');
                     $trans->save();    
 

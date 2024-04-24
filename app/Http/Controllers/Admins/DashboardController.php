@@ -90,10 +90,10 @@ class DashboardController extends Controller
         }
 
 
-        $transaction = Transaction::limit(6)->orderBy('created_at', 'desc')->get();
+        $transaction = Transaction::where('payment_status', 'PAID')->limit(6)->orderBy('created_at', 'desc')->get();
 
 
-        $details = PaymentDetail::limit(6)->orderBy('created_at', 'desc')->get();
+        $details = PaymentDetail::where('payment_status', 'PAID')->limit(6)->orderBy('created_at', 'desc')->get();
 
 
         return view("admins.dashboard.index", compact('view', 'iuran_today','iuran_bulan','booking_today','lain_today','transaction','details'));

@@ -121,7 +121,14 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label>BLOK:</label>
-                                            <input type="text" name="blok" id="blok" class="form-control" placeholder="enter blok">
+                                            <select name="blok" id="blok" class="form-control">
+                                                <option value=""> - Select - </option>
+                                                @foreach($bloks as $blok)
+                                                    <option value="{{ $blok->blok_name }}">{{ $blok->blok_name }}</option>
+                                                @endforeach
+                                            </select>
+
+                                            </select>
                                         </div>
                                         <div class="col-md-6">
                                             <label>House No. :</label>

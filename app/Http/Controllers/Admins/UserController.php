@@ -24,7 +24,8 @@ class UserController extends Controller
     public function index(): View
     {
         $view = "user-list";
-        return view("admins.user.index", compact('view'));
+        $bloks = \App\Models\Blok::all();
+        return view("admins.user.index", compact('view','bloks'));
     }
 
 

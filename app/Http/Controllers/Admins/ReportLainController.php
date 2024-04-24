@@ -52,7 +52,7 @@ class ReportLainController extends Controller
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
                                 ->join('users', 'users.id', '=', 'payment_details.user_id')
-                                ->where('payments.payment_type', 1)
+                                ->where('payments.payment_type','!=', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $start)
                                 ->where('payment_details.paid_at', '<=', $end);
@@ -62,7 +62,7 @@ class ReportLainController extends Controller
                                 ->select('payment_details.*', 'payments.payment_name', 'payments.due_date','payments.periode')
                                 ->join('payments', 'payments.id', '=', 'payment_details.payment_id')
                                 ->join('users', 'users.id', '=', 'payment_details.user_id')
-                                ->where('payments.payment_type', 1)
+                                ->where('payments.payment_type','!=', 1)
                                 ->where('payment_details.payment_status', 'PAID')
                                 ->where('payment_details.paid_at', '>=', $awal)
                                 ->where('payment_details.paid_at', '<=', $sampai);

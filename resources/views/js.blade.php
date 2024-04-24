@@ -1577,6 +1577,89 @@
             });
         });
 
+        var table = $('#table-blok-setting').DataTable({
+            processing:true,
+            serverSide:true,
+            
+            ajax: "{{ route('blok.list') }}",
+            order: [[ 0, "desc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'blok_name', name: 'blok_name'},
+            ]
+        });
+
+        function editData(id) {
+            $.ajax({
+                url: "{{ url('backdata/blok_edit') }}"+"/"+id,
+                type: "GET",
+                dataType: "JSON",
+                success: function(data) {
+                    $("#_method").val("edit");
+                    $("#blok_id").val(data.id);
+                    $("#blok-tambah").val(data.blok_name);
+                }
+            })
+        }
+
+
+        function deleteData(id) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Delete this data?',
+                
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url  : "{{ url('backdata/blok_delete') }}",
+                        type : "POST",
+                        data : {'id':id, '_token':csrf_token},
+                        success : function($data){
+                            table.ajax.reload(null, false);
+                        }
+                    });
+                }
+            });
+        }
+
+
+        $("#btn-add-blok").click(function(){
+            var id = $("#blok_id").val(); 
+            var blok = $("#blok-tambah").val();
+            var method = $("#_method").val();
+            var csrf_token = $('meta[name="csrf-token"]').attr('content');
+            if(blok == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: "Blok can not be empty",
+                    showConfirmButton: false,
+                    scrollbarPadding: false,
+                });
+            } else {
+                $.ajax({
+                    url: "{{ url('backdata/add_blok') }}",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {'id':id, 'blok':blok, 'method': method, '_token': csrf_token},
+                    success: function(data) {
+                        console.log(data);
+                        if(data.success) {
+                            table.ajax.reload(null, false);
+                            $("#blok-tambah").val("");
+                        }
+                    }
+                })
+            }
+
+        });
+
         
     </script>
 
