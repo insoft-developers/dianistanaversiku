@@ -70,7 +70,7 @@
                                     <label>Payment Type:</label>
                                     <select name="payment_type" id="payment_type" class="form-control">
                                         <option value="">- Select Payment Type - </option>
-                                        <option value="1">Iuran Bulanan Komplek</option>
+                                       
                                         <option value="2">Pembayaran Rutin</option>
                                         <option value="3">Sekali Bayar</option>
                                     </select>

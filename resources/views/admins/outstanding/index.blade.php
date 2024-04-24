@@ -14,23 +14,26 @@
             <div class="card-body">
                
                     <div class="widget-content widget-content-area br-8 mt-10">
-                        
+                            <div class="table-responsive">
                             <table id="listTable" class="table table-striped table-bordered table-hover table-custom"
                             style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Action</th>
+                                        <th>#</th>
                                         <th>User</th>
+                                        <th>Blok</th>
+                                        <th>No.Rumah</th>
                                         <th>Amount</th>
                                         <th>Denda</th>
-                                        <th>Total Outstanding</th>
+                                        <th>Adjust</th>
+                                        <th>Total</th>
                                         <th>Next Bills</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
-                        
+                          </div>
 
                     </div>    
                 

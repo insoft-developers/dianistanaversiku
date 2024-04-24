@@ -100,6 +100,7 @@ class AuthUsersController extends Controller
         $rules = array(
             "whatsapp_number" => "required",
             "jenis_kelamin" => "required",
+            "email" => "required",
         );
 
         $validator = Validator::make($input, $rules);
@@ -114,18 +115,23 @@ class AuthUsersController extends Controller
             return Redirect::back()->with('error', $html);
         }
 
-        $input['foto'] = null;
+        $user = User::findorfail(Auth::user()->id);
+
+        $input['foto'] = $user->foto;
         $unique = uniqid();
         if($request->hasFile('foto')){
             $input['foto'] = Str::slug($unique, '-').'.'.$request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('/storage/profile'), $input['foto']);
         }
 
-        $user = User::findorfail(Auth::user()->id);
+        
         $user->no_hp = $input['whatsapp_number'];
         $user->jenis_kelamin = $input['jenis_kelamin'];
         $user->whatsapp_emergency = $input['whatsapp_emergency'];
         $user->foto = $input['foto'];
+        $user->email = $input['email'];
+        $user->id_pelanggan_pdam = $input['id_pelanggan_pdam'];
+        $user->nomor_meter_pln = $input['nomor_meter_pln'];
         $user->save();
 
         return Redirect::back()->with('success', "Your Profile Successfully Updated!");

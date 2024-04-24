@@ -48,12 +48,25 @@ class UserController extends Controller
             })
             ->addColumn('action', function($user){
                 $phone = str_replace("+", "", $user->no_hp);
+                $setting = \App\Models\Setting::findorFail(1);
 
-                return '<a href="https://api.whatsapp.com/send?phone='.$phone.'&text=Bapak%2FIbu%20%7Bname%7D%2C%20Berikut%20adalah%20detail%20akun%20aplikasi%20myDianIstana.%0A%0AUsername%3A%20%%7D%0AEmail%3A%20%7Bemail%7D%0ANomor%20WhatsApp%3A%20%7Bwhatsapp%7D%0APassword%3A%20%7Bpassword%7D%0A%0ASila%20gunakan%20username%20dan%20password%20di%20atas%20untuk%20masuk%20ke%20aplikasi%20lewat%20web%20browser%20di%20alamat%20https%3A%2F%2Fdianistana.com%2Flogin%0A%0Aatau%20lewat%20aplikasi%20berikut%3A%0AVersi%20Android%3A%20%7Blinkandroid%7D%0AVersi%20IOS%3A%20%7Blinkios%7D%0A%0A------------------%0AApabila%20ada%20kesulitan%20dan%20pertanyaan%20Bapak%2FIbu%20%7Bname%7D%20bisa%20menghubungi%20saya%20langsung%20atau%20lewat%20fitur%20ticketing%20pada%20aplikasi" target="_blank" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Whatsapp" aria-label="Whatsapp" data-bs-original-title="Whatsapp" title="Whatsapp"><i class="fab fa-whatsapp"></i></a>
+                $button = "";
+                $button .=  '<a href="https://api.whatsapp.com/send?phone='.$phone.'&text=Bapak%2FIbu%20'.$user->name.'%2C%20Berikut%20adalah%20detail%20akun%20aplikasi%20myDianIstana.%0A%0AUsername:'.$user->username.', Email%3A%20'.$user->email.', Nomor%20WhatsApp%3A%20'.$user->no_hp.',Password%3A%20%7Brahasia%7D%0A%0ASila%20gunakan%20username%20dan%20password%20di%20atas%20untuk%20masuk%20ke%20aplikasi%20lewat%20web%20browser%20di%20alamat%20https%3A%2F%2Fdianistana.com%2Flogin%0A%0Aatau%20lewat%20aplikasi%20berikut%3A%0AVersi%20Android%3A%20'.$setting->link_android.', Versi%20IOS%3A%20'.$setting->link_ios.'-----------------%0AApabila%20ada%20kesulitan%20dan%20pertanyaan%20Bapak%2FIbu%20%7Bname%7D%20bisa%20menghubungi%20saya%20langsung%20atau%20lewat%20fitur%20ticketing%20pada%20aplikasi" target="_blank" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Whatsapp" aria-label="Whatsapp" data-bs-original-title="Whatsapp" title="Whatsapp"><i class="fab fa-whatsapp"></i></a>&nbsp;&nbsp;';
                 
-                &nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Form Permohonan" aria-label="Edit" data-bs-original-title="Form Permohonan" title="Form Permohonan" onclick="pdfData('.$user->id.')"><i class="fa fa-file-pdf"></i></a>
+                $button .='<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Form Permohonan" aria-label="Edit" data-bs-original-title="Form Permohonan" title="Form Permohonan" onclick="pdfData('.$user->id.')"><i class="fa fa-file-pdf"></i></a>&nbsp;&nbsp;';
+                
 
-                &nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$user->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$user->id.')"><i class="far fa-edit"></i></a>&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$user->id.')"><i class="far fa-times-circle"></i></i></a>';
+                $button .= '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$user->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;';
+
+                $button .= '<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$user->id.')"><i class="far fa-edit"></i></a>&nbsp;';
+
+                if(adminAuth()->level == 'admin') {
+
+                } else {
+                    $button .= '<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$user->id.')"><i class="far fa-times-circle"></i></i></a>';
+                }
+
+                return $button;
         })->rawColumns(['action','is_active','foto'])
         ->addIndexColumn()
         ->make(true);
@@ -324,7 +337,14 @@ class UserController extends Controller
             ]);
         }
 
-        $user = User::all();
+        if(empty($input['blok'])) {
+            $user = User::all();
+        } else {
+            $user = User::where('blok', $input['blok'])->get();
+        }
+        
+        
+        
         foreach($user as $u) {
             $persen = $input['up'] * $u->iuran_bulanan /100;
             $baru = (int)$persen + $u->iuran_bulanan; 

@@ -54,8 +54,11 @@ class BannerIklanController extends Controller
                 $btnAction .= '<a href="javascript:void(0);" class="bs-tooltip text-info mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Restore" aria-label="Restore" data-bs-original-title="Restore" title="Restore" onclick="restoreData(' . $item->id . ')"><i class="fas fa-arrow-circle-left"></i></a>';
             } else {
                 $btnAction .= '<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData(' . $item->id . ')"><i class="far fa-edit"></i></a>';
+                if(adminAuth()->level == 'admin') {
 
-                $btnAction .= '&emsp; <a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData(' . $item->id . ')"><i class="far fa-times-circle"></i></i></a>';
+                } else {
+                    $btnAction .= '&emsp; <a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData(' . $item->id . ')"><i class="far fa-times-circle"></i></i></a>';
+                }
             }
             $item->action = $btnAction;
         }

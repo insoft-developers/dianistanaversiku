@@ -26,34 +26,45 @@ class OutstandingController extends Controller
         
          return Datatables::of($data)
              ->addColumn('denda', function($data) use ($setting){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->where('payment_id', '>', 0)->sum('amount');
                 $denda = $setting->percent_denda;
-                $nominal = $tunggakan * $denda / 100;
+                $angka_denda = $tunggakan * $denda / 100;
+                $nominal = $this->pembulatan((int)$angka_denda);
 
                 return '<div style="text-align:right;">'.number_format($nominal).'</div>';
              })
              ->addColumn('total_outstanding', function($data) use($setting){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->where('payment_id', '>', 0)->sum('amount');
+                $adjust = Tunggakan::where('user_id', $data->id)->where('payment_id', -1)->sum('amount');
                 $denda = $setting->percent_denda;
-                $nominal = $tunggakan * $denda / 100;
-                $total = $nominal + $tunggakan;
+                $angka_denda = $tunggakan * $denda / 100;
+                $nominal = $this->pembulatan((int)$angka_denda);
+
+                $total = $nominal + $tunggakan + $adjust;
                 return '<div style="text-align:right;">'.number_format($total).'</div>';
              })
              ->addColumn('next_bill', function($data) use ($setting){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->where('payment_id', '>', 0)->sum('amount');
+                $adjust = Tunggakan::where('user_id', $data->id)->where('payment_id', -1)->sum('amount');
                 $denda = $setting->percent_denda;
-                $nominal = $tunggakan * $denda / 100;
+                $angka_denda = $tunggakan * $denda / 100;
+                $nominal = $this->pembulatan((int)$angka_denda);
+
                 $total = $nominal + $tunggakan;
-                $next = $total + $data->iuran_bulanan;
+                $next = $total + $data->iuran_bulanan + $adjust;
                 return '<div style="text-align:right;">'.number_format($next).'</div>';
              })
+             ->addColumn('adjustment', function($data){
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('payment_id', -1)->sum('amount');
+                return '<div style="text-align:right;">'.number_format($tunggakan).'</div>';
+             })
              ->addColumn('amount', function($data){
-                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->sum('amount');
+                $tunggakan = Tunggakan::where('user_id', $data->id)->where('amount', '!=', 0)->where('payment_id', '>', 0)->sum('amount');
                 return '<div style="text-align:right;">'.number_format($tunggakan).'</div>';
              })
              ->addColumn('action', function($data){
              return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>';
-         })->rawColumns(['action','amount','denda','total_outstanding','next_bill'])
+         })->rawColumns(['action','amount','denda','total_outstanding','next_bill', 'adjustment'])
          ->addIndexColumn()
          ->make(true);
      }
@@ -101,20 +112,32 @@ class OutstandingController extends Controller
         $html .= '<th>User</th>';
         $html .= '<th>Payment</th>';
         $html .= '<th>Amount</th>';
+        $html .= '<th>Adust</th>';
         $html .= '</tr>';
         $html .= '</thead>';
         $html .= '<tbody>';
         $no = 0;
         $total = 0;
+        $adjust = 0;
         foreach($data as $key) {
             $user = User::findorFail($key->user_id);
-            $total = $total + $key->amount;
+            
             $no++;
             $html .= '<tr>';
             $html .= '<td>'.$no.'</td>';
             $html .= '<td>'.$user->name.'</td>';
             $html .= '<td>'.$key->description.'</td>';
-            $html .= '<td style="text-align:right;">'.number_format($key->amount).'</td>';
+            if($key->payment_id > 0) {
+                $html .= '<td style="text-align:right;">'.number_format($key->amount).'</td>';
+                $html .= '<td style="text-align:right;">0</td>';
+                $total = $total + $key->amount;
+            } else {
+               
+                $html .= '<td style="text-align:right;">0</td>';
+                $html .= '<td style="text-align:right;">'.number_format($key->amount).'</td>';
+                $adjust = $adjust + $key->amount;
+            }
+            
             $html .= '</tr>';
         }
         $html .= '<tr>';
@@ -122,6 +145,7 @@ class OutstandingController extends Controller
         $html .= '<td></td>';
         $html .= '<td>TOTAL</td>';
         $html .= '<td style="text-align:right;"><strong>'.number_format($total).'</strong></td>';
+        $html .= '<td style="text-align:right;"><strong>'.number_format($adjust).'</strong></td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
@@ -188,5 +212,19 @@ class OutstandingController extends Controller
             "success" => true,
             "message" => 'successfully added'
         ]);
+    }
+
+
+    public function pembulatan($uang)
+    {
+        $ratusan = substr($uang, -3);
+        if($ratusan<500) {
+            $akhir = $uang - $ratusan;
+        }   
+        else {
+            $akhir = $uang + (1000-$ratusan);
+        }
+       
+        return $akhir;
     }
 }

@@ -200,10 +200,27 @@
         </div>
         <div class="card mt20">
             <div class="card-body">
-                <div class="form-group">
-                    <label>Upgrade Iuran User in (%)</label>
-                    <input type="text" class="form-control" id="upgrade-iuran" name="upgrade-iuran" placeholder="enter your percent upgrade">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Upgrade Iuran User in (%)</label>
+                            <input type="text" class="form-control" id="upgrade-iuran" name="upgrade-iuran" placeholder="enter your percent upgrade">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>BLOK</label>
+                            <select class="form-control" id="blok">
+                                <option value=""> - All Blok - </option>
+                                @foreach($bloks as $blok )
+                                    <option value="{{ $blok->blok_name }}">{{ $blok->blok_name }}</option>
+                                @endforeach
+                            </select>  
+                        </div>
+                    </div>
                 </div>
+                
                 <button id="btn-upgrade-iuran" class="btn btn-success mt20">Upgrade Now</button>
             </div>
         </div>

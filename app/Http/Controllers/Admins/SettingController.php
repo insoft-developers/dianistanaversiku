@@ -31,7 +31,8 @@ class SettingController extends Controller
         $setting = Setting::findorFail(1);
         $terms = $setting->term;
         $privacies = $setting->privacy;
-        return view("admins.setting.index", compact('view','setting','terms', 'privacies'));
+        $bloks = \App\Models\Blok::all();
+        return view("admins.setting.index", compact('view','setting','terms', 'privacies','bloks'));
     }
 
 

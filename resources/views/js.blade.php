@@ -606,7 +606,7 @@
                 alert('Payment link copied...');
                 var ckeditor = CKEDITOR.instances.message.getData();
 
-                CKEDITOR.instances.message.setData(ckeditor+'<br><a class="payment-links" href="{{ url('payment_link_share') }}/'+id+'">Please Click this Payment Link to Pay</a>');
+                CKEDITOR.instances.message.setData(ckeditor+'<br><a class="payment-links" href="{{ url('payment_link_share') }}/'+id+'"><span style="color:blue;text-decoration:underline;">Please Click this Payment Link to Pay</span></a>');
             }, function () {
                 alert('Failure to copy. Check permissions for clipboard')
             });
@@ -1538,6 +1538,7 @@
 
         $("#btn-upgrade-iuran").click(function(){
             var up = $("#upgrade-iuran").val();
+            var blok = $("#blok").val();
             Swal.fire({
                 icon: 'question',
                 title: 'Upgrade iuranan bulanan user..?',
@@ -1553,7 +1554,7 @@
                     $.ajax({
                         url  : "{{ url('backdata/upgrade_iuran_bulanan') }}",
                         type : "POST",
-                        data : {'up':up, '_token':csrf_token},
+                        data : {'up':up,'blok':blok, '_token':csrf_token},
                         success : function(data){
                             if(data.success) {
                                 Swal.fire({
@@ -1782,8 +1783,11 @@
                 {data: 'id', name: 'id', searchable: false },
                 {data:'action', name: 'action', orderable: false, searchable: false},
                 {data:'name', name: 'name'},
+                {data:'blok', name: 'blok'},
+                {data:'nomor_rumah', name: 'nomor_rumah'},
                 {data:'amount', name: 'amount'},
                 {data:'denda', name: 'denda'},
+                {data:'adjustment', name: 'adjustment'},
                 {data:'total_outstanding', name: 'total_outstanding'},
                 {data:'next_bill', name: 'next_bill'},
             ]
@@ -1830,6 +1834,8 @@
                         success : function(data){
                             if(data.success) {
                               $("#modal-adjustment").modal("hide");
+                              detailData(user_id);
+                              table.ajax.reload(null, false);
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -1837,6 +1843,7 @@
                                     showConfirmButton: false,
                                     scrollbarPadding: false,
                                 });
+                                
                             }
                         }
                     });

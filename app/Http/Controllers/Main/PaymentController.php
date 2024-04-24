@@ -59,7 +59,7 @@ class PaymentController extends Controller
             if($sekarang > $due) {
                 return response()->json([
                     "success" => false,
-                    "message" => "Tagihan anda telah lewat jatuh tempo dan akan dikenakan denda serta diakumulasikan pada tagihan berikutnya."
+                    "message" => "Payment of bills is due by the 20th of each month. Your current bill is already past due and therefore cannot be paid at this time. A penalty will be incurred and added to your next bill"
                 ]);
                 // $tagihan = $user->iuran_bulanan;
                 // $nom_denda = $denda * $tagihan /100;
@@ -69,13 +69,16 @@ class PaymentController extends Controller
 
             } else {
                 $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id)
-                            ->where('amount', '!=', 0);
+                            ->where('amount', '!=', 0)->where('payment_id', '>', 0);
+                $adjust = \App\Models\Tunggakan::where('user_id', Auth::user()->id)->where('payment_id', -1)->sum('amount');
                 if($tunggakan->count() > 0) {
                     $jumlah_tunggakan = $tunggakan->sum('amount');
-                    $nom_denda = $denda * $jumlah_tunggakan /100;
-                    $total_tunggakan = (int)$nom_denda + $jumlah_tunggakan;
-                    $amount = $iuran + $total_tunggakan;
-                    $text_denda = "Iuran Bulan ini :".number_format($iuran).'<br>Tunggakan : '.number_format($jumlah_tunggakan).'<br>Denda Tunggakan : '.number_format($nom_denda).'<br> Total Tunggakan : '.number_format($total_tunggakan);
+                    $nomi = $denda * $jumlah_tunggakan /100;
+                    $nom_denda = $this->pembulatan((int)$nomi);
+                    
+                    $total_tunggakan = $nom_denda + $jumlah_tunggakan;
+                    $amount = $iuran + $total_tunggakan + $adjust;
+                    $text_denda = "Iuran Bulan ini :".number_format($iuran).'\nTunggakan : '.number_format($jumlah_tunggakan).'\nDenda Tunggakan : '.number_format($nom_denda).'\n Total Tunggakan : '.number_format($total_tunggakan).'\nAdjustment : '.number_format($adjust);
                 } else {
                     $amount = $iuran;
                     $text_denda = "";
@@ -206,9 +209,10 @@ class PaymentController extends Controller
         if(Auth::user()->level != "user" ) {
             return redirect("frontend_dashboard");
         }
+        $setting = \App\Models\Setting::findorFail(1);
         $user = User::findorFail(Auth::user()->id);
         $auth = \App\Models\Payment::findorFail($id);
-        if($auth->payment_dedication != Auth::user()->id) {
+        if($auth->payment_dedication != Auth::user()->id && $auth->payment_dedication != -1 ) {
             return  '<script>
                         alert("Payment Bill To Not Match");
                         window.location = "'.url('frontend_dashboard').'";
@@ -223,7 +227,11 @@ class PaymentController extends Controller
 
         
         if($cek->count() > 0) {
-            return redirect('/payment');
+            return  '<script>
+                        alert("This payment has already paid");
+                        window.location = "'.url('payment').'";
+                    </script>';
+           
         }
 
         $payment = Payment::findorFail($id);
@@ -232,8 +240,24 @@ class PaymentController extends Controller
 
 
         if($payment->payment_type == 1) {
+            $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id)
+                ->where('payment_id', '>', 0)->sum('amount');
+            $adjust = \App\Models\Tunggakan::where('user_id', Auth::user()->id)
+            ->where('payment_id', -1)->sum('amount');
+
+            if($tunggakan > 0 ) {
+                $tagihan = $user->iuran_bulanan;
+                $percent = $setting->percent_denda;
+                $nomi = $percent * $tunggakan / 100;
+                $denda = $this->pembulatan((int)$nomi);
+                
+
+                $amount = $tagihan + $tunggakan + $denda + $adjust;
+            } else {
+                $amount = $user->iuran_bulanan + $adjust;
+            }
             
-            $amount = $user->iuran_bulanan;
+            
         } else {
             $amount = $payment->payment_amount;
         }
@@ -369,5 +393,18 @@ class PaymentController extends Controller
         $setting = Setting::findorFail(1);
         $payment = Payment::findorFail($id);    
         return view('frontend.kwitansi', compact('view','data','setting','payment'));
+    }
+
+    public function pembulatan($uang)
+    {
+        $ratusan = substr($uang, -3);
+        if($ratusan<500) {
+            $akhir = $uang - $ratusan;
+        }   
+        else {
+            $akhir = $uang + (1000-$ratusan);
+        }
+       
+        return $akhir;
     }
 }

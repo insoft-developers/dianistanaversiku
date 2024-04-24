@@ -717,4 +717,8 @@ label{
     font-weight: 500;
  }
 
+ .paper-content a{
+    color:blue;
+    text-decoration: underline;
+ }
 </style>

@@ -44,7 +44,7 @@
                                             <label for="checkbox1" class="ml-[5px] cursor-pointer text-[14px]"> Remember
                                                 me</label><br>
                                         </div>
-                                        <a href="#" class="hover:text-secondary text-[14px] block">Forgot Password</a>
+                                        <a href="https://api.whatsapp.com/send?phone=6282231353000&text=Saya%20Lupa%20Password%20aplikasi%20MyDianIstana%2C%20mohon%20dibantu%20untuk%20mereset%20password%0A%0ANama%3A%0ABlok%20%26%20Nomor%20Rumah%3A" class="hover:text-secondary text-[14px] block">Forgot Password</a>
                                     </div>
                                 </div>
 

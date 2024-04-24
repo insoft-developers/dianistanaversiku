@@ -78,7 +78,13 @@ class PembayaranController extends Controller
             })
             ->addColumn('action', function($data){
                
-                return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-dollar-sign"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-primary mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Copy Link" aria-label="Copy Link" data-bs-original-title="Copy Link" title="Copy Link" onclick="copyData('.$data->id.')"><i class="fa fa-copy"></i></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                if(adminAuth()->level == 'admin') {
+                    return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-dollar-sign"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-primary mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Copy Link" aria-label="Copy Link" data-bs-original-title="Copy Link" title="Copy Link" onclick="copyData('.$data->id.')"><i class="fa fa-copy"></i></i></a>';
+                } else {
+                    return '<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Detail" aria-label="Edit" data-bs-original-title="Detail" title="Detail" onclick="detailData('.$data->id.')"><i class="far fa-file"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-success mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Payment" aria-label="Payment" data-bs-original-title="Payment" title="Payment" onclick="paymentData('.$data->id.')"><i class="fa fa-dollar-sign"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-warning mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Edit" aria-label="Edit" data-bs-original-title="Edit" title="Edit" onclick="editData('.$data->id.')"><i class="far fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-primary mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Copy Link" aria-label="Copy Link" data-bs-original-title="Copy Link" title="Copy Link" onclick="copyData('.$data->id.')"><i class="fa fa-copy"></i></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" class="bs-tooltip text-danger mb-2" data-bs-toggle="tooltip" data-bs-placement="top" data-original-title="Hapus" aria-label="Hapus" data-bs-original-title="Hapus" title="Hapus" onclick="deleteData('.$data->id.')"><i class="far fa-times-circle"></i></i></a>';
+                }
+
+                
         })->rawColumns(['action','created_at','payment_name','due_date','payment_type','payment_amount','payment_dedication'])
         ->addIndexColumn()
         ->make(true);
@@ -362,6 +368,14 @@ class PembayaranController extends Controller
         $detail->payment_method = "ADMIN PAYMENT";
         $detail->payment_channel =  adminAuth()->name;
         $detail->save();
+
+        if($payment->payment_type == 1) {
+            \App\Models\Tunggakan::where('user_id', $input['payment_dedication_admin'])->where('payment_id', '>', 0)->update(["amount"=> 0]);
+            \App\Models\Tunggakan::where('user_id', $input['payment_dedication_admin'])->where('payment_id', -1)->delete();
+        }
+
+
+
         return response()->json([
             "success" => true,
             "message" => "payment successfull"
@@ -385,13 +399,17 @@ class PembayaranController extends Controller
         $due = $tahun_sekarang.'-'.$bulan_sekarang.'-'.$tgl_tempo;
         $sekarang = date('Y-m-d');
 
-        if($sekarang > $due) {
+        $tunggakan = \App\Models\Tunggakan::where('user_id', $id)->where('amount', '>', 0)->where('payment_id','>', 0)->sum('amount');
+        $adjust = \App\Models\Tunggakan::where('user_id', $id)->where('payment_id', -1)->sum('amount');
+        if($tunggakan > 0) {
+            
             $percent_denda = $setting->percent_denda;
-            $denda = $percent_denda * $tagihan /100;
-            $total = (int)$denda + $tagihan;
+            $nomi = $percent_denda * $tunggakan /100;
+            $denda = $this->pembulatan((int)$nomi);
+            $total = $denda + $tunggakan + $adjust + $tagihan;
             $iuran_bulanan = $total;
         } else {
-            $iuran_bulanan = $tagihan;
+            $iuran_bulanan = $tagihan + $adjust;
         }
 
         return $iuran_bulanan;
@@ -626,6 +644,19 @@ class PembayaranController extends Controller
         }
 
         return response()->json($belum_bayar);
+    }
+
+    public function pembulatan($uang)
+    {
+        $ratusan = substr($uang, -3);
+        if($ratusan<500) {
+            $akhir = $uang - $ratusan;
+        }   
+        else {
+            $akhir = $uang + (1000-$ratusan);
+        }
+       
+        return $akhir;
     }
    
 }

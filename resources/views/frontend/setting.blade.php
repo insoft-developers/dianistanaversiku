@@ -40,7 +40,7 @@
                     <input readonly type="text" class="input-ticket w-100 readonly" value="{{$data->username}}">
                     <div class="jarak20"></div>
                     <label>Email : </label>
-                    <input readonly type="text" class="input-ticket w-100 readonly" value="{{$data->email}}">
+                    <input type="email" name="email" class="input-ticket w-100" value="{{$data->email}}">
                     <div class="jarak20"></div>
                     <label>Whatsapp Number : </label>
                     <input name="whatsapp_number" type="text" class="input-ticket w-100" placeholder="ex: +6282165174567" value="{{ $data->no_hp }}">
@@ -57,6 +57,12 @@
                     <div class="jarak20"></div>
                     <label>User Level : </label>
                     <input readonly  type="text" class="input-ticket w-100 readonly" value="{{ Auth::user()->level }}">
+                    <div class="jarak20"></div>
+                    <label>ID PDAM : </label>
+                    <input type="text" name="id_pelanggan_pdam" class="input-ticket w-100" value="{{ $data->id_pelanggan_pdam }}">
+                    <div class="jarak20"></div>
+                    <label>ID PLN : </label>
+                    <input type="text" name="nomor_meter_pln" class="input-ticket w-100" value="{{ $data->nomor_meter_pln }}">
 
                     <div class="jarak40"></div>
                     <center><button type="submit" class="buttons btn-success">Submit</button></center>
