@@ -71,7 +71,7 @@ class SettingController extends Controller
             "email" => "required|email",
             "api_wa" =>"required",
             "api_payment" => "required",
-            "duitku_url" => "required",
+            "duitku_link" => "required",
             "callback_payment"=> "required",
             "merchant_code" => "required",
             "term" => "required",

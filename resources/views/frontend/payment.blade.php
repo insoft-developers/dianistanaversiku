@@ -57,9 +57,9 @@
                         $nomor++;
                         if($key->payment_type == 1 ) {
                             $setting = \App\Models\Setting::findorFail(1);
-                            $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id)->where('payment_id', '>', 0);
+                            $tunggakan = \App\Models\Tunggakan::where('user_id', Auth::user()->id)->where('payment_id', '>', 0)->sum('amount');
                             $adjust = \App\Models\Tunggakan::where('user_id', Auth::user()->id)->where('payment_id', -1)->sum('amount');
-                            if($tunggakan->count() > 0) {
+                            if($tunggakan > 0) {
                                 $detail = \App\Models\PaymentDetail::where('payment_id', $key->id)
                                     ->where('user_id', Auth::user()->id)
                                     ->where('payment_status','PAID');
@@ -69,7 +69,7 @@
                                 } else {
                                     $user = \App\Models\User::findorFail(Auth::user()->id);
                                     $iuran = $user->iuran_bulanan;
-                                    $jumlah = $tunggakan->sum('amount');
+                                    $jumlah = $tunggakan;
                                     $percent  = $setting->percent_denda;
                                     $nomi = $percent * $jumlah / 100;
                                     $nom = pembulatan((int)$nomi);
@@ -79,8 +79,14 @@
                                 
 
                             } else {
-                                $user = \App\Models\User::findorFail(Auth::user()->id);
-                                $amount = $user->iuran_bulanan;
+                                
+                                $detail = \App\Models\PaymentDetail::where('payment_id', $key->id)
+                                    ->where('user_id', Auth::user()->id)
+                                    ->where('payment_status','PAID');
+                                if($detail->count() > 0 ) {
+                                    $detail_data = $detail->first();
+                                    $amount = $detail_data->amount;
+                                }
                             }
 
                             

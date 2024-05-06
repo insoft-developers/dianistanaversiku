@@ -37,10 +37,12 @@ function penyebut($nilai) {
 	}    
 
 @endphp
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
+     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />  -->
     <title>Kwitansi {{ $data->invoice }}</title>
     <style>
         .clearfix:after {
@@ -179,9 +181,20 @@ footer {
   padding: 8px 0;
   text-align: center;
 }
-    </style>
+
+@media print {
+
+  #btn-print{
+    display: none;
+  }
+
+}
+
+</style>
+
+     
   </head>
-  <body onload="window.print();">
+  <body id="body-data" onload="window.print();">
     <header class="clearfix">
       @php
         $user = \App\Models\User::findorFail($data->user_id);
@@ -252,7 +265,20 @@ footer {
       </div>
     </main>
     <footer>
+
       Invoice was created on a computer and is valid without the signature and seal.
+      <div class=""><button id="btn-print" style="margin-top: 30px;height: 200px;width:800px;font-size: 80px;background-color:green;color:white;border-radius:10px;" class="button">PRINT</button></div>
+
     </footer>
+   
+   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+   <script>
+      $("#body-data").click(function(){
+        window.print();
+      })
+
+   </script>
+  
   </body>
 </html>

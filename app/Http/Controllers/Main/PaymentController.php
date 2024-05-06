@@ -80,7 +80,7 @@ class PaymentController extends Controller
                     $amount = $iuran + $total_tunggakan + $adjust;
                     $text_denda = "Iuran Bulan ini :".number_format($iuran).'\nTunggakan : '.number_format($jumlah_tunggakan).'\nDenda Tunggakan : '.number_format($nom_denda).'\n Total Tunggakan : '.number_format($total_tunggakan).'\nAdjustment : '.number_format($adjust);
                 } else {
-                    $amount = $iuran;
+                    $amount = $iuran + $adjust;
                     $text_denda = "";
                 }
                 

@@ -1583,6 +1583,9 @@ class AuthUsersController extends Controller
             if($input['total_price'] == 0 || $input['total_price'] == "0") {
                 $input['payment_status'] = "PAID";
                 $input['description'] = "free for user";
+                $input['paid_at'] = date('Y-m-d H:i:s');
+                $input['payment_method'] = "FREE HOUR";
+                $input['payment_channel'] = "FREE HOUR";
             } else {
                 $input['payment_status'] = "PENDING";
                 $input['description'] = "order";
