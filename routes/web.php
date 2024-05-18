@@ -221,6 +221,7 @@ Route::prefix("backdata")
    Route::get('print_unit_report/{awal}/{akhir}/{payment}', [ReportUnitController::class, 'print_unit_report']);
    Route::get('print_unit_report_pdf/{awal}/{akhir}/{payment}', [ReportUnitController::class, 'print_unit_report_pdf']);
    Route::get('print_unit_report_excel/{awal}/{akhir}', [ReportUnitController::class, 'print_unit_report_excel']);
+   Route::get('print_unit_accounting/{awal}/{akhir}/{payment}', [ReportUnitController::class, 'print_unit_accounting']);
 
 
    Route::post("report-lain-list",[ReportLainController::class,'ajax_list'])->name('report.lain.list') ;
@@ -228,6 +229,7 @@ Route::prefix("backdata")
    Route::get('print_lain_report/{awal}/{akhir}/{payment}/{penyelia}', [ReportLainController::class, 'print_lain_report']);
    Route::get('print_lain_report_pdf/{awal}/{akhir}/{payment}/{penyelia}', [ReportLainController::class, 'print_lain_report_pdf']);
    Route::get('print_lain_report_excel/{awal}/{akhir}', [ReportLainController::class, 'print_lain_report_excel']);
+   Route::get('print_lain_accounting/{awal}/{akhir}/{payment}/{penyelia}', [ReportLainController::class, 'print_export_accounting']);
 
    Route::resource("setting",SettingController::class)->middleware('appsetting');
    

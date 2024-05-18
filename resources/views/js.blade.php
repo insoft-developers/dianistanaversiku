@@ -1409,6 +1409,33 @@
     function printData(id) {
         window.open('{{ url('backdata/kwitansi') }}'+'/'+id, '_blank');
     }
+
+
+    $("#btn-export-accounting").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+       
+
+        
+        if(payment == '') {
+            payment = '0';
+        }
+       
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+            window.location = "{{ url('backdata/print_unit_accounting') }}"+"/"+awal+"/"+akhir+"/"+payment;
+            // window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
+        }
+    })
 </script>
 @endif
 
@@ -1520,12 +1547,43 @@
 
             window.open("{{ url('backdata/print_lain_report') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
         }
+
+
     })
 
 
     function printData(id) {
         window.open('{{ url('backdata/kwitansi') }}'+'/'+id, '_blank');
     }
+
+    $("#btn-export-accounting").click(function(){
+        var awal = $("#awal").val();
+        var akhir = $("#akhir").val();
+        var payment = $("#payment").val();
+        var penyelia = $("#penyelia").val();
+
+        
+        if(payment == '') {
+            payment = '0';
+        }
+        if(penyelia == '' ) {
+            penyelia = '0';
+        }
+
+        if(awal == '' || akhir == '') {
+            Swal.fire({
+                icon: 'error',
+                title: "Tanggal Awal atau Tanggal Akhir Tidak Boleh Kosong...!",
+                showConfirmButton: false,
+                scrollbarPadding: false,
+            });
+        }
+
+        else {
+            window.location = "{{ url('backdata/print_lain_accounting') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia;
+            // window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
+        }
+    })
 </script>
 @endif
 

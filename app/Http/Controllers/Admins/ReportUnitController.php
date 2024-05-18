@@ -20,6 +20,7 @@ use PDF;
 use App\Exports\LaporanDetailKasExport;
 use App\Exports\LaporanKeuanganExport;
 use App\Exports\LaporanUnitExport;
+use App\Exports\AccountingUnit;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Transaction;
 
@@ -241,6 +242,11 @@ class ReportUnitController extends Controller
     public function print_unit_report_excel($awal, $akhir) 
     {
          return Excel::download(new LaporanUnitExport($awal, $akhir), 'laporan_kas_masuk_bisnis_unit.xlsx');
+    }
+
+    public function print_unit_accounting($awal, $akhir, $payment) 
+    {
+         return Excel::download(new AccountingUnit($awal, $akhir, $payment), 'dianistana_export_unit_to_accounting.csv');
     }
 
     

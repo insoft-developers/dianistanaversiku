@@ -43,7 +43,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <button id="btn-filter" class="btn btn-success btn-report"><i class="fa fa-filter"></i> Filter</button>
-                        
+                            <button id="btn-export-accounting" class="btn btn-danger btn-report"><i class="fa fa-file-excel"></i> Export to Accounting System</button>
                             <button id="btn-print-kas" class="btn btn-warning btn-report"><i class="fa fa-file"></i> Print Detail Kas Masuk</button>
                         
                                 

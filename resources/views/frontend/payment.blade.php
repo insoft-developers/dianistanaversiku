@@ -86,6 +86,8 @@
                                 if($detail->count() > 0 ) {
                                     $detail_data = $detail->first();
                                     $amount = $detail_data->amount;
+                                } else {
+                                    $amount = $key->payment_amount;
                                 }
                             }
 

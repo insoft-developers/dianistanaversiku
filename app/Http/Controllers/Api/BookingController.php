@@ -791,7 +791,7 @@ class BookingController extends Controller
     public function print_ticket($id) {
         $tran = Transaction::where('id', (int)$id)->where('payment_status', 'PAID');
         if($tran->count() <= 0) {
-            return redirect('/riwayat');
+            return redirect('/api/mobile_redirect/Thanks for your booking please complete your payment.');
         }
         $trans = $tran->first();
         $user = User::findorFail($trans->user_id);
@@ -807,15 +807,17 @@ class BookingController extends Controller
         $awal = date('Y-m-d', $hitung);
         
         $cek = Transaction::where('user_id', $input['user_id'])->where('payment_status', 'PAID')
-            ->where('booking_date', '>=', $awal)
-            ->where('booking_date', '<=', $sekarang)
+            ->where('created_at', '>=', $awal.' 00:00:00')
+            ->where('created_at', '<=', $sekarang.' 23:59:59')
             ->get();
-
+        
+       
+        
         if($cek->count() > 3) {
             // return Redirect::to('frontend_dashboard')->with('error', "You have booked more than 3 times within 30 days");
             return response()->json([
             	"success" => false,
-            	"message" => "You have booked more than 3 times within 30 days",
+            	"message" => "Your booking quota for business units is used up. Each user can book a maximum of 3 times per month",
             ]);
         }
 

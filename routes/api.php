@@ -56,3 +56,5 @@ Route::get('history/{id}', [HistoryController::class, 'history']);
 Route::post('update_fcm_token', [LoginController::class, 'update_fcm_token']);
 Route::get('mobile_redirect/{text}', [UserController::class, 'mobile_redirect']);
 Route::post('booking_check', [BookingController::class, 'booking_check']);
+
+Route::post('payment_test', [PaymentController::class, 'payment_test']);

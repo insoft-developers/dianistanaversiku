@@ -19,6 +19,7 @@ use DB;
 use PDF;
 
 use App\Exports\LaporanLainExport;
+use App\Exports\AccountingLain;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -263,6 +264,9 @@ class ReportLainController extends Controller
          return Excel::download(new LaporanLainExport($awal, $akhir), 'laporan_kas_lain.xlsx');
     }
 
-   
+    public function print_export_accounting($awal, $akhir, $payment, $penyelia) 
+    {
+         return Excel::download(new AccountingLain($awal, $akhir, $payment, $penyelia), 'dianistana_pendapatan_lain_to_accounting.csv');
+    }
     
 }

@@ -131,7 +131,7 @@
             @foreach($data as $key)
             @php
             $no++;
-            $total = $total + $key->amount;
+            $total = $total + $key->total_price;
             $users = \App\Models\User::where('id', $key->user_id);
             if($users->count() > 0) {
                 $user = $users->first();
@@ -150,9 +150,9 @@
             <td>{{ $no }}</td>
             <td style="white-space:nowrap;">{{ date('d/m/y', strtotime($key->paid_at)) }}</td>
             <td>{{ $key->invoice }}</td>
-            <td style="text-align: right;white-space:nowrap;">{{ number_format($key->amount, 2) }}</td>
+            <td style="text-align: right;white-space:nowrap;">{{ number_format($key->total_price, 2) }}</td>
             <td>{{ $info }}</td>
-            <td>{{ $key->payment_name }}</td>
+            <td>{{ $key->name_unit }}</td>
             <td>{{ $info2 }}</td>
             <td>{{ $user_name }}</td>
             

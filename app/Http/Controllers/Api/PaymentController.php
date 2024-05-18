@@ -300,4 +300,41 @@ class PaymentController extends Controller
        
         return $akhir;
     }
+
+
+
+    public function payment_test(Request $request) {
+        
+            
+            
+        $setting = Setting::findorFail(1);
+        
+        // $merchantCode = "DS18810"; // dari duitku
+        // $merchantKey = "2e083b1f97e15dfd4cb02e6aa1d057a7"; // dari duitku
+        
+        
+        $merchantCode = trim($setting->merchant_code); // dari duitku
+        $merchantKey = trim($setting->api_payment); // dari duitku
+
+        $timestamp = round(microtime(true) * 1000); //in milisecond
+        
+        $paymentAmount = 40000;
+        $merchantOrderId = time() . ''; // dari merchant, unique
+        $productDetails = 'Test Pay with duitku';
+        $email = 'test@test.com'; // email pelanggan merchant
+        $phoneNumber = '08123456789'; // nomor tlp pelanggan merchant (opsional)
+        $additionalParam = ''; // opsional
+        $merchantUserInfo = ''; // opsional
+        $customerVaName = 'John Doe'; // menampilkan nama pelanggan pada tampilan konfirmasi bank
+        $callbackUrl = 'http://example.com/api-pop/backend/callback.php'; // url untuk callback
+        $returnUrl = 'http://example.com/api-pop/backend/redirect.php';//'http://example.com/return'; // url untuk redirect
+        $expiryPeriod = 10; // untuk menentukan waktu kedaluarsa dalam menit
+        $signature = hash('sha256', $merchantCode.$timestamp.$merchantKey);
+       
+        return response()->json([
+            "timestamp" => $timestamp,
+            "signature" => $signature,
+            "date" => date('Y-m-d H:i:s')
+        ]);
+    }    
 }
