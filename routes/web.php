@@ -122,6 +122,7 @@ Route::prefix("backdata")
 ->middleware('authAdmins')
 ->group(function() {
    Route::get('/',[DashboardController::class, 'index'])->name("home_admin");
+   Route::get("outstanding-dashboard", [DashboardController::class, 'ajax_list'])->name('outstanding.dashboard');
 
    Route::get('/logout',[AuthController::class, 'logout'])->name("logout_admin");
    

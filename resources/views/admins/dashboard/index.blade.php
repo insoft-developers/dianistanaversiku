@@ -22,7 +22,7 @@
 
 <!-- Analytics -->
     
-<div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+<div style="display: none;" class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
     <div class="widget widget-six">
         <div class="widget-heading">
             <h6 class="">Iuran Bulanan</h6>
@@ -63,7 +63,7 @@
     </div>
 </div>
 
-<div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+<div style="display: none;" class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
     <div class="widget widget-card-four">
         <div class="widget-content">
             <div class="w-header">
@@ -105,7 +105,7 @@
     </div>
 </div>  
 
-<div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+<div style="display: none;" class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
     <div class="widget widget-card-five">
         <div class="widget-content">
             <div class="account-box">
@@ -241,6 +241,40 @@
 
 
                     </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+    <div class="widget widget-table-three">
+
+        <div class="widget-heading">
+            <h5 class="">Outstanding Payment</h5>
+        </div>
+
+        <div class="widget-content">
+            <div class="table-responsive">
+                <table class="table table-scroll" id="table-outstanding-payment">
+                    <thead>
+                        <tr>
+                            <th><div class="th-content">No</div></th>
+                            <th><div class="th-content">Action</div></th>
+                            <th><div class="th-content th-heading">User</div></th>
+                            <th><div class="th-content th-heading">Blok</div></th>
+                            <th><div class="th-content">No.Rumah</div></th>
+                            <th><div class="th-content">Penyelia</div></th>
+                            <th><div class="th-content">Saldo Awal</div></th>
+                            <th><div class="th-content">Denda</div></th>
+                            <th><div class="th-content">Iuran</div></th>
+                            <th><div class="th-content">Adjust</div></th>
+                            <th><div class="th-content">Tunggakan</div></th>
+                            <th><div class="th-content">Last Paid</div></th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>

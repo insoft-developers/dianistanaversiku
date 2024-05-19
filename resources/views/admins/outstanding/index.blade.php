@@ -24,11 +24,14 @@
                                         <th>User</th>
                                         <th>Blok</th>
                                         <th>No.Rumah</th>
-                                        <th>Amount</th>
+                                        <th>Penyelia</th>
+                                        <th>Saldo Awal</th>
                                         <th>Denda</th>
+                                        <th>Iuran</th>
                                         <th>Adjust</th>
-                                        <th>Total</th>
+                                        <th>Tg bln ini</th>
                                         <th>Next Bills</th>
+                                        <th>Last Payment</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>

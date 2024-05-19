@@ -1926,11 +1926,14 @@
                 {data:'name', name: 'name'},
                 {data:'blok', name: 'blok'},
                 {data:'nomor_rumah', name: 'nomor_rumah'},
+                {data:'penyelia', name: 'penyelia'},
                 {data:'amount', name: 'amount'},
                 {data:'denda', name: 'denda'},
+                {data:'iuran', name: 'iuran'},
                 {data:'adjustment', name: 'adjustment'},
                 {data:'total_outstanding', name: 'total_outstanding'},
                 {data:'next_bill', name: 'next_bill'},
+                {data:'last_paid', name: 'last_paid'},
             ]
         });
 
@@ -1994,4 +1997,37 @@
         
        
     </script>
+@endif
+
+@if($view == 'dashboard')
+<script>
+    var table = $('#table-outstanding-payment').DataTable({
+            processing:true,
+            serverSide:true,
+            dom: 'Blfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            ajax: "{{ route('outstanding.dashboard') }}",
+            order: [[ 0, "asc" ]],
+            columns: [
+                {data: 'id', name: 'id', searchable: false },
+                {data:'action', name: 'action', orderable: false, searchable: false},
+                {data:'name', name: 'name'},
+                {data:'blok', name: 'blok'},
+                {data:'nomor_rumah', name: 'nomor_rumah'},
+                {data:'penyelia', name: 'penyelia'},
+                {data:'amount', name: 'amount'},
+                {data:'denda', name: 'denda'},
+                {data:'iuran', name: 'iuran'},
+                {data:'adjustment', name: 'adjustment'},
+                {data:'total_outstanding', name: 'total_outstanding'},
+                {data:'last_paid', name: 'last_paid'},
+            ]
+        });
+</script>
 @endif
