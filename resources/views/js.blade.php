@@ -1912,7 +1912,7 @@
             serverSide:true,
             dom: 'Blfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'csv', 'excel', 'pdf'
             ],
             lengthMenu: [
                 [10, 25, 50, -1],
@@ -2006,7 +2006,7 @@
             serverSide:true,
             dom: 'Blfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'csv', 'excel', 'pdf'
             ],
             lengthMenu: [
                 [10, 25, 50, -1],
