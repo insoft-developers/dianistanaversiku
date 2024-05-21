@@ -6,6 +6,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use DB;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use App\Models\UnitBisnis;
 
 class LaporanUnitExport implements FromView
 {
@@ -14,11 +15,16 @@ class LaporanUnitExport implements FromView
     */
     protected $awal;
     protected $akhir;
+    protected $payment;
+    protected $unit;
 
-    function __construct($awal, $akhir) {
+    function __construct($awal, $akhir, $payment, $unit) {
             $this->awal = $awal;
             $this->akhir = $akhir;
+            $this->payment = $payment;
+            $this->unit = $unit;
     }
+
 
     public function view(): View
     {
@@ -29,27 +35,42 @@ class LaporanUnitExport implements FromView
             $thn = date('Y');
             $start = $thn.'-'.$bln.'-01';
             $end = $thn.'-'.$bln.'-31';
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $start)
                                 ->where('transactions.paid_at', '<=', $end)
-                                ->orderBy('transactions.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('transactions.paid_at', 'asc');
+                                
         } else {
-            $data = DB::table('transactions')
+            $query = DB::table('transactions')
                                 ->select('transactions.*', 'unit_bisnis.name_unit')
                                 ->join('unit_bisnis', 'unit_bisnis.id', '=', 'transactions.business_unit_id', 'left')
                                 ->where('transactions.payment_status', 'PAID')
                                 ->where('transactions.paid_at', '>=', $this->awal)
                                 ->where('transactions.paid_at', '<=', $sampai)
-                                ->orderBy('transactions.paid_at', 'asc')
-                                ->get();
+                                ->orderBy('transactions.paid_at', 'asc');
+                                
+        }
+
+        if($this->payment != 0) {
+            $query->where('transactions.payment_method', $this->payment);
+        }
+
+
+        $nameunit = "";
+        if($this->unit != 0) {
+            $query->where('transactions.business_unit_id', $this->unit);
+            $q = UnitBisnis::findorFail($this->unit);
+            $nameunit = $q->name_unit;
         }
         
+        $data = $query->get();
+       
+
         return view('admins.report.bisnis.print_excel', [
-            'data' => $data, 'awal'=> $this->awal, 'akhir' => $this->akhir
+            'data' => $data, 'awal'=> $this->awal, 'akhir' => $this->akhir, 'payment' => $this->payment, 'unit'=> $this->unit, 'units'=> $nameunit
         ]);
     }
 }

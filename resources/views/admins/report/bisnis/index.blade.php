@@ -27,7 +27,18 @@
                         </div>
                         
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Unit Bisnis:</label>
+                            <select class="form-control" id="bisnis_unit">
+                                <option value="">- All Bisnis Unit - </option>
+                                @foreach($unit as $u)
+                                <option value="{{ $u->id }}">{{ $u->name_unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>  
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Paid By:</label>
                             <select class="form-control" id="payment">

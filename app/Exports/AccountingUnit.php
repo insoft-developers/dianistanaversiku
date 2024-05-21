@@ -15,11 +15,13 @@ class AccountingUnit implements FromView
     protected $awal;
     protected $akhir;
     protected $payment;
-    
-    function __construct($awal, $akhir, $payment) {
+    protected $unit;
+
+    function __construct($awal, $akhir, $payment, $unit) {
             $this->awal = $awal;
             $this->akhir = $akhir;
             $this->payment = $payment;
+            $this->unit = $unit;
     }
 
     public function view(): View
@@ -53,9 +55,13 @@ class AccountingUnit implements FromView
             $query->where('transactions.payment_method', $this->payment);
         }
 
+        if($this->unit != 0) {
+            $query->where('transactions.business_unit_id', $this->unit);
+        }
+
         $data = $query->get();
         return view('admins.report.bisnis.accounting_unit', [
-            'data' => $data, 'awal'=> $this->awal, 'akhir' => $this->akhir, 'payment' => $this->payment
+            'data' => $data, 'awal'=> $this->awal, 'akhir' => $this->akhir, 'payment' => $this->payment, 'unit'=> $this->unit
         ]);
     }
 }

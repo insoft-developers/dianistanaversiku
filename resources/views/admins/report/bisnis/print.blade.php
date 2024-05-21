@@ -97,7 +97,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}<br> Paid By : {{ Request::segment(5) == 0 ? "ALL METHOD ": Request::segment(5) }}
+            <th colspan="8"><center><img class="logo-atas" src="{{ asset('assets/template/main/img/dianlogo.png') }}"><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}<br> Paid By : {{ Request::segment(5) == 0 ? "ALL METHOD ": Request::segment(5) }}<br>Unit: {{ Request::segment(6) == 0 ? "ALL UNIT " : $units }}
             </center></th>
             </tr>
             <tr>
@@ -177,13 +177,16 @@
             var awal = "{{ $awal }}";
             var akhir = "{{ $akhir }}";
             var payment = "{{ $payment }}";
-            window.open("{{ url('backdata/print_unit_report_pdf') }}"+"/"+awal+"/"+akhir+"/"+payment , "_blank");
+            var unit = "{{ $unit }}";
+            window.open("{{ url('backdata/print_unit_report_pdf') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+unit , "_blank");
         })
 
         $("#btn-excel").click(function(){
             var awal = "{{ $awal }}";
             var akhir = "{{ $akhir }}";
-            window.location = "{{ url('backdata/print_unit_report_excel') }}"+"/"+awal+"/"+akhir;
+            var payment = "{{ $payment }}";
+            var unit = "{{ $unit }}";
+            window.location = "{{ url('backdata/print_unit_report_excel') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+unit;
         })
     </script>
 

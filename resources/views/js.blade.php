@@ -1304,8 +1304,8 @@
 
 @if($view == 'report-unit')
 <script>
-    init_data_table("","","");
-    function init_data_table(awal, akhir, payment) {
+    init_data_table("","","","");
+    function init_data_table(awal, akhir, payment, unit) {
         $("#report-table").dataTable().fnDestroy();
 
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -1320,7 +1320,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, 'All'],
             ],
-            ajax: {type: "POST", url: "{{ route('report.unit.list') }}", data:{"awal":awal, "akhir":akhir, "payment":payment, '_token':csrf_token}},
+            ajax: {type: "POST", url: "{{ route('report.unit.list') }}", data:{"awal":awal, "akhir":akhir, "payment":payment,"unit":unit, '_token':csrf_token}},
             order: [[ 11, "asc" ]],
             columns: [
                 {data: 'id', name: 'id', searchable: false },
@@ -1346,6 +1346,7 @@
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
         var payment = $("#payment").val();
+        var unit = $("#bisnis_unit").val();
 
         if(awal == '' || akhir == '') {
             Swal.fire({
@@ -1367,7 +1368,7 @@
 
         else {
 
-            init_data_table(awal,akhir, payment);
+            init_data_table(awal,akhir, payment, unit);
         }
     });
 
@@ -1376,9 +1377,14 @@
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
         var payment = $("#payment").val();
+        var unit = $("#bisnis_unit").val();
 
         if(payment == '') {
             payment = '0';
+        }
+
+        if(unit == '') {
+            unit = '0';
         }
 
         if(awal == '' || akhir == '') {
@@ -1401,7 +1407,7 @@
 
         else {
 
-            window.open("{{ url('backdata/print_unit_report') }}"+"/"+awal+"/"+akhir+"/"+payment, "_blank");
+            window.open("{{ url('backdata/print_unit_report') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+unit, "_blank");
         }
     })
 
@@ -1415,11 +1421,16 @@
         var awal = $("#awal").val();
         var akhir = $("#akhir").val();
         var payment = $("#payment").val();
+        var unit = $("#bisnis_unit").val();
        
 
         
         if(payment == '') {
             payment = '0';
+        }
+
+        if(unit == '') {
+            unit = '0';
         }
        
         if(awal == '' || akhir == '') {
@@ -1432,7 +1443,7 @@
         }
 
         else {
-            window.location = "{{ url('backdata/print_unit_accounting') }}"+"/"+awal+"/"+akhir+"/"+payment;
+            window.location = "{{ url('backdata/print_unit_accounting') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+unit;
             // window.open("{{ url('backdata/print_iuran_financing') }}"+"/"+awal+"/"+akhir+"/"+payment+"/"+penyelia, "_blank");
         }
     })

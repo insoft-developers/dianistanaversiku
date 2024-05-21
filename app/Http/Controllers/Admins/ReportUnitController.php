@@ -23,6 +23,7 @@ use App\Exports\LaporanUnitExport;
 use App\Exports\AccountingUnit;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Transaction;
+use App\Models\UnitBisnis;
 
 
 class ReportUnitController extends Controller
@@ -35,7 +36,8 @@ class ReportUnitController extends Controller
     {
         $view = "report-unit";
         $method = Transaction::where('payment_method', '!=', null)->groupBy('payment_method')->get();
-        return view("admins.report.bisnis.index", compact('view','method'));
+        $unit = UnitBisnis::all();
+        return view("admins.report.bisnis.index", compact('view','method','unit'));
     }
 
 
@@ -44,6 +46,7 @@ class ReportUnitController extends Controller
         $input = $request->all();
         $awal = $input['awal'];
         $akhir = $input['akhir'];
+        $unit = $input['unit'];
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -70,6 +73,9 @@ class ReportUnitController extends Controller
 
         if(! empty($input['payment'])) {
             $query->where('payment_method', $input['payment']);
+        }
+        if(! empty($input['unit'])) {
+            $query->where('business_unit_id', $input['unit']);
         }
 
         $data = $query->get();
@@ -110,7 +116,7 @@ class ReportUnitController extends Controller
     }
 
     
-    public function print_unit_report($awal, $akhir, $payment) {
+    public function print_unit_report($awal, $akhir, $payment, $unit) {
         
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
@@ -138,13 +144,24 @@ class ReportUnitController extends Controller
             $query->where('transactions.payment_method', $payment);
         }
 
+        $units = "";
+
+        if($unit != 0) {
+            $query->where('transactions.business_unit_id', $unit);
+            $unit_query = UnitBisnis::findorFail($unit);
+            $units = $unit_query->name_unit;
+        }
+
         $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
-        return view('admins.report.bisnis.print', compact('data','awal','akhir','setting','awal','akhir','payment'));
+
+       
+
+        return view('admins.report.bisnis.print', compact('data','awal','akhir','setting','awal','akhir','payment','unit','units'));
     }
 
 
-    public function print_unit_report_pdf($awal, $akhir, $payment) {
+    public function print_unit_report_pdf($awal, $akhir, $payment, $unit) {
         $ending = strtotime("+1 day", strtotime($akhir));
         $sampai = date('Y-m-d', $ending);
         if(empty($awal) && empty($akhir)) {
@@ -173,9 +190,17 @@ class ReportUnitController extends Controller
             $query->where('transactions.payment_method', $payment);
         }
 
+
+        $nameunit = "";
+        if($unit != 0) {
+            $query->where('transactions.business_unit_id', $unit);
+            $q = UnitBisnis::findorFail($unit);
+            $nameunit = $q->name_unit;
+        }
+
         $data = $query->get();
         $setting = \App\Models\Setting::findorFail(1);
-        $pdf= PDF::loadView('admins.report.bisnis.print_pdf', compact('data','awal','akhir','setting'));
+        $pdf= PDF::loadView('admins.report.bisnis.print_pdf', compact('data','awal','akhir','setting','nameunit'));
         $pdf->setPaper('a4', 'potrait');
         return $pdf->stream();
         // return view('admins.report.iuran.print_pdf', compact('data','awal','akhir','setting'));
@@ -239,14 +264,14 @@ class ReportUnitController extends Controller
     }
 
 
-    public function print_unit_report_excel($awal, $akhir) 
+    public function print_unit_report_excel($awal, $akhir, $payment, $unit) 
     {
-         return Excel::download(new LaporanUnitExport($awal, $akhir), 'laporan_kas_masuk_bisnis_unit.xlsx');
+         return Excel::download(new LaporanUnitExport($awal, $akhir, $payment, $unit), 'laporan_kas_masuk_bisnis_unit.xlsx');
     }
 
-    public function print_unit_accounting($awal, $akhir, $payment) 
+    public function print_unit_accounting($awal, $akhir, $payment, $unit) 
     {
-         return Excel::download(new AccountingUnit($awal, $akhir, $payment), 'dianistana_export_unit_to_accounting.csv');
+         return Excel::download(new AccountingUnit($awal, $akhir, $payment, $unit), 'dianistana_export_unit_to_accounting.csv');
     }
 
     

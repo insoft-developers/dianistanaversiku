@@ -82,7 +82,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                <th colspan="8"><center><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}</center></th>
+                <th colspan="8"><center><h4>DIAN ISTANA<br>Laporan Kas Masuk Unit Bisnis</h4><br>Tanggal : {{ date('d F Y', strtotime($awal)) }} s.d {{ date('d F Y', strtotime($akhir)) }}
+                <br>{{ $payment == 0 ? "ALL PAYMENT" : $payment }}
+                <br>{{ $unit == 0 ? "ALL UNIT" : $units }}
+                </center></th>
                 </tr>
                 <tr>
                     <th>No</th>
