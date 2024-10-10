@@ -387,7 +387,7 @@
         init_table("","","");
 
         function init_table(department, priority, status) {
-            $("#listTable").dataTable().fnDestroy();
+            $("#listTable").DataTable().fnDestroy();
             var csrf_token = $('meta[name="csrf-token"]').attr('content');
             var table = $('#listTable').DataTable({
                 processing:true,
